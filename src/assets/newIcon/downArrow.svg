@@ -1,0 +1,13 @@
+<svg width="8" height="30" viewBox="0 0 8 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect width="1" height="30" transform="translate(3.5)" fill="#00B277"/>
+<mask id="path-1-inside-1_2023_1453" fill="white">
+<path d="M0 24H8V30H0V24Z"/>
+</mask>
+<g clip-path="url(#paint0_diamond_2023_1453_clip_path)" data-figma-skip-parse="true" mask="url(#path-1-inside-1_2023_1453)"><g transform="matrix(0.004 0 0 0.006 4 24)"><rect x="0" y="0" width="1250" height="1166.67" fill="url(#paint0_diamond_2023_1453)" opacity="1" shape-rendering="crispEdges"/><rect x="0" y="0" width="1250" height="1166.67" transform="scale(1 -1)" fill="url(#paint0_diamond_2023_1453)" opacity="1" shape-rendering="crispEdges"/><rect x="0" y="0" width="1250" height="1166.67" transform="scale(-1 1)" fill="url(#paint0_diamond_2023_1453)" opacity="1" shape-rendering="crispEdges"/><rect x="0" y="0" width="1250" height="1166.67" transform="scale(-1)" fill="url(#paint0_diamond_2023_1453)" opacity="1" shape-rendering="crispEdges"/></g></g><path d="M0 24V18H-4V24H0ZM8 24H12V18H8V24ZM0 24V30H8V24V18H0V24ZM8 24H4V30H8H12V24H8ZM0 30H4V24H0H-4V30H0Z" data-figma-gradient-fill="{&#34;type&#34;:&#34;GRADIENT_DIAMOND&#34;,&#34;stops&#34;:[{&#34;color&#34;:{&#34;r&#34;:0.0,&#34;g&#34;:0.59893888235092163,&#34;b&#34;:0.39898362755775452,&#34;a&#34;:1.0},&#34;position&#34;:0.99999988079071045},{&#34;color&#34;:{&#34;r&#34;:0.0,&#34;g&#34;:0.0,&#34;b&#34;:0.0,&#34;a&#34;:0.0},&#34;position&#34;:1.0}],&#34;stopsVar&#34;:[{&#34;color&#34;:{&#34;r&#34;:0.0,&#34;g&#34;:0.59893888235092163,&#34;b&#34;:0.39898362755775452,&#34;a&#34;:1.0},&#34;position&#34;:0.99999988079071045},{&#34;color&#34;:{&#34;r&#34;:0.0,&#34;g&#34;:0.0,&#34;b&#34;:0.0,&#34;a&#34;:0.0},&#34;position&#34;:1.0}],&#34;transform&#34;:{&#34;m00&#34;:8.0,&#34;m01&#34;:0.0,&#34;m02&#34;:0.0,&#34;m10&#34;:0.0,&#34;m11&#34;:12.0,&#34;m12&#34;:18.0},&#34;opacity&#34;:1.0,&#34;blendMode&#34;:&#34;NORMAL&#34;,&#34;visible&#34;:true}" mask="url(#path-1-inside-1_2023_1453)"/>
+<defs>
+<clipPath id="paint0_diamond_2023_1453_clip_path"><path d="M0 24V18H-4V24H0ZM8 24H12V18H8V24ZM0 24V30H8V24V18H0V24ZM8 24H4V30H8H12V24H8ZM0 30H4V24H0H-4V30H0Z" mask="url(#path-1-inside-1_2023_1453)"/></clipPath><linearGradient id="paint0_diamond_2023_1453" x1="0" y1="0" x2="500" y2="500" gradientUnits="userSpaceOnUse">
+<stop offset="1" stop-color="#009966"/>
+<stop offset="1" stop-opacity="0"/>
+</linearGradient>
+</defs>
+</svg>
