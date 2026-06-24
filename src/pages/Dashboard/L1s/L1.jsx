@@ -3,6 +3,7 @@ import Navbar from "../DashboardComponent/Navbar";
 import ChainPulse from "../DashboardComponent/ChainPulse";
 import L1Stats from "./L1Stats";
 import PrimaryNetworkPinned from "./PrimaryNetworkPinned";
+import RegisteredL1sTable from "./RegisteredL1sTable";
 
 const L1Component = () => {
   return (
@@ -19,6 +20,7 @@ const L1Component = () => {
           <h1 className="text-2xl font-bold text-white">L1 Directory</h1>
           <L1Stats />
           <PrimaryNetworkPinned />
+          <RegisteredL1sTable />
         </div>
       </div>
     </div>

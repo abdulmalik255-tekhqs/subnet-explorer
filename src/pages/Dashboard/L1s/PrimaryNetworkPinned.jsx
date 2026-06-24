@@ -13,7 +13,7 @@ const InfoItem = ({ label, value }) => (
 
 const PrimaryNetworkPinned = () => {
   return (
-    <div className="w-full">
+    <div className="w-full mt-2">
       {/* Section Header */}
       <div className="flex items-center gap-4 mb-1 opacity-60">
         <h2 className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] whitespace-nowrap">

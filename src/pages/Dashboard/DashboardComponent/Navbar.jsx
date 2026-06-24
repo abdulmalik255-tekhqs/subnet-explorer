@@ -1,11 +1,13 @@
-import React from "react";
+import React, { useState } from "react";
 import { MagnifyingGlass, Command, CaretDown } from "@phosphor-icons/react";
 import { useNavigate, useLocation } from "react-router-dom";
 
 const Navbar = () => {
   const navigate = useNavigate();
   const location = useLocation();
-
+  const options = ["Game L1", "even", "Blaze", "FIFA Blockchain", "Hashfire"];
+  const [selected, setSelected] = useState("Game L1");
+  const [open, setOpen] = useState(false);
   const getLinkClass = (path) => {
     const isActive = location.pathname === path;
     return `px-4 py-1.5 rounded-md text-sm font-medium cursor-pointer transition-colors ${
@@ -25,28 +27,61 @@ const Navbar = () => {
           <span className="w-2 h-2 bg-blue-500 rounded-full ml-1"></span>
         </div>
 
-        <div className="flex items-center gap-2 bg-[#1E293B] px-3 py-1.5 rounded-lg border border-gray-700 cursor-pointer hover:bg-gray-700 transition-colors">
-          <div className="w-2.5 h-2.5 bg-orange-500 rounded-full"></div>
-          <span className="text-sm font-medium">Game L1</span>
-          <CaretDown size={14} className="text-gray-400" />
+        <div className="relative">
+          <button
+            onClick={() => setOpen(!open)}
+            className="flex items-center gap-2 bg-[#1E293B] px-2 py-1 rounded-xl border border-[#334155] min-w-[120px]"
+          >
+            <div className="w-2.5 h-2.5 bg-orange-500 rounded-full" />
+            <span className="text-white font-medium flex-1 text-left">
+              {selected}
+            </span>
+            <CaretDown
+              size={16}
+              className={`text-gray-400 transition-transform ${
+                open ? "rotate-180" : ""
+              }`}
+            />
+          </button>
+
+          {open && (
+            <div className="absolute top-full left-0 mt-2 w-full rounded-xl min-w-[180px] border border-[#334155] bg-[#0F172A] shadow-xl overflow-hidden z-50">
+              {options.map((option) => (
+                <button
+                  key={option}
+                  onClick={() => {
+                    setSelected(option);
+                    setOpen(false);
+                  }}
+                  className={`w-full px-4 py-3 text-left text-sm hover:bg-[#1E293B] transition-colors ${
+                    selected === option
+                      ? "bg-[#1E293B] text-white"
+                      : "text-gray-300"
+                  }`}
+                >
+                  {option}
+                </button>
+              ))}
+            </div>
+          )}
         </div>
 
         <div className="flex items-center gap-6 ml-4">
-          <a onClick={() => navigate("/")} className={getLinkClass("/")}>
+          <p onClick={() => navigate("/")} className={getLinkClass("/")}>
             Overview
-          </a>
-          <a
+          </p>
+          <p
             onClick={() => navigate("/subnets")}
             className={getLinkClass("/subnets")}
           >
             L1s
-          </a>
-          <a
+          </p>
+          <p
             onClick={() => navigate("/tools")}
             className={getLinkClass("/tools")}
           >
             Tools
-          </a>
+          </p>
         </div>
       </div>
 
