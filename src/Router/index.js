@@ -23,6 +23,7 @@ import TopAccounts from "../pages/TopAccounts/index.js";
 import NftDetailPage from "../pages/NftTransfer/NftDetailPage.jsx";
 import Dashboard from "../pages/Dashboard/index.jsx";
 import L1Component from "../pages/Dashboard/L1s/L1.jsx";
+import L1SLandingPage from "../pages/Dashboard/AllL1S/L1SLandingPage.jsx";
 
 const Index = () => {
   return (
@@ -56,6 +57,10 @@ const Index = () => {
         <Route path="/nft/:id/:tokenID" element={<NftDetailPage />} />
         <Route path="mempoolspace" element={<MempoolPage />} />
         <Route path="/subnets" element={<L1Component />} />
+        <Route
+          path="/subnets/network/:subnetName"
+          element={<L1SLandingPage />}
+        />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Route>
     </Routes>

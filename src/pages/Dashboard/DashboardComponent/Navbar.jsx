@@ -5,7 +5,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 const Navbar = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const options = ["Game L1", "even", "Blaze", "FIFA Blockchain", "Hashfire"];
+  const options = ["Beam L1", "Game L1", "even", "Blaze", "FIFA Blockchain", "Hashfire"];
   const [selected, setSelected] = useState("Game L1");
   const [open, setOpen] = useState(false);
   const getLinkClass = (path) => {
@@ -52,6 +52,7 @@ const Navbar = () => {
                   onClick={() => {
                     setSelected(option);
                     setOpen(false);
+                    navigate(`/subnets/network/${option}`);
                   }}
                   className={`w-full px-4 py-3 text-left text-sm hover:bg-[#1E293B] transition-colors ${
                     selected === option
