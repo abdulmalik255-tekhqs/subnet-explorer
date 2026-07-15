@@ -11,9 +11,14 @@ module.exports = {
           "0%": { strokeDashoffset: "1000" },
           "100%": { strokeDashoffset: "0" },
         },
+        growBar: {
+          "0%": { transform: "scaleY(0.35)", opacity: "0.5" },
+          "100%": { transform: "scaleY(1)", opacity: "1" },
+        },
       },
       animation: {
         dash: "dash 5s linear infinite",
+        growBar: "growBar 1.4s ease-in-out infinite alternate",
       },
       backgroundImage: {
         footer: "linear-gradient(90deg, #DEE5FF 0%, #DFEEFF 100%)",

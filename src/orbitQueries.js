@@ -21,7 +21,7 @@ export const GET_ORBITS = gql`
       orbits {
         name
         orbit_id
-        TPS
+        tps
         transaction_count
         address_count
         total_deployed_contracts

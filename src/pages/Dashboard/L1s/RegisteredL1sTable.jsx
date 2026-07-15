@@ -23,6 +23,12 @@ const STATUS_MAP = {
     dot: "#22c55e",
     label: "Active",
   },
+  running: {
+    bg: "rgba(34,197,94,0.12)",
+    color: "#22c55e",
+    dot: "#22c55e",
+    label: "Active",
+  },
   syncing: {
     bg: "rgba(245,158,11,0.12)",
     color: "#f59e0b",
@@ -58,7 +64,7 @@ const fmtContracts = (val) => {
 const truncateId = (id = "") => (id.length > 10 ? `${id.slice(0, 10)}…` : id);
 
 const SORT_OPTIONS = ["TPS", "Name", "Transactions", "Contracts"];
-const STATUS_OPTIONS = ["All", "Active", "Syncing", "Offline"];
+const STATUS_OPTIONS = ["All", "Active", "Running", "Offline"];
 
 const DropMenu = ({ label, value, options, onSelect }) => {
   const [open, setOpen] = useState(false);
@@ -153,7 +159,7 @@ export default function RegisteredL1sTable() {
 
     list.sort((a, b) => {
       if (sortBy === "TPS")
-        return parseFloat(b.TPS || 0) - parseFloat(a.TPS || 0);
+        return parseFloat(b.tps || 0) - parseFloat(a.tps || 0);
       if (sortBy === "Name") return (a.name || "").localeCompare(b.name || "");
       if (sortBy === "Transactions")
         return (
@@ -280,14 +286,14 @@ export default function RegisteredL1sTable() {
                 pageData?.map((chain, i) => {
                   const color =
                     CHAIN_COLORS[
-                      registeredOrbits.indexOf(chain) % CHAIN_COLORS.length
+                      registeredOrbits?.indexOf(chain) % CHAIN_COLORS?.length
                     ];
-                  const st = getStatus(chain.status);
-                  const tps = parseFloat(chain.TPS || 0);
+                  const st = getStatus(chain?.status);
+                  const tps = parseFloat(chain?.tps || 0);
 
                   return (
                     <tr
-                      key={chain.orbit_id ?? i}
+                      key={chain?.orbit_id ?? i}
                       className="border-b border-gray-800/30 hover:bg-white/[0.02] transition-colors cursor-pointer"
                     >
                       {/* Name */}
@@ -348,14 +354,14 @@ export default function RegisteredL1sTable() {
                       {/* Status */}
                       <td className="px-5 py-3 text-right">
                         <span
-                          className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[11px] font-semibold"
+                          className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[11px] font-semibold uppercase tracking-wider"
                           style={{ background: st.bg, color: st.color }}
                         >
                           <span
                             className="w-1.5 h-1.5 rounded-full"
                             style={{ backgroundColor: st.dot }}
                           />
-                          {st?.label}
+                          {chain?.status}
                         </span>
                       </td>
                     </tr>
