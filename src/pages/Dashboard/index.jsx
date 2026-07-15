@@ -6,6 +6,7 @@ import PrimaryNetworkPinned from "./L1s/PrimaryNetworkPinned";
 import GaugeChart from "./DashboardComponent/TPSLive";
 import TransactionChart from "./DashboardComponent/TransactionChart";
 import TopL1sByTPS from "./DashboardComponent/TopL1sByTPS";
+import NetworkTPSChart from "./DashboardComponent/NetworkTPSChart";
 
 const Dashboard = () => {
   return (
@@ -22,6 +23,9 @@ const Dashboard = () => {
         <div className="flex flex-col lg:flex-row gap-4 mt-2">
           <TopL1sByTPS />
           <TransactionChart />
+        </div>
+        <div className="mt-4">
+          <NetworkTPSChart />
         </div>
       </div>
     </div>
