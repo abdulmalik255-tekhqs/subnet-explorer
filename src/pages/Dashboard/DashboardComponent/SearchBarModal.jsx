@@ -2,38 +2,29 @@ import React, { useState, useEffect, useRef, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
-const RECENT_SEARCHES = [
-  {
-    id: 1,
-    type: "transaction",
-    label: "0x4a8b2c9f3d7e1f0a6b5c…",
-    sub: "Transaction",
-    chain: "Main Chain",
-    chainId: null,
-    color: "#1D4ED8",
-    href: "/tx/0x4a8b2c9f3d7e1f0a6b5c",
-  },
-  {
-    id: 2,
-    type: "block",
-    label: "Block #847,291",
-    sub: "Block",
-    chain: "Main Chain",
-    chainId: null,
-    color: "#065F46",
-    href: "/block/847291",
-  },
-  {
-    id: 3,
-    type: "l1",
-    label: "DeFi L1",
-    sub: "L1",
-    chain: null,
-    chainId: "2001",
-    color: "#0F3460",
-    href: "/subnets/network/DeFi%20L1",
-  },
-];
+const TYPE_COLORS = {
+  transaction: "#1D4ED8",
+  block: "#065F46",
+  contract: "#7C3AED",
+  address: "#B45309",
+  l1: "#0F3460",
+};
+
+const getSearchHref = (item) => {
+  switch (item.type) {
+    case "transaction":
+      return `/tx/${item.value}`;
+    case "block":
+      return `/block/${item.value}`;
+    case "contract":
+    case "address":
+      return `/address/${item.value}`;
+    case "l1":
+      return `/subnets/network/${encodeURIComponent(item.chain_name)}`;
+    default:
+      return `/address/${item.value}`;
+  }
+};
 
 const KbdHint = ({ keys, label }) => (
   <div className="flex items-center gap-1.5 text-[11px] text-gray-600">
@@ -66,18 +57,16 @@ const SearchBarModal = ({ isOpen, onClose }) => {
 
   const inputRef = useRef(null);
 
-  /* auto-focus input when modal opens */
+  /* auto-focus input + refresh recent searches when modal opens */
   useEffect(() => {
     if (isOpen) {
       setQuery("");
       setFocused(0);
       setSelectedChain("All chains");
       setTimeout(() => inputRef.current?.focus(), 30);
+      dispatch.orbit.getLatestSearchHistory();
     }
-  }, [isOpen]);
-  useEffect(() => {
-    dispatch.orbit.getSearchData({ query: "", chainType: null, chainId: null });
-  }, [dispatch]);
+  }, [isOpen, dispatch]);
 
   /* ESC + arrow key navigation */
   const handleKeyDown = useCallback(
@@ -89,18 +78,18 @@ const SearchBarModal = ({ isOpen, onClose }) => {
       }
       if (e.key === "ArrowDown") {
         e.preventDefault();
-        setFocused((f) => Math.min(f + 1, RECENT_SEARCHES.length - 1));
+        setFocused((f) => Math.min(f + 1, (searchHistory?.length ?? 1) - 1));
       }
       if (e.key === "ArrowUp") {
         e.preventDefault();
         setFocused((f) => Math.max(f - 1, 0));
       }
-      if (e.key === "Enter" && RECENT_SEARCHES[focused]) {
-        navigate(RECENT_SEARCHES[focused].href);
+      if (e.key === "Enter" && searchHistory?.[focused]) {
+        navigate(getSearchHref(searchHistory[focused]));
         onClose();
       }
     },
-    [isOpen, focused, navigate, onClose],
+    [isOpen, focused, navigate, onClose, searchHistory],
   );
 
   useEffect(() => {
@@ -118,9 +107,9 @@ const SearchBarModal = ({ isOpen, onClose }) => {
   ];
 
   /* filter recent searches by selected chain */
-  const results = RECENT_SEARCHES.filter((r) => {
+  const results = (searchHistory ?? []).filter((r) => {
     if (selectedChain === "All chains") return true;
-    return r.chain === selectedChain || r.label === selectedChain;
+    return r.chain_name === selectedChain;
   });
 
   return (
@@ -198,9 +187,9 @@ const SearchBarModal = ({ isOpen, onClose }) => {
           ) : (
             results?.map((item, i) => (
               <button
-                key={item.id}
+                key={`${item.type}-${item.value}-${i}`}
                 onClick={() => {
-                  navigate(item.href);
+                  navigate(getSearchHref(item));
                   onClose();
                 }}
                 onMouseEnter={() => setFocused(i)}
@@ -208,15 +197,13 @@ const SearchBarModal = ({ isOpen, onClose }) => {
                   focused === i ? "bg-white/[0.04]" : "hover:bg-white/[0.02]"
                 }`}
               >
-                <ChainIcon color={item.color} size={38} />
+                <ChainIcon color={TYPE_COLORS[item.type] ?? "#334155"} size={38} />
                 <div className="flex flex-col gap-0.5 min-w-0">
                   <span className="text-sm font-medium text-gray-200 truncate">
-                    {item.label}
+                    {item.title}
                   </span>
                   <span className="text-xs text-gray-600 font-mono">
-                    {item.sub}
-                    {item.chain && ` · ${item.chain}`}
-                    {item.chainId && ` · Chain ID ${item.chainId}`}
+                    {item.subtitle}
                   </span>
                 </div>
               </button>

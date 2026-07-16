@@ -92,18 +92,48 @@ export const GET_METRICS_HISTORY = gql`
   }
 `;
 
+export const GET_GLOBAL_TRANSACTIONS = gql`
+  query GetGlobalTransactions($limit: String) {
+    globalTransactions(limit: $limit) {
+      id
+      chain_type
+      chain_id
+      chain_name
+      transaction_status
+      hash
+      block
+      number
+      timestamp
+      from
+      to
+      value
+      transactionstatus
+      transaction_type
+      status
+      nonce
+      type
+      node_id
+      gas
+      gas_price
+      gas_used
+      contract_address
+      input
+      function_name
+      function_args
+    }
+  }
+`;
+
 export const GET_LATEST_SEARCH_HISTORY = gql`
   query GetLatestSearchHistory {
     searchHistory {
-      history {
-        type
-        chain_type
-        chain_id
-        chain_name
-        title
-        subtitle
-        value
-      }
+      type
+      chain_type
+      chain_id
+      chain_name
+      title
+      subtitle
+      value
     }
   }
 `;

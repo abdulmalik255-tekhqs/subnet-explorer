@@ -31,9 +31,7 @@ const CustomTooltip = ({ active, payload, label }) => {
 
 export default function NetworkTPSChart({ type = "primary", chainId }) {
   const dispatch = useDispatch();
-  const { metricsHistory, metricsHistoryLoading } = useSelector(
-    (s) => s.orbit,
-  );
+  const { metricsHistory, metricsHistoryLoading } = useSelector((s) => s.orbit);
 
   useEffect(() => {
     const end = Date.now();
@@ -49,17 +47,16 @@ export default function NetworkTPSChart({ type = "primary", chainId }) {
 
   const chartData = useMemo(() => {
     return (metricsHistory ?? [])
-      .filter((m) => m.metric === "tps")
+      .filter((m) => m?.metric === "tps")
       .map((m) => ({
-        timestamp: Number(m.timestamp),
-        time: fmtTime(m.timestamp),
-        value: parseFloat(m.value) || 0,
+        timestamp: Number(m?.timestamp),
+        time: fmtTime(m?.timestamp),
+        value: parseFloat(m?.value) || 0,
       }))
-      .sort((a, b) => a.timestamp - b.timestamp);
+      .sort((a, b) => a?.timestamp - b?.timestamp);
   }, [metricsHistory]);
 
-  const hasData = chartData.length > 0;
-
+  const hasData = chartData?.length > 0;
   return (
     <div className="bg-[#0B1220] border border-gray-800/60 rounded-2xl p-4 shadow-2xl shadow-black/50 w-full">
       <div className="flex items-center justify-between mb-4">

@@ -9,6 +9,7 @@ import {
   GET_LATEST_SEARCH_HISTORY,
   GET_SEARCH_HISTORY_BY_CHAIN,
   GET_METRICS_HISTORY,
+  GET_GLOBAL_TRANSACTIONS,
 } from "../../orbitQueries";
 
 export const orbit = createModel()({
@@ -29,6 +30,7 @@ export const orbit = createModel()({
     searchHistory: [],
     metricsHistory: [],
     metricsHistoryLoading: false,
+    globalTransactions: [],
   },
   reducers: {
     setLoading(state, payload) {
@@ -75,6 +77,9 @@ export const orbit = createModel()({
     },
     setMetricsHistoryLoading(state, payload) {
       state.metricsHistoryLoading = payload;
+    },
+    setGlobalTransactions(state, payload) {
+      state.globalTransactions = payload;
     },
   },
   effects: (dispatch) => ({
@@ -153,7 +158,7 @@ export const orbit = createModel()({
     async getLatestSearchHistory() {
       try {
         const response = await graphqlClient.request(GET_LATEST_SEARCH_HISTORY);
-        dispatch.orbit.setSearchHistory(response?.searchHistory?.history ?? {});
+        dispatch.orbit.setSearchHistory(response?.searchHistory ?? []);
       } catch (err) {
         console.log(err.message);
         return [];
@@ -161,15 +166,16 @@ export const orbit = createModel()({
     },
     async getSearchData(payload) {
       try {
-        const { query, chainId } = payload || {};
+        const { query, chainType, chainId } = payload || {};
         const response = await graphqlClient.request(
           GET_SEARCH_HISTORY_BY_CHAIN,
           {
-            query,
+            search: query,
+            chainType,
             chainId,
           },
         );
-        return response?.searchData ?? [];
+        return response?.search ?? [];
       } catch (err) {
         console.log(err.message);
         return [];
@@ -198,6 +204,18 @@ export const orbit = createModel()({
         console.log(err.message);
       } finally {
         dispatch.orbit.setMetricsHistoryLoading(false);
+      }
+    },
+
+    async handleGetGlobalTransactions(payload) {
+      try {
+        const { limit = "10" } = payload || {};
+        const response = await graphqlClient.request(GET_GLOBAL_TRANSACTIONS, {
+          limit,
+        });
+        dispatch.orbit.setGlobalTransactions(response?.globalTransactions ?? []);
+      } catch (err) {
+        console.log(err.message);
       }
     },
   }),
