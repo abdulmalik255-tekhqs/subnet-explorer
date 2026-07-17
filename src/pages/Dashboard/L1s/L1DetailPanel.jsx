@@ -3,6 +3,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { X } from "@phosphor-icons/react";
 import L1StatsTab from "./L1StatsTab";
 import L1DetailTab from "./L1DetailTab";
+import LatestBlocks from "./Blocks/LatestBlocks";
+import LatestTransactions from "./Transactions/LatestTransactions";
 
 const TABS = ["Explorer", "Stats", "Detail"];
 
@@ -16,19 +18,6 @@ const fmtNum = (val) => {
   if (n >= 1_000) return `${Math.round(n / 1_000)}K`;
   return n.toLocaleString();
 };
-
-// Placeholder rows — wired up once the blocks/transactions APIs are integrated.
-const LATEST_BLOCKS = [
-  { block: "847,291", validator: "0x1a2b3c…", txns: 24, age: "2s" },
-  { block: "847,290", validator: "0x3c4d5e…", txns: 18, age: "5s" },
-  { block: "847,289", validator: "0x5e6f7a…", txns: 31, age: "9s" },
-];
-
-const LATEST_TRANSACTIONS = [
-  { hash: "0x4a8b2c…", value: "1.24", status: "success", age: "2s" },
-  { hash: "0x9f2c5e…", value: "0.05", status: "success", age: "7s" },
-  { hash: "0x2e9d8f…", value: "84.0", status: "failed", age: "12s" },
-];
 
 const StatCard = ({ label, value, delta, accent }) => (
   <div className="relative bg-[#0B111D] border border-gray-800 rounded-xl overflow-hidden">
@@ -48,19 +37,6 @@ const StatCard = ({ label, value, delta, accent }) => (
     </div>
   </div>
 );
-
-const StatusBadge = ({ status }) => {
-  const ok = status === "success";
-  return (
-    <span
-      className={`inline-flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-semibold ${
-        ok ? "bg-green-500/10 text-green-400" : "bg-red-500/10 text-red-400"
-      }`}
-    >
-      {ok ? "✓ Success" : "✗ Failed"}
-    </span>
-  );
-};
 
 export default function L1DetailPanel({ chain, onClose }) {
   const dispatch = useDispatch();
@@ -157,119 +133,8 @@ export default function L1DetailPanel({ chain, onClose }) {
 
           {/* Latest Blocks / Transactions */}
           <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
-            {/* Latest Blocks */}
-            <div className="bg-[#0B111D] border border-gray-800 rounded-xl overflow-hidden">
-              <div className="flex items-center justify-between px-5 py-4 border-b border-gray-800">
-                <span className="text-sm font-semibold text-white">
-                  Latest Blocks
-                </span>
-                <button className="text-xs text-blue-400 hover:text-blue-300 transition-colors">
-                  View all →
-                </button>
-              </div>
-              <div className="overflow-x-auto">
-                <table className="w-full text-xs">
-                  <thead>
-                    <tr className="border-b border-gray-800/60">
-                      <th className="text-left px-5 py-2.5 text-gray-500 font-medium">
-                        Block
-                      </th>
-                      <th className="text-left px-3 py-2.5 text-gray-500 font-medium">
-                        Validator
-                      </th>
-                      <th className="text-left px-3 py-2.5 text-gray-500 font-medium">
-                        Txns
-                      </th>
-                      <th className="text-right px-5 py-2.5 text-gray-500 font-medium">
-                        Age
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {LATEST_BLOCKS.map((row, i) => (
-                      <tr
-                        key={row.block}
-                        className={`border-b border-gray-800/40 hover:bg-white/[0.02] transition-colors ${
-                          i === LATEST_BLOCKS.length - 1 ? "border-0" : ""
-                        }`}
-                      >
-                        <td className="px-5 py-2.5">
-                          <span className="text-blue-400 font-medium">
-                            #{row.block}
-                          </span>
-                        </td>
-                        <td className="px-3 py-2.5 font-mono text-gray-300">
-                          {row.validator}
-                        </td>
-                        <td className="px-3 py-2.5 font-semibold text-gray-200">
-                          {row.txns}
-                        </td>
-                        <td className="px-5 py-2.5 text-right text-gray-500">
-                          {row.age}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-
-            {/* Latest Transactions */}
-            <div className="bg-[#0B111D] border border-gray-800 rounded-xl overflow-hidden">
-              <div className="flex items-center justify-between px-5 py-4 border-b border-gray-800">
-                <span className="text-sm font-semibold text-white">
-                  Latest Transactions
-                </span>
-                <button className="text-xs text-blue-400 hover:text-blue-300 transition-colors">
-                  View all →
-                </button>
-              </div>
-              <div className="overflow-x-auto">
-                <table className="w-full text-xs">
-                  <thead>
-                    <tr className="border-b border-gray-800/60">
-                      <th className="text-left px-5 py-2.5 text-gray-500 font-medium">
-                        Tx Hash
-                      </th>
-                      <th className="text-left px-3 py-2.5 text-gray-500 font-medium">
-                        Value
-                      </th>
-                      <th className="text-left px-3 py-2.5 text-gray-500 font-medium">
-                        Status
-                      </th>
-                      <th className="text-right px-5 py-2.5 text-gray-500 font-medium">
-                        Age
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {LATEST_TRANSACTIONS.map((row, i) => (
-                      <tr
-                        key={row.hash}
-                        className={`border-b border-gray-800/40 hover:bg-white/[0.02] transition-colors ${
-                          i === LATEST_TRANSACTIONS.length - 1 ? "border-0" : ""
-                        }`}
-                      >
-                        <td className="px-5 py-2.5">
-                          <span className="text-blue-400 font-mono">
-                            {row.hash}
-                          </span>
-                        </td>
-                        <td className="px-3 py-2.5 font-mono text-gray-300">
-                          {row.value} {symbol}
-                        </td>
-                        <td className="px-3 py-2.5">
-                          <StatusBadge status={row.status} />
-                        </td>
-                        <td className="px-5 py-2.5 text-right text-gray-500">
-                          {row.age}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
+            <LatestBlocks chainId={chainId} />
+            <LatestTransactions chainId={chainId} symbol={symbol} />
           </div>
         </div>
       )}

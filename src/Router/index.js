@@ -24,6 +24,8 @@ import NftDetailPage from "../pages/NftTransfer/NftDetailPage.jsx";
 import Dashboard from "../pages/Dashboard/index.jsx";
 import L1Component from "../pages/Dashboard/L1s/L1.jsx";
 import L1SLandingPage from "../pages/Dashboard/AllL1S/L1SLandingPage.jsx";
+import BlocksPage from "../pages/Dashboard/L1s/Blocks/BlocksPage.jsx";
+import TransactionsPage from "../pages/Dashboard/L1s/Transactions/TransactionsPage.jsx";
 
 const Index = () => {
   return (
@@ -60,6 +62,11 @@ const Index = () => {
         <Route
           path="/subnets/network/:subnetName"
           element={<L1SLandingPage />}
+        />
+        <Route path="/subnets/:chainId/blocks" element={<BlocksPage />} />
+        <Route
+          path="/subnets/:chainId/transactions"
+          element={<TransactionsPage />}
         />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Route>
