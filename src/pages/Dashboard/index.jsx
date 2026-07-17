@@ -3,7 +3,6 @@ import Navbar from "./DashboardComponent/Navbar";
 import ChainPulse from "./DashboardComponent/ChainPulse";
 import NetworkOverview from "./DashboardComponent/NetworkOverview";
 import PrimaryNetworkPinned from "./L1s/PrimaryNetworkPinned";
-import GaugeChart from "./DashboardComponent/TPSLive";
 import TransactionChart from "./DashboardComponent/TransactionChart";
 import TopL1sByTPS from "./DashboardComponent/TopL1sByTPS";
 import NetworkTPSChart from "./DashboardComponent/NetworkTPSChart";

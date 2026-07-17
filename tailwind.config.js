@@ -15,10 +15,15 @@ module.exports = {
           "0%": { transform: "scaleY(0.35)", opacity: "0.5" },
           "100%": { transform: "scaleY(1)", opacity: "1" },
         },
+        waveScroll: {
+          "0%": { transform: "translateX(0%)" },
+          "100%": { transform: "translateX(-50%)" },
+        },
       },
       animation: {
         dash: "dash 5s linear infinite",
         growBar: "growBar 1.4s ease-in-out infinite alternate",
+        waveScroll: "waveScroll 4s linear infinite",
       },
       backgroundImage: {
         footer: "linear-gradient(90deg, #DEE5FF 0%, #DFEEFF 100%)",

@@ -162,7 +162,7 @@ const Navbar = () => {
                   <>
                     <div className="px-4 pt-4 pb-1">
                       <span className="text-[10px] font-semibold tracking-widest text-gray-500 uppercase">
-                        L1s
+                        Orbit
                       </span>
                     </div>
                     {orbits?.map((chain, i) => (
@@ -201,7 +201,7 @@ const Navbar = () => {
               onClick={() => navigate("/subnets")}
               className={getLinkClass("/subnets")}
             >
-              L1s
+              Orbits
             </p>
             {/* <p
               onClick={() => navigate("/tools")}

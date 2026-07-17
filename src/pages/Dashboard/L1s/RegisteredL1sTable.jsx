@@ -1,6 +1,7 @@
 import { useState, useMemo, useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { MagnifyingGlass, CaretDown } from "@phosphor-icons/react";
+import L1DetailPanel from "./L1DetailPanel";
 
 const PAGE_SIZE = 6;
 
@@ -134,6 +135,7 @@ export default function RegisteredL1sTable() {
   const [sortBy, setSortBy] = useState("TPS");
   const [statusFilter, setStatusFilter] = useState("All");
   const [page, setPage] = useState(1);
+  const [selectedChain, setSelectedChain] = useState(null);
 
   useEffect(() => {
     dispatch.orbit.handleGetOrbits();
@@ -197,7 +199,7 @@ export default function RegisteredL1sTable() {
       {/* Section label */}
       <div className="flex items-center gap-4 mb-1 opacity-60">
         <h2 className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] whitespace-nowrap">
-          All Registered L1s
+          All Registered Orbits
         </h2>
         <div className="h-px w-full bg-gradient-to-r from-gray-800 to-transparent" />
       </div>
@@ -241,7 +243,7 @@ export default function RegisteredL1sTable() {
 
           {/* Total count */}
           <span className="ml-auto text-xs font-semibold text-gray-500">
-            {registeredOrbitsLoading ? "—" : `${totalOrbits} L1s`}
+            {registeredOrbitsLoading ? "—" : `${totalOrbits} Orbit`}
           </span>
         </div>
 
@@ -252,7 +254,7 @@ export default function RegisteredL1sTable() {
               <tr className="border-b border-gray-800/60 bg-[#0B111D]">
                 {[
                   { label: "Name", align: "left", pl: "pl-5" },
-                  { label: "Subnet ID", align: "left", pl: "pl-4" },
+                  { label: "Orbit ID", align: "left", pl: "pl-4" },
                   { label: "TPS", align: "right", pl: "" },
                   { label: "Daily Txns", align: "right", pl: "" },
                   { label: "Active Addresses", align: "right", pl: "" },
@@ -279,7 +281,7 @@ export default function RegisteredL1sTable() {
                     colSpan={7}
                     className="text-center py-10 text-gray-600 text-xs"
                   >
-                    No L1s found
+                    No Orbit found
                   </td>
                 </tr>
               ) : (
@@ -291,10 +293,20 @@ export default function RegisteredL1sTable() {
                   const st = getStatus(chain?.status);
                   const tps = parseFloat(chain?.tps || 0);
 
+                  const isSelected =
+                    selectedChain?.orbit_id === chain?.orbit_id;
+
                   return (
                     <tr
                       key={chain?.orbit_id ?? i}
-                      className="border-b border-gray-800/30 hover:bg-white/[0.02] transition-colors cursor-pointer"
+                      onClick={() =>
+                        setSelectedChain((prev) =>
+                          prev?.orbit_id === chain?.orbit_id ? null : chain,
+                        )
+                      }
+                      className={`border-b border-gray-800/30 hover:bg-white/[0.02] transition-colors cursor-pointer ${
+                        isSelected ? "bg-blue-500/[0.06]" : ""
+                      }`}
                     >
                       {/* Name */}
                       <td className="px-5 py-3 text-left whitespace-nowrap">
@@ -413,6 +425,13 @@ export default function RegisteredL1sTable() {
           </div>
         </div>
       </div>
+
+      {selectedChain && (
+        <L1DetailPanel
+          chain={selectedChain}
+          onClose={() => setSelectedChain(null)}
+        />
+      )}
     </>
   );
 }
