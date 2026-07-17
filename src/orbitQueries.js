@@ -26,6 +26,7 @@ export const GET_ORBITS = gql`
         address_count
         total_deployed_contracts
         status
+        chain_id
       }
       totalOrbits
     }
@@ -120,6 +121,19 @@ export const GET_GLOBAL_TRANSACTIONS = gql`
       input
       function_name
       function_args
+    }
+  }
+`;
+
+export const GET_ORBIT_DETAIL = gql`
+  query GetOrbitDetail($chainId: String!) {
+    orbitDetail(chainId: $chainId) {
+      name
+      orbit_id
+      chain_id
+      vm_type
+      description
+      created_at
     }
   }
 `;

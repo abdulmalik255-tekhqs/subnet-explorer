@@ -181,7 +181,7 @@ export default function RegisteredL1sTable() {
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
   const pageData = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
-
+  console.log("RegisteredL1sTable pageData:", pageData);
   const handleSort = (v) => {
     setSortBy(v);
     setPage(1);
@@ -294,14 +294,14 @@ export default function RegisteredL1sTable() {
                   const tps = parseFloat(chain?.tps || 0);
 
                   const isSelected =
-                    selectedChain?.orbit_id === chain?.orbit_id;
+                    selectedChain?.chain_id === chain?.chain_id;
 
                   return (
                     <tr
-                      key={chain?.orbit_id ?? i}
+                      key={chain?.chain_id ?? i}
                       onClick={() =>
                         setSelectedChain((prev) =>
-                          prev?.orbit_id === chain?.orbit_id ? null : chain,
+                          prev?.chain_id === chain?.chain_id ? null : chain,
                         )
                       }
                       className={`border-b border-gray-800/30 hover:bg-white/[0.02] transition-colors cursor-pointer ${

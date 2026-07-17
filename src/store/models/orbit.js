@@ -6,6 +6,7 @@ import {
   GET_NETWORK_OVERVIEW,
   GET_LAST_14_DAYS_TXS,
   GET_ORBITS,
+  GET_ORBIT_DETAIL,
   GET_LATEST_SEARCH_HISTORY,
   GET_SEARCH_HISTORY_BY_CHAIN,
   GET_METRICS_HISTORY,
@@ -20,6 +21,8 @@ export const orbit = createModel()({
     orbits: [],
     dashboard: null,
     dashboardLoading: false,
+    orbitDetail: null,
+    orbitDetailLoading: false,
     networkOverview: null,
     networkOverviewLoading: false,
     txHistory: null,
@@ -47,6 +50,12 @@ export const orbit = createModel()({
     },
     setDashboardLoading(state, payload) {
       state.dashboardLoading = payload;
+    },
+    setOrbitDetail(state, payload) {
+      state.orbitDetail = payload;
+    },
+    setOrbitDetailLoading(state, payload) {
+      state.orbitDetailLoading = payload;
     },
     setNetworkOverview(state, payload) {
       state.networkOverview = payload;
@@ -155,6 +164,21 @@ export const orbit = createModel()({
         dispatch.orbit.setDashboardLoading(false);
       }
     },
+    async handleGetOrbitDetail(payload) {
+      try {
+        dispatch.orbit.setOrbitDetailLoading(true);
+        const { chainId } = payload || {};
+        const response = await graphqlClient.request(GET_ORBIT_DETAIL, {
+          chainId,
+        });
+        dispatch.orbit.setOrbitDetail(response?.orbitDetail ?? null);
+      } catch (err) {
+        console.log(err.message);
+      } finally {
+        dispatch.orbit.setOrbitDetailLoading(false);
+      }
+    },
+
     async getLatestSearchHistory() {
       try {
         const response = await graphqlClient.request(GET_LATEST_SEARCH_HISTORY);

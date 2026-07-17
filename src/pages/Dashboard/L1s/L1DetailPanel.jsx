@@ -68,8 +68,7 @@ export default function L1DetailPanel({ chain, onClose }) {
   const [activeTab, setActiveTab] = useState("Explorer");
   const symbol = chain?.symbol || "RYT";
   const chainType = "orbit";
-  const chainId = chain?.orbit_id;
-  console.log(dashboard, "in the 1st step");
+  const chainId = chain?.chain_id;
   useEffect(() => {
     if (chainId) {
       dispatch.orbit.handleGetOrbitDashboard({ type: chainType, chainId });
