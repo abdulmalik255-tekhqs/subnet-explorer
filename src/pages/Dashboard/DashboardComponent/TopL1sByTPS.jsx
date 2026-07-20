@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 const ROW_STYLES = [
   {
@@ -32,6 +33,7 @@ const fmtNum = (val) => {
 };
 
 export default function TopL1sByTPS() {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const { registeredOrbits, registeredOrbitsLoading } = useSelector(
     (s) => s.orbit,
@@ -46,10 +48,15 @@ export default function TopL1sByTPS() {
       {/* Header */}
       <div className="mb-4 flex items-center justify-between">
         <h3 className="text-xs font-semibold uppercase tracking-wider text-[#7D8FB3]">
-          TOP L1S BY TPS
+          TOP Orbits BY TPS
         </h3>
 
-        <button className="text-sm text-[#4D8DFF] hover:text-[#6AA4FF]">
+        <button
+          className="text-sm text-[#4D8DFF] hover:text-[#6AA4FF] cursor-pointer transition-colors duration-200"
+          onClick={() => {
+            navigate("/subnets");
+          }}
+        >
           View all →
         </button>
       </div>
@@ -58,7 +65,7 @@ export default function TopL1sByTPS() {
       <div className="overflow-hidden rounded-xl border border-[#16284A]">
         {/* Header Row */}
         <div className="grid grid-cols-4 bg-[#0E1B31] px-4 py-3 text-xs uppercase tracking-wider text-[#6F82A7]">
-          <div>L1 Name</div>
+          <div>Orbit Name</div>
           <div>TPS</div>
           <div>Daily Txns</div>
           <div>7D Trend</div>
@@ -83,7 +90,7 @@ export default function TopL1sByTPS() {
           ))
         ) : registeredOrbits.length === 0 ? (
           <div className="px-4 py-8 text-center text-xs text-gray-600">
-            No L1s found
+            No Orbits found
           </div>
         ) : (
           registeredOrbits.map((item, index) => {

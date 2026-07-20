@@ -1,18 +1,16 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+import relativeTime from "dayjs/plugin/relativeTime";
+import ClipBoardComponet from "../../../../components/Pagination/ClipBoard";
+
+dayjs.extend(utc);
+dayjs.extend(relativeTime);
 
 const truncateHash = (hash = "") =>
-  hash.length > 14 ? `${hash.slice(0, 8)}…${hash.slice(-6)}` : hash;
-
-const fmtAge = (timestamp) => {
-  const ts = Number(timestamp);
-  if (!ts) return "—";
-  const diffSec = Math.max(0, Math.floor((Date.now() - ts) / 1000));
-  if (diffSec < 60) return `${diffSec}s`;
-  if (diffSec < 3600) return `${Math.floor(diffSec / 60)}m`;
-  return `${Math.floor(diffSec / 3600)}h`;
-};
+  hash.length > 14 ? `${hash?.slice(0, 8)}…${hash.slice(-6)}` : hash;
 
 export default function LatestBlocks({ chainId }) {
   const dispatch = useDispatch();
@@ -78,12 +76,23 @@ export default function LatestBlocks({ chainId }) {
                   }`}
                 >
                   <td className="px-5 py-2.5">
-                    <span className="text-blue-400 font-medium">
+                    <span
+                      onClick={() =>
+                        navigate(
+                          `/subnets/${chainId}/blocks/${row.block_number}`,
+                        )
+                      }
+                      className="text-blue-400 font-medium hover:text-blue-300 cursor-pointer"
+                    >
                       #{row.block_number}
                     </span>
                   </td>
-                  <td className="px-3 py-2.5 font-mono text-gray-300">
+                  <td className="px-3 py-2.5 font-mono text-gray-300 flex items-center gap-1">
                     {truncateHash(row.block_hash)}
+                    <ClipBoardComponet
+                      val={row.block_hash}
+                      message={"Hash copied!"}
+                    />
                   </td>
                   <td className="px-3 py-2.5 font-semibold text-gray-200">
                     {Array.isArray(row.transactions)
@@ -91,7 +100,7 @@ export default function LatestBlocks({ chainId }) {
                       : 0}
                   </td>
                   <td className="px-5 py-2.5 text-right text-gray-500">
-                    {fmtAge(row.timestamp)}
+                    {dayjs(Number(row.timestamp)).fromNow()}
                   </td>
                 </tr>
               ))

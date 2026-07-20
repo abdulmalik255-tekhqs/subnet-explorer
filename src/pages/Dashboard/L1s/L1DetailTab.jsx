@@ -155,7 +155,7 @@ export default function L1DetailTab({ chain, chainType, chainId }) {
       <div className="space-y-4">
         <div className="bg-[#0B111D] border border-gray-800 rounded-xl overflow-hidden">
           <InfoRow
-            label="Subnet ID"
+            label="Orbit ID"
             value={truncateId(orbitDetail?.orbit_id ?? chain?.orbit_id)}
           />
           <InfoRow label="VM type" value={orbitDetail?.vm_type ?? "—"} />

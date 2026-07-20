@@ -8,6 +8,7 @@ import {
   GET_ORBITS,
   GET_ORBIT_DETAIL,
   GET_ORBIT_BLOCKS,
+  GET_ORBIT_BLOCK,
   GET_ORBIT_TRANSACTIONS,
   GET_LATEST_SEARCH_HISTORY,
   GET_SEARCH_HISTORY_BY_CHAIN,
@@ -38,6 +39,8 @@ export const orbit = createModel()({
     globalTransactions: [],
     orbitBlocks: [],
     orbitBlocksLoading: false,
+    orbitBlockDetail: null,
+    orbitBlockDetailLoading: false,
     orbitTransactions: [],
     orbitTransactionsLoading: false,
   },
@@ -101,6 +104,12 @@ export const orbit = createModel()({
     },
     setOrbitBlocksLoading(state, payload) {
       state.orbitBlocksLoading = payload;
+    },
+    setOrbitBlockDetail(state, payload) {
+      state.orbitBlockDetail = payload;
+    },
+    setOrbitBlockDetailLoading(state, payload) {
+      state.orbitBlockDetailLoading = payload;
     },
     setOrbitTransactions(state, payload) {
       state.orbitTransactions = payload;
@@ -275,6 +284,22 @@ export const orbit = createModel()({
         console.log(err.message);
       } finally {
         dispatch.orbit.setOrbitBlocksLoading(false);
+      }
+    },
+
+    async handleGetOrbitBlock(payload) {
+      try {
+        dispatch.orbit.setOrbitBlockDetailLoading(true);
+        const { chainId, id } = payload || {};
+        const response = await graphqlClient.request(GET_ORBIT_BLOCK, {
+          chainId,
+          id,
+        });
+        dispatch.orbit.setOrbitBlockDetail(response?.block ?? null);
+      } catch (err) {
+        console.log(err.message);
+      } finally {
+        dispatch.orbit.setOrbitBlockDetailLoading(false);
       }
     },
 

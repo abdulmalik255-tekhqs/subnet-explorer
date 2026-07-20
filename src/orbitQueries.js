@@ -163,6 +163,31 @@ export const GET_ORBIT_BLOCKS = gql`
   }
 `;
 
+export const GET_ORBIT_BLOCK = gql`
+  query GetOrbitBlock($chainId: String!, $id: String!) {
+    block(chainId: $chainId, id: $id) {
+      id
+      type
+      chain_id
+      chain_name
+      block_number
+      block_status
+      previous_hash
+      state_root
+      transaction_root
+      reciept_root
+      timestamp
+      logs_bloom
+      transactions
+      block_reward
+      value
+      data
+      to
+      block_hash
+    }
+  }
+`;
+
 export const GET_ORBIT_TRANSACTIONS = gql`
   query GetOrbitTransactions($chainId: String!, $lastId: String, $limit: String) {
     transactions(chainId: $chainId, lastId: $lastId, limit: $limit) {

@@ -54,7 +54,7 @@ const L1Stats = () => {
   }, [dispatch]);
   const stats = [
     {
-      title: "Total L1s",
+      title: "Total Orbits",
       value: fmt(ov?.total_orbits),
       subtext: "",
       borderTopColor: "bg-blue-500",

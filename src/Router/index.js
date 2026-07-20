@@ -25,6 +25,7 @@ import Dashboard from "../pages/Dashboard/index.jsx";
 import L1Component from "../pages/Dashboard/L1s/L1.jsx";
 import L1SLandingPage from "../pages/Dashboard/AllL1S/L1SLandingPage.jsx";
 import BlocksPage from "../pages/Dashboard/L1s/Blocks/BlocksPage.jsx";
+import BlockDetailPage from "../pages/Dashboard/L1s/Blocks/BlockDetailPage.jsx";
 import TransactionsPage from "../pages/Dashboard/L1s/Transactions/TransactionsPage.jsx";
 
 const Index = () => {
@@ -64,6 +65,10 @@ const Index = () => {
           element={<L1SLandingPage />}
         />
         <Route path="/subnets/:chainId/blocks" element={<BlocksPage />} />
+        <Route
+          path="/subnets/:chainId/blocks/:blockNumber"
+          element={<BlockDetailPage />}
+        />
         <Route
           path="/subnets/:chainId/transactions"
           element={<TransactionsPage />}

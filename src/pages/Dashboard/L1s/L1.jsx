@@ -14,10 +14,10 @@ const L1Component = () => {
       <div className="">
         <div className="flex items-center gap-2 text-xs text-gray-500 border-b border-gray-800 w-full max-w-full px-6 py-[8px]">
           <span className="text-blue-500">/</span>
-          <span>L1 directory</span>
+          <span>Orbit directory</span>
         </div>
         <div className="flex flex-col items-start gap-2 mt-4 px-6 w-full">
-          <h1 className="text-2xl font-bold text-white">L1 Directory</h1>
+          <h1 className="text-2xl font-bold text-white">Orbit Directory</h1>
           <L1Stats />
           <PrimaryNetworkPinned />
           <RegisteredL1sTable />

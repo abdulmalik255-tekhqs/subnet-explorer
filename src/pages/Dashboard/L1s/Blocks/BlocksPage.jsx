@@ -1,8 +1,14 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+import relativeTime from "dayjs/plugin/relativeTime";
 import { ArrowLeft } from "@phosphor-icons/react";
 import Navbar from "../../DashboardComponent/Navbar";
+
+dayjs.extend(utc);
+dayjs.extend(relativeTime);
 
 const PAGE_SIZE = "10";
 
@@ -45,7 +51,10 @@ export default function BlocksPage() {
   const handleNext = () => {
     const lastBlockNumber = blocks[blocks.length - 1]?.block_number;
     if (!lastBlockNumber) return;
-    setLastIdStack((prev) => [...prev.slice(0, pageIndex + 1), lastBlockNumber]);
+    setLastIdStack((prev) => [
+      ...prev.slice(0, pageIndex + 1),
+      lastBlockNumber,
+    ]);
     setPageIndex((p) => p + 1);
   };
 
@@ -123,7 +132,14 @@ export default function BlocksPage() {
                       }`}
                     >
                       <td className="px-5 py-2.5">
-                        <span className="text-blue-400 font-medium">
+                        <span
+                          onClick={() =>
+                            navigate(
+                              `/subnets/${chainId}/blocks/${row.block_number}`,
+                            )
+                          }
+                          className="text-blue-400 font-medium hover:text-blue-300 cursor-pointer"
+                        >
                           #{row.block_number}
                         </span>
                       </td>
@@ -139,7 +155,7 @@ export default function BlocksPage() {
                           : 0}
                       </td>
                       <td className="px-5 py-2.5 text-right text-gray-500">
-                        {fmtAge(row.timestamp)}
+                        {dayjs(Number(row.timestamp)).fromNow()}
                       </td>
                     </tr>
                   ))

@@ -2,6 +2,12 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import StatusBadge from "./StatusBadge";
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+import relativeTime from "dayjs/plugin/relativeTime";
+import ClipBoardComponet from "../../../../components/Pagination/ClipBoard";
+dayjs.extend(utc);
+dayjs.extend(relativeTime);
 
 const truncateHash = (hash = "") =>
   hash.length > 14 ? `${hash.slice(0, 8)}…${hash.slice(-6)}` : hash;
@@ -87,8 +93,12 @@ export default function LatestTransactions({ chainId, symbol = "RYT" }) {
                   }`}
                 >
                   <td className="px-5 py-2.5">
-                    <span className="text-blue-400 font-mono">
+                    <span className="text-blue-400 font-mono flex items-center gap-1">
                       {truncateHash(row.hash)}
+                      <ClipBoardComponet
+                        val={row.hash}
+                        message={"Hash copied!"}
+                      />
                     </span>
                   </td>
                   <td className="px-3 py-2.5 font-mono text-gray-300">
@@ -98,7 +108,7 @@ export default function LatestTransactions({ chainId, symbol = "RYT" }) {
                     <StatusBadge status={row.transaction_status} />
                   </td>
                   <td className="px-5 py-2.5 text-right text-gray-500">
-                    {fmtAge(row.timestamp)}
+                    {dayjs(Number(row.timestamp)).fromNow()}
                   </td>
                 </tr>
               ))

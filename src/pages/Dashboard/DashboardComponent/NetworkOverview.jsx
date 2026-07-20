@@ -50,7 +50,7 @@ const NetworkOverview = () => {
 
   const stats = [
     {
-      title: "Total L1s",
+      title: "Total Orbits",
       value: fmt(ov?.total_orbits),
       subtext: "↑ 2 this week",
       borderTopColor: "bg-blue-500",
