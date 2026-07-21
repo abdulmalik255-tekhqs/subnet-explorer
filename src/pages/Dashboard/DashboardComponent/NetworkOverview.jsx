@@ -100,7 +100,7 @@ const NetworkOverview = () => {
               Live
             </span>
           </div>
-          <span className="text-xs text-gray-500">Updated 6s ago</span>
+          {/* <span className="text-xs text-gray-500">Updated 6s ago</span> */}
         </div>
       </div>
 

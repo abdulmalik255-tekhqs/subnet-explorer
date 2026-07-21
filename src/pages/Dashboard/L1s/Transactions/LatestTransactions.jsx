@@ -94,7 +94,14 @@ export default function LatestTransactions({ chainId, symbol = "RYT" }) {
                 >
                   <td className="px-5 py-2.5">
                     <span className="text-blue-400 font-mono flex items-center gap-1">
-                      {truncateHash(row.hash)}
+                      <span
+                        onClick={() =>
+                          navigate(`/subnets/${chainId}/tx/${row.hash}`)
+                        }
+                        className="hover:text-blue-300 cursor-pointer"
+                      >
+                        {truncateHash(row.hash)}
+                      </span>
                       <ClipBoardComponet
                         val={row.hash}
                         message={"Hash copied!"}

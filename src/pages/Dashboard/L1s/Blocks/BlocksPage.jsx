@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import dayjs from "dayjs";
@@ -6,61 +6,62 @@ import utc from "dayjs/plugin/utc";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { ArrowLeft } from "@phosphor-icons/react";
 import Navbar from "../../DashboardComponent/Navbar";
+import Pagination from "../Pagination";
 
 dayjs.extend(utc);
 dayjs.extend(relativeTime);
 
-const PAGE_SIZE = "10";
+const PAGE_SIZE = 10;
 
 const truncateHash = (hash = "") =>
-  hash.length > 14 ? `${hash.slice(0, 10)}…${hash.slice(-8)}` : hash;
+  hash?.length > 14 ? `${hash?.slice(0, 10)}…${hash?.slice(-8)}` : hash;
 
-const fmtAge = (timestamp) => {
-  const ts = Number(timestamp);
-  if (!ts) return "—";
-  const diffSec = Math.max(0, Math.floor((Date.now() - ts) / 1000));
-  if (diffSec < 60) return `${diffSec}s`;
-  if (diffSec < 3600) return `${Math.floor(diffSec / 60)}m`;
-  return `${Math.floor(diffSec / 3600)}h`;
+// Blocks are numbered sequentially, so a page's cursor can be derived directly
+// from the highest known block number instead of walking through every page.
+const getLastIdForPage = (page, total) => {
+  if (page <= 1) return "0";
+  return String(total - (page - 1) * PAGE_SIZE + 1);
 };
 
 export default function BlocksPage() {
   const { chainId } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { orbitBlocks, orbitBlocksLoading } = useSelector((s) => s.orbit);
+  const { orbitBlocks, orbitBlocksLoading, orbitBlocksTotal } = useSelector(
+    (s) => s.orbit,
+  );
 
-  // Keyset pagination: lastIdStack[pageIndex] is the lastId used to fetch that page.
-  const [lastIdStack, setLastIdStack] = useState(["0"]);
-  const [pageIndex, setPageIndex] = useState(0);
-  const currentLastId = lastIdStack[pageIndex];
+  const [page, setPage] = useState(1);
 
   useEffect(() => {
+    setPage(1);
     if (chainId) {
+      dispatch.orbit.handleGetOrbitBlocksTotal({ chainId, limit: "1" });
+    }
+  }, [dispatch, chainId]);
+
+  const total = Number(orbitBlocksTotal ?? 0);
+  const totalPages =
+    orbitBlocksTotal != null
+      ? Math.max(1, Math.ceil((total + 1) / PAGE_SIZE))
+      : 1;
+
+  const currentLastId = useMemo(
+    () => getLastIdForPage(page, total),
+    [page, total],
+  );
+
+  useEffect(() => {
+    if (chainId && orbitBlocksTotal != null) {
       dispatch.orbit.handleGetOrbitBlocks({
         chainId,
         lastId: currentLastId,
-        limit: PAGE_SIZE,
+        limit: String(PAGE_SIZE),
       });
     }
-  }, [dispatch, chainId, currentLastId]);
+  }, [dispatch, chainId, currentLastId, orbitBlocksTotal]);
 
   const blocks = orbitBlocks ?? [];
-  const hasNext = blocks.length === Number(PAGE_SIZE);
-
-  const handleNext = () => {
-    const lastBlockNumber = blocks[blocks.length - 1]?.block_number;
-    if (!lastBlockNumber) return;
-    setLastIdStack((prev) => [
-      ...prev.slice(0, pageIndex + 1),
-      lastBlockNumber,
-    ]);
-    setPageIndex((p) => p + 1);
-  };
-
-  const handlePrev = () => {
-    setPageIndex((p) => Math.max(0, p - 1));
-  };
 
   return (
     <div className="min-h-screen bg-[#060B15] text-white -m-5">
@@ -164,28 +165,7 @@ export default function BlocksPage() {
             </table>
           </div>
 
-          {/* Pagination */}
-          <div className="flex items-center justify-between px-5 py-3 border-t border-gray-800/60">
-            <span className="text-[11px] text-gray-600">
-              Page {pageIndex + 1}
-            </span>
-            <div className="flex items-center gap-1">
-              <button
-                disabled={pageIndex === 0}
-                onClick={handlePrev}
-                className="px-2.5 py-1 rounded-md border border-gray-800 bg-[#0B111D] text-gray-500 text-xs font-bold disabled:opacity-30 hover:border-gray-700 hover:text-gray-300 transition-colors"
-              >
-                ←
-              </button>
-              <button
-                disabled={!hasNext}
-                onClick={handleNext}
-                className="px-2.5 py-1 rounded-md border border-gray-800 bg-[#0B111D] text-gray-500 text-xs font-bold disabled:opacity-30 hover:border-gray-700 hover:text-gray-300 transition-colors"
-              >
-                →
-              </button>
-            </div>
-          </div>
+          <Pagination page={page} totalPages={totalPages} onPageChange={setPage} />
         </div>
       </div>
     </div>

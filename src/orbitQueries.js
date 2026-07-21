@@ -188,6 +188,89 @@ export const GET_ORBIT_BLOCK = gql`
   }
 `;
 
+export const GET_BLOCK_TRANSACTIONS = gql`
+  query GetBlockTransactions($chainId: String!, $id: String!) {
+    blockTransactions(chainId: $chainId, id: $id) {
+      id
+      chain_type
+      chain_id
+      chain_name
+      transaction_status
+      hash
+      block
+      number
+      timestamp
+      from
+      to
+      value
+      transactionstatus
+      transaction_type
+      status
+      nonce
+      type
+      node_id
+      gas
+      gas_price
+      gas_used
+      contract_address
+      input
+      function_name
+      function_args
+    }
+  }
+`;
+
+export const GET_TRANSACTION = gql`
+  query GetTransaction($chainId: String!, $id: String!) {
+    transaction(chainId: $chainId, id: $id) {
+      id
+      chain_type
+      chain_id
+      chain_name
+      transaction_status
+      hash
+      block
+      number
+      timestamp
+      from
+      to
+      value
+      transactionstatus
+      transaction_type
+      status
+      nonce
+      type
+      node_id
+      gas
+      gas_price
+      gas_used
+      contract_address
+      input
+      function_name
+      function_args
+    }
+  }
+`;
+
+export const GET_TRANSACTION_LOGS = gql`
+  query GetTransactionLogs($chainId: String!, $txHash: String!) {
+    transactionLogs(chainId: $chainId, txHash: $txHash) {
+      id
+      chain_id
+      log_index
+      transaction_index
+      block_number
+      transaction_hash
+      address
+      data
+      topics
+      timestamp
+      event_name
+      event_args
+    }
+  }
+`;
+
 export const GET_ORBIT_TRANSACTIONS = gql`
   query GetOrbitTransactions($chainId: String!, $lastId: String, $limit: String) {
     transactions(chainId: $chainId, lastId: $lastId, limit: $limit) {

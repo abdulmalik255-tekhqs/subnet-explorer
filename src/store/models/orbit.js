@@ -9,6 +9,9 @@ import {
   GET_ORBIT_DETAIL,
   GET_ORBIT_BLOCKS,
   GET_ORBIT_BLOCK,
+  GET_BLOCK_TRANSACTIONS,
+  GET_TRANSACTION,
+  GET_TRANSACTION_LOGS,
   GET_ORBIT_TRANSACTIONS,
   GET_LATEST_SEARCH_HISTORY,
   GET_SEARCH_HISTORY_BY_CHAIN,
@@ -43,6 +46,14 @@ export const orbit = createModel()({
     orbitBlockDetailLoading: false,
     orbitTransactions: [],
     orbitTransactionsLoading: false,
+    orbitBlocksTotal: null,
+    orbitTransactionsTotal: null,
+    blockTransactions: [],
+    blockTransactionsLoading: false,
+    orbitTransactionDetail: null,
+    orbitTransactionDetailLoading: false,
+    transactionLogs: [],
+    transactionLogsLoading: false,
   },
   reducers: {
     setLoading(state, payload) {
@@ -117,6 +128,30 @@ export const orbit = createModel()({
     setOrbitTransactionsLoading(state, payload) {
       state.orbitTransactionsLoading = payload;
     },
+    setOrbitBlocksTotal(state, payload) {
+      state.orbitBlocksTotal = payload;
+    },
+    setOrbitTransactionsTotal(state, payload) {
+      state.orbitTransactionsTotal = payload;
+    },
+    setBlockTransactions(state, payload) {
+      state.blockTransactions = payload;
+    },
+    setBlockTransactionsLoading(state, payload) {
+      state.blockTransactionsLoading = payload;
+    },
+    setOrbitTransactionDetail(state, payload) {
+      state.orbitTransactionDetail = payload;
+    },
+    setOrbitTransactionDetailLoading(state, payload) {
+      state.orbitTransactionDetailLoading = payload;
+    },
+    setTransactionLogs(state, payload) {
+      state.transactionLogs = payload;
+    },
+    setTransactionLogsLoading(state, payload) {
+      state.transactionLogsLoading = payload;
+    },
   },
   effects: (dispatch) => ({
     async handleGetAllChains() {
@@ -131,7 +166,6 @@ export const orbit = createModel()({
         dispatch.orbit.setLoading(false);
       }
     },
-
     async handleGetNetworkOverview() {
       try {
         dispatch.orbit.setNetworkOverviewLoading(true);
@@ -143,7 +177,6 @@ export const orbit = createModel()({
         dispatch.orbit.setNetworkOverviewLoading(false);
       }
     },
-
     async handleGetLast14DaysTxs(payload) {
       try {
         dispatch.orbit.setTxHistoryLoading(true);
@@ -158,7 +191,6 @@ export const orbit = createModel()({
         dispatch.orbit.setTxHistoryLoading(false);
       }
     },
-
     async handleGetOrbits(payload) {
       try {
         dispatch.orbit.setRegisteredOrbitsLoading(true);
@@ -175,7 +207,6 @@ export const orbit = createModel()({
         dispatch.orbit.setRegisteredOrbitsLoading(false);
       }
     },
-
     async handleGetOrbitDashboard(payload) {
       try {
         dispatch.orbit.setDashboardLoading(true);
@@ -205,7 +236,6 @@ export const orbit = createModel()({
         dispatch.orbit.setOrbitDetailLoading(false);
       }
     },
-
     async getLatestSearchHistory() {
       try {
         const response = await graphqlClient.request(GET_LATEST_SEARCH_HISTORY);
@@ -232,7 +262,6 @@ export const orbit = createModel()({
         return [];
       }
     },
-
     async handleGetMetricsHistory(payload) {
       try {
         dispatch.orbit.setMetricsHistoryLoading(true);
@@ -257,19 +286,19 @@ export const orbit = createModel()({
         dispatch.orbit.setMetricsHistoryLoading(false);
       }
     },
-
     async handleGetGlobalTransactions(payload) {
       try {
         const { limit = "10" } = payload || {};
         const response = await graphqlClient.request(GET_GLOBAL_TRANSACTIONS, {
           limit,
         });
-        dispatch.orbit.setGlobalTransactions(response?.globalTransactions ?? []);
+        dispatch.orbit.setGlobalTransactions(
+          response?.globalTransactions ?? [],
+        );
       } catch (err) {
         console.log(err.message);
       }
     },
-
     async handleGetOrbitBlocks(payload) {
       try {
         dispatch.orbit.setOrbitBlocksLoading(true);
@@ -286,7 +315,6 @@ export const orbit = createModel()({
         dispatch.orbit.setOrbitBlocksLoading(false);
       }
     },
-
     async handleGetOrbitBlock(payload) {
       try {
         dispatch.orbit.setOrbitBlockDetailLoading(true);
@@ -302,7 +330,6 @@ export const orbit = createModel()({
         dispatch.orbit.setOrbitBlockDetailLoading(false);
       }
     },
-
     async handleGetOrbitTransactions(payload) {
       try {
         dispatch.orbit.setOrbitTransactionsLoading(true);
@@ -317,6 +344,90 @@ export const orbit = createModel()({
         console.log(err.message);
       } finally {
         dispatch.orbit.setOrbitTransactionsLoading(false);
+      }
+    },
+
+    async handleGetOrbitBlocksTotal(payload) {
+      try {
+        dispatch.orbit.setOrbitBlocksLoading(true);
+        const { chainId, limit = "1" } = payload || {};
+        const response = await graphqlClient.request(GET_ORBIT_BLOCKS, {
+          chainId,
+          limit,
+        });
+        console.log("response?.blocks", response?.blocks);
+        dispatch.orbit.setOrbitBlocksTotal(
+          response?.blocks?.[0]?.block_number ?? 0,
+        );
+      } catch (err) {
+        console.log(err.message);
+      } finally {
+        dispatch.orbit.setOrbitBlocksLoading(false);
+      }
+    },
+
+    async handleGetOrbitTransactionsTotal(payload) {
+      try {
+        const { chainId, limit = "1" } = payload || {};
+        const response = await graphqlClient.request(GET_ORBIT_TRANSACTIONS, {
+          chainId,
+          limit,
+        });
+        dispatch.orbit.setOrbitTransactionsTotal(
+          response?.transactions?.[0]?.number ?? 0,
+        );
+      } catch (err) {
+        console.log(err.message);
+      }
+    },
+
+    async handleGetBlockTransactions(payload) {
+      try {
+        dispatch.orbit.setBlockTransactionsLoading(true);
+        const { chainId, id } = payload || {};
+        const response = await graphqlClient.request(GET_BLOCK_TRANSACTIONS, {
+          chainId,
+          id,
+        });
+        dispatch.orbit.setBlockTransactions(
+          response?.blockTransactions ?? [],
+        );
+      } catch (err) {
+        console.log(err.message);
+      } finally {
+        dispatch.orbit.setBlockTransactionsLoading(false);
+      }
+    },
+
+    async handleGetOrbitTransaction(payload) {
+      try {
+        dispatch.orbit.setOrbitTransactionDetailLoading(true);
+        const { chainId, id } = payload || {};
+        const response = await graphqlClient.request(GET_TRANSACTION, {
+          chainId,
+          id,
+        });
+        dispatch.orbit.setOrbitTransactionDetail(response?.transaction ?? null);
+      } catch (err) {
+        console.log(err.message);
+      } finally {
+        dispatch.orbit.setOrbitTransactionDetailLoading(false);
+      }
+    },
+
+    async handleGetTransactionLogs(payload) {
+      try {
+        dispatch.orbit.setTransactionLogsLoading(true);
+        const { chainId, txHash } = payload || {};
+        const response = await graphqlClient.request(GET_TRANSACTION_LOGS, {
+          chainId,
+          txHash,
+        });
+        dispatch.orbit.setTransactionLogs(response?.transactionLogs ?? []);
+      } catch (err) {
+        console.log(err.message);
+      } finally {
+        dispatch.orbit.setTransactionLogsLoading(false);
       }
     },
   }),
