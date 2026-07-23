@@ -170,12 +170,22 @@ export default function BlockTransactionsPage() {
 
                 <div className="flex items-center gap-2 mt-2.5 text-xs">
                   <span className="text-gray-500">From</span>
-                  <span className="font-mono text-gray-300">
+                  <span
+                    onClick={() =>
+                      navigate(`/subnets/${chainId}/address/${tx.from}`)
+                    }
+                    className="font-mono text-gray-300 hover:text-blue-300 cursor-pointer"
+                  >
                     {truncateHash(tx.from)}
                   </span>
                   <ArrowRight size={11} className="text-gray-600" />
                   <span className="text-gray-500">To</span>
-                  <span className="font-mono text-gray-300">
+                  <span
+                    onClick={() =>
+                      navigate(`/subnets/${chainId}/address/${tx.to}`)
+                    }
+                    className="font-mono text-gray-300 hover:text-blue-300 cursor-pointer"
+                  >
                     {truncateHash(tx.to)}
                   </span>
                 </div>

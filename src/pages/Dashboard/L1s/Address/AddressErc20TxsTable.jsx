@@ -1,0 +1,151 @@
+import { useCallback } from "react";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import dayjs from "dayjs";
+import Pagination from "../Pagination";
+import { DirectionBadge } from "./AddressAtoms";
+import { truncateHash, fmtNum, hexToDecimalString } from "./addressUtils";
+import useKeysetPagination, { PAGE_SIZE } from "./useKeysetPagination";
+
+export default function AddressErc20TxsTable({ chainId, address, active }) {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const fetchPage = useCallback(
+    async (lastId) => {
+      const data = await dispatch.orbit.handleGetErc20TokenTxs({
+        chainId,
+        address,
+        lastId,
+        limit: String(PAGE_SIZE),
+      });
+      return { items: data?.transfers ?? [], total: data?.totalTransfers };
+    },
+    [dispatch, chainId, address],
+  );
+
+  const { items, total, totalPages, page, loading, goToPage } =
+    useKeysetPagination({ chainId, address, active, fetchPage });
+
+  return (
+    <div className="bg-[#0B111D] border border-gray-800 rounded-xl overflow-hidden">
+      <div className="px-5 py-3 border-b border-gray-800 flex items-center justify-between flex-wrap gap-2">
+        <span className="text-xs text-gray-500">
+          Latest {items.length} from a total of{" "}
+          <span className="text-gray-300 font-semibold">{fmtNum(total)}</span>{" "}
+          ERC20 transfers
+        </span>
+      </div>
+
+      <div className="overflow-x-auto">
+        <table className="w-full text-xs">
+          <thead>
+            <tr className="border-b border-gray-800/60">
+              <th className="text-left px-5 py-2.5 text-gray-500 font-medium">
+                Tx Hash
+              </th>
+              <th className="text-left px-3 py-2.5 text-gray-500 font-medium">
+                Token
+              </th>
+              <th className="text-left px-3 py-2.5 text-gray-500 font-medium">
+                From
+              </th>
+              <th className="text-left px-3 py-2.5 text-gray-500 font-medium" />
+              <th className="text-left px-3 py-2.5 text-gray-500 font-medium">
+                To
+              </th>
+              <th className="text-left px-3 py-2.5 text-gray-500 font-medium">
+                Value
+              </th>
+              <th className="text-right px-5 py-2.5 text-gray-500 font-medium">
+                Age
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {loading ? (
+              <tr>
+                <td colSpan={7} className="text-center py-10 text-gray-600 text-xs">
+                  Loading…
+                </td>
+              </tr>
+            ) : items.length === 0 ? (
+              <tr>
+                <td colSpan={7} className="text-center py-10 text-gray-600 text-xs">
+                  No ERC20 transfers found
+                </td>
+              </tr>
+            ) : (
+              items.map((row, i) => {
+                const isOut = row.from?.toLowerCase() === address?.toLowerCase();
+                const txHash = row.transaction_hash?.split("-").pop();
+                return (
+                  <tr
+                    key={row.id ?? i}
+                    className={`border-b border-gray-800/40 hover:bg-white/[0.02] transition-colors ${
+                      i === items.length - 1 ? "border-0" : ""
+                    }`}
+                  >
+                    <td className="px-5 py-2.5">
+                      <span
+                        onClick={() =>
+                          navigate(`/subnets/${chainId}/tx/${txHash}`)
+                        }
+                        className="text-blue-400 font-mono hover:text-blue-300 cursor-pointer"
+                      >
+                        {truncateHash(txHash)}
+                      </span>
+                    </td>
+                    <td className="px-3 py-2.5">
+                      <span
+                        onClick={() =>
+                          navigate(
+                            `/subnets/${chainId}/address/${row.token_address}`,
+                          )
+                        }
+                        className="font-mono text-gray-300 hover:text-blue-300 cursor-pointer"
+                      >
+                        {row.name || truncateHash(row.token_address)}
+                      </span>
+                    </td>
+                    <td className="px-3 py-2.5 font-mono text-gray-300">
+                      <span
+                        onClick={() =>
+                          navigate(`/subnets/${chainId}/address/${row.from}`)
+                        }
+                        className="hover:text-blue-300 cursor-pointer"
+                      >
+                        {truncateHash(row.from)}
+                      </span>
+                    </td>
+                    <td className="px-1 py-2.5">
+                      <DirectionBadge isOut={isOut} />
+                    </td>
+                    <td className="px-3 py-2.5 font-mono text-gray-300">
+                      <span
+                        onClick={() =>
+                          navigate(`/subnets/${chainId}/address/${row.to}`)
+                        }
+                        className="hover:text-blue-300 cursor-pointer"
+                      >
+                        {truncateHash(row.to)}
+                      </span>
+                    </td>
+                    <td className="px-3 py-2.5 font-mono text-gray-300">
+                      {hexToDecimalString(row.value)}
+                    </td>
+                    <td className="px-5 py-2.5 text-right text-gray-500">
+                      {dayjs(Number(row.timestamp)).fromNow()}
+                    </td>
+                  </tr>
+                );
+              })
+            )}
+          </tbody>
+        </table>
+      </div>
+
+      <Pagination page={page} totalPages={totalPages} onPageChange={goToPage} />
+    </div>
+  );
+}

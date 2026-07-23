@@ -150,10 +150,26 @@ export default function TransactionsPage() {
                         </span>
                       </td>
                       <td className="px-3 py-2.5 font-mono text-gray-300">
-                        {truncateHash(row.from)}
+                        <span
+                          onClick={() =>
+                            navigate(
+                              `/subnets/${chainId}/address/${row.from}`,
+                            )
+                          }
+                          className="hover:text-blue-300 cursor-pointer"
+                        >
+                          {truncateHash(row.from)}
+                        </span>
                       </td>
                       <td className="px-3 py-2.5 font-mono text-gray-300">
-                        {truncateHash(row.to)}
+                        <span
+                          onClick={() =>
+                            navigate(`/subnets/${chainId}/address/${row.to}`)
+                          }
+                          className="hover:text-blue-300 cursor-pointer"
+                        >
+                          {truncateHash(row.to)}
+                        </span>
                       </td>
                       <td className="px-3 py-2.5 font-mono text-gray-300">
                         {row.value}

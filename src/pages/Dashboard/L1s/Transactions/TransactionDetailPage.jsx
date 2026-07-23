@@ -291,17 +291,29 @@ export default function TransactionDetailPage() {
                 <span className="text-xs text-gray-500 flex-shrink-0">
                   From
                 </span>
-                <CopyableValue value={tx.from} />
+                <CopyableValue
+                  value={tx.from}
+                  onClick={() =>
+                    tx.from &&
+                    navigate(`/subnets/${chainId}/address/${tx.from}`)
+                  }
+                />
               </div>
               <div className="flex items-center justify-between gap-4 px-5 py-3 border-b border-gray-800/60 last:border-b-0">
                 <span className="text-xs text-gray-500 flex-shrink-0">To</span>
-                <CopyableValue
-                  value={
-                    isContractCreation
-                      ? "Contract Creation"
-                      : (tx.to ?? "—")
-                  }
-                />
+                {isContractCreation ? (
+                  <span className="text-xs font-mono text-gray-200">
+                    Contract Creation
+                  </span>
+                ) : (
+                  <CopyableValue
+                    value={tx.to}
+                    onClick={() =>
+                      tx.to &&
+                      navigate(`/subnets/${chainId}/address/${tx.to}`)
+                    }
+                  />
+                )}
               </div>
               {tx.contract_address &&
                 tx.contract_address.toLowerCase() !== ZERO_ADDRESS && (
@@ -309,7 +321,14 @@ export default function TransactionDetailPage() {
                     <span className="text-xs text-gray-500 flex-shrink-0">
                       Contract
                     </span>
-                    <CopyableValue value={tx.contract_address} />
+                    <CopyableValue
+                      value={tx.contract_address}
+                      onClick={() =>
+                        navigate(
+                          `/subnets/${chainId}/address/${tx.contract_address}`,
+                        )
+                      }
+                    />
                   </div>
                 )}
             </div>

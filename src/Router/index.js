@@ -29,6 +29,7 @@ import BlockDetailPage from "../pages/Dashboard/L1s/Blocks/BlockDetailPage.jsx";
 import TransactionsPage from "../pages/Dashboard/L1s/Transactions/TransactionsPage.jsx";
 import BlockTransactionsPage from "../pages/Dashboard/L1s/Blocks/BlockTransactionsPage.jsx";
 import TransactionDetailPage from "../pages/Dashboard/L1s/Transactions/TransactionDetailPage.jsx";
+import AddressDetailPage from "../pages/Dashboard/L1s/Address/AddressDetailPage.jsx";
 
 const Index = () => {
   return (
@@ -82,6 +83,10 @@ const Index = () => {
         <Route
           path="/subnets/:chainId/tx/:txHash"
           element={<TransactionDetailPage />}
+        />
+        <Route
+          path="/subnets/:chainId/address/:address"
+          element={<AddressDetailPage />}
         />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Route>

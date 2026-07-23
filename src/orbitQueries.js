@@ -138,6 +138,14 @@ export const GET_ORBIT_DETAIL = gql`
   }
 `;
 
+export const GET_ADDRESS_BALANCE = gql`
+  query GetAddressBalance($address: String!) {
+    addressBalance(address: $address) {
+      balance
+    }
+  }
+`;
+
 export const GET_ORBIT_BLOCKS = gql`
   query GetOrbitBlocks($chainId: String!, $lastId: String, $limit: String) {
     blocks(chainId: $chainId, lastId: $lastId, limit: $limit) {
@@ -299,6 +307,221 @@ export const GET_ORBIT_TRANSACTIONS = gql`
       input
       function_name
       function_args
+    }
+  }
+`;
+
+export const GET_ORBIT_ADDRESS = gql`
+  query GetOrbitAddress($chainId: String!, $address: String!) {
+    address(chainId: $chainId, address: $address) {
+      id
+      chain_id
+      chain_name
+      number
+      balance
+      timestamp
+      deployed_timestamp
+      total_transactions
+      total_events
+      total_erc20_transfers
+      total_nft_transfers
+      is_contract
+      creator
+      creation_tx_hash
+      is_verified
+      contract_name
+      abi
+      compiler_version
+      license
+      source_code
+      optimizer
+      on_chain_bytecode
+      evm_version
+      via_ir
+      is_proxy
+      proxy_type
+      implementation
+      admin
+      beacon
+      constructor_args
+      code_structure
+    }
+  }
+`;
+
+export const GET_FIRST_TRANSACTIONS_BY_ADDRESS = gql`
+  query GetFirstTransactionsByAddress($chainId: String!, $address: String!) {
+    firstTransactionsByAddress(chainId: $chainId, address: $address) {
+      id
+      chain_type
+      chain_id
+      chain_name
+      transaction_status
+      hash
+      block
+      number
+      timestamp
+      from
+      to
+      value
+      transactionstatus
+      transaction_type
+      status
+      nonce
+      type
+      node_id
+      gas
+      gas_price
+      gas_used
+      contract_address
+      input
+      function_name
+      function_args
+    }
+  }
+`;
+
+export const GET_TRANSACTIONS_BY_ADDRESS = gql`
+  query GetTransactionsByAddress(
+    $chainId: String!
+    $address: String!
+    $lastId: String
+    $limit: String
+  ) {
+    transactionsByAddress(
+      chainId: $chainId
+      address: $address
+      lastId: $lastId
+      limit: $limit
+    ) {
+      transactions {
+        id
+        chain_type
+        chain_id
+        chain_name
+        transaction_status
+        hash
+        block
+        number
+        timestamp
+        from
+        to
+        value
+        transactionstatus
+        transaction_type
+        status
+        nonce
+        type
+        node_id
+        gas
+        gas_price
+        gas_used
+        contract_address
+        input
+        function_name
+        function_args
+      }
+      totalTransactions
+    }
+  }
+`;
+
+export const GET_ERC20_TOKEN_TXS = gql`
+  query GetErc20TokenTxs(
+    $chainId: String!
+    $address: String!
+    $lastId: String
+    $limit: String
+  ) {
+    erc20TokenTxs(
+      chainId: $chainId
+      address: $address
+      lastId: $lastId
+      limit: $limit
+    ) {
+      transfers {
+        id
+        chain_id
+        number
+        transaction_hash
+        log_index
+        block_number
+        timestamp
+        token_address
+        from
+        to
+        value
+        token_type
+        token_id
+        name
+        logo
+      }
+      totalTransfers
+    }
+  }
+`;
+
+export const GET_NFT_TRANSFERS = gql`
+  query GetNftTransfers(
+    $chainId: String!
+    $address: String!
+    $lastId: String
+    $limit: String
+  ) {
+    nftTransfers(
+      chainId: $chainId
+      address: $address
+      lastId: $lastId
+      limit: $limit
+    ) {
+      transfers {
+        id
+        chain_id
+        number
+        transaction_hash
+        log_index
+        block_number
+        timestamp
+        token_address
+        from
+        to
+        value
+        token_type
+        token_id
+        name
+        logo
+      }
+      totalTransfers
+    }
+  }
+`;
+
+export const GET_NFTS_BY_ADDRESS = gql`
+  query GetNftsByAddress(
+    $chainId: String!
+    $address: String!
+    $lastId: String
+    $limit: String
+  ) {
+    nftsByAddress(
+      chainId: $chainId
+      address: $address
+      lastId: $lastId
+      limit: $limit
+    ) {
+      nfts {
+        id
+        chain_id
+        number
+        type
+        token_address
+        owner
+        token_id
+        amount
+        token_uri
+        token_uri_resolved
+      }
+      totalNFTS
     }
   }
 `;

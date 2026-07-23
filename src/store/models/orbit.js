@@ -12,6 +12,13 @@ import {
   GET_BLOCK_TRANSACTIONS,
   GET_TRANSACTION,
   GET_TRANSACTION_LOGS,
+  GET_ORBIT_ADDRESS,
+  GET_ADDRESS_BALANCE,
+  GET_FIRST_TRANSACTIONS_BY_ADDRESS,
+  GET_TRANSACTIONS_BY_ADDRESS,
+  GET_ERC20_TOKEN_TXS,
+  GET_NFT_TRANSFERS,
+  GET_NFTS_BY_ADDRESS,
   GET_ORBIT_TRANSACTIONS,
   GET_LATEST_SEARCH_HISTORY,
   GET_SEARCH_HISTORY_BY_CHAIN,
@@ -54,6 +61,24 @@ export const orbit = createModel()({
     orbitTransactionDetailLoading: false,
     transactionLogs: [],
     transactionLogsLoading: false,
+    orbitAddress: null,
+    orbitAddressLoading: false,
+    addressBalance: null,
+    addressBalanceLoading: false,
+    firstTransactionsByAddress: [],
+    firstTransactionsByAddressLoading: false,
+    transactionsByAddress: [],
+    transactionsByAddressTotal: "0",
+    transactionsByAddressLoading: false,
+    erc20TokenTxs: [],
+    erc20TokenTxsTotal: "0",
+    erc20TokenTxsLoading: false,
+    nftTransfers: [],
+    nftTransfersTotal: "0",
+    nftTransfersLoading: false,
+    nftsByAddress: [],
+    nftsByAddressTotal: "0",
+    nftsByAddressLoading: false,
   },
   reducers: {
     setLoading(state, payload) {
@@ -151,6 +176,60 @@ export const orbit = createModel()({
     },
     setTransactionLogsLoading(state, payload) {
       state.transactionLogsLoading = payload;
+    },
+    setOrbitAddress(state, payload) {
+      state.orbitAddress = payload;
+    },
+    setOrbitAddressLoading(state, payload) {
+      state.orbitAddressLoading = payload;
+    },
+    setAddressBalance(state, payload) {
+      state.addressBalance = payload;
+    },
+    setAddressBalanceLoading(state, payload) {
+      state.addressBalanceLoading = payload;
+    },
+    setFirstTransactionsByAddress(state, payload) {
+      state.firstTransactionsByAddress = payload;
+    },
+    setFirstTransactionsByAddressLoading(state, payload) {
+      state.firstTransactionsByAddressLoading = payload;
+    },
+    setTransactionsByAddress(state, payload) {
+      state.transactionsByAddress = payload;
+    },
+    setTransactionsByAddressTotal(state, payload) {
+      state.transactionsByAddressTotal = payload;
+    },
+    setTransactionsByAddressLoading(state, payload) {
+      state.transactionsByAddressLoading = payload;
+    },
+    setErc20TokenTxs(state, payload) {
+      state.erc20TokenTxs = payload;
+    },
+    setErc20TokenTxsTotal(state, payload) {
+      state.erc20TokenTxsTotal = payload;
+    },
+    setErc20TokenTxsLoading(state, payload) {
+      state.erc20TokenTxsLoading = payload;
+    },
+    setNftTransfers(state, payload) {
+      state.nftTransfers = payload;
+    },
+    setNftTransfersTotal(state, payload) {
+      state.nftTransfersTotal = payload;
+    },
+    setNftTransfersLoading(state, payload) {
+      state.nftTransfersLoading = payload;
+    },
+    setNftsByAddress(state, payload) {
+      state.nftsByAddress = payload;
+    },
+    setNftsByAddressTotal(state, payload) {
+      state.nftsByAddressTotal = payload;
+    },
+    setNftsByAddressLoading(state, payload) {
+      state.nftsByAddressLoading = payload;
     },
   },
   effects: (dispatch) => ({
@@ -389,9 +468,7 @@ export const orbit = createModel()({
           chainId,
           id,
         });
-        dispatch.orbit.setBlockTransactions(
-          response?.blockTransactions ?? [],
-        );
+        dispatch.orbit.setBlockTransactions(response?.blockTransactions ?? []);
       } catch (err) {
         console.log(err.message);
       } finally {
@@ -428,6 +505,146 @@ export const orbit = createModel()({
         console.log(err.message);
       } finally {
         dispatch.orbit.setTransactionLogsLoading(false);
+      }
+    },
+
+    async handleGetOrbitAddress(payload) {
+      try {
+        dispatch.orbit.setOrbitAddressLoading(true);
+        const { chainId, address } = payload || {};
+        const response = await graphqlClient.request(GET_ORBIT_ADDRESS, {
+          chainId,
+          address,
+        });
+        dispatch.orbit.setOrbitAddress(response?.address ?? null);
+      } catch (err) {
+        console.log(err.message);
+      } finally {
+        dispatch.orbit.setOrbitAddressLoading(false);
+      }
+    },
+
+    async handleGetAddressBalance(payload) {
+      try {
+        dispatch.orbit.setAddressBalanceLoading(true);
+        const { chainId, address } = payload || {};
+        const response = await graphqlClient.request(GET_ADDRESS_BALANCE, {
+          chainId,
+          address,
+        });
+        dispatch.orbit.setAddressBalance(
+          response?.addressBalance?.balance ?? null,
+        );
+      } catch (err) {
+        console.log(err.message);
+      } finally {
+        dispatch.orbit.setAddressBalanceLoading(false);
+      }
+    },
+
+    async handleGetFirstTransactionsByAddress(payload) {
+      try {
+        dispatch.orbit.setFirstTransactionsByAddressLoading(true);
+        const { chainId, address } = payload || {};
+        const response = await graphqlClient.request(
+          GET_FIRST_TRANSACTIONS_BY_ADDRESS,
+          { chainId, address },
+        );
+        const result = response?.firstTransactionsByAddress;
+        const list = Array.isArray(result) ? result : result ? [result] : [];
+        dispatch.orbit.setFirstTransactionsByAddress(list);
+      } catch (err) {
+        console.log(err.message);
+      } finally {
+        dispatch.orbit.setFirstTransactionsByAddressLoading(false);
+      }
+    },
+
+    async handleGetTransactionsByAddress(payload) {
+      try {
+        dispatch.orbit.setTransactionsByAddressLoading(true);
+        const { chainId, address, lastId = "0", limit = "10" } = payload || {};
+        const response = await graphqlClient.request(
+          GET_TRANSACTIONS_BY_ADDRESS,
+          { chainId, address, lastId, limit },
+        );
+        const data = response?.transactionsByAddress;
+        dispatch.orbit.setTransactionsByAddress(data?.transactions ?? []);
+        dispatch.orbit.setTransactionsByAddressTotal(
+          data?.totalTransactions ?? "0",
+        );
+        return data;
+      } catch (err) {
+        console.log(err.message);
+        return null;
+      } finally {
+        dispatch.orbit.setTransactionsByAddressLoading(false);
+      }
+    },
+
+    async handleGetErc20TokenTxs(payload) {
+      try {
+        dispatch.orbit.setErc20TokenTxsLoading(true);
+        const { chainId, address, lastId = "0", limit = "10" } = payload || {};
+        const response = await graphqlClient.request(GET_ERC20_TOKEN_TXS, {
+          chainId,
+          address,
+          lastId,
+          limit,
+        });
+        const data = response?.erc20TokenTxs;
+        dispatch.orbit.setErc20TokenTxs(data?.transfers ?? []);
+        dispatch.orbit.setErc20TokenTxsTotal(data?.totalTransfers ?? "0");
+        return data;
+      } catch (err) {
+        console.log(err.message);
+        return null;
+      } finally {
+        dispatch.orbit.setErc20TokenTxsLoading(false);
+      }
+    },
+
+    async handleGetNftTransfers(payload) {
+      try {
+        dispatch.orbit.setNftTransfersLoading(true);
+        const { chainId, address, lastId = "0", limit = "10" } = payload || {};
+        const response = await graphqlClient.request(GET_NFT_TRANSFERS, {
+          chainId,
+          address,
+          lastId,
+          limit,
+        });
+        const data = response?.nftTransfers;
+        dispatch.orbit.setNftTransfers(data?.transfers ?? []);
+        dispatch.orbit.setNftTransfersTotal(data?.totalTransfers ?? "0");
+        return data;
+      } catch (err) {
+        console.log(err.message);
+        return null;
+      } finally {
+        dispatch.orbit.setNftTransfersLoading(false);
+      }
+    },
+
+    async handleGetNftsByAddress(payload) {
+      try {
+        dispatch.orbit.setNftsByAddressLoading(true);
+        const { chainId, address, lastId = "0", limit = "10" } = payload || {};
+        const response = await graphqlClient.request(GET_NFTS_BY_ADDRESS, {
+          chainId,
+          address,
+          lastId,
+          limit,
+        });
+        const data = response?.nftsByAddress;
+        dispatch.orbit.setNftsByAddress(data?.nfts ?? []);
+        dispatch.orbit.setNftsByAddressTotal(data?.totalNFTS ?? "0");
+        return data;
+      } catch (err) {
+        console.log(err.message);
+        return null;
+      } finally {
+        dispatch.orbit.setNftsByAddressLoading(false);
       }
     },
   }),
