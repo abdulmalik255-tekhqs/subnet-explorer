@@ -139,8 +139,8 @@ export const GET_ORBIT_DETAIL = gql`
 `;
 
 export const GET_ADDRESS_BALANCE = gql`
-  query GetAddressBalance($address: String!) {
-    addressBalance(address: $address) {
+  query GetAddressBalance($chainId: String!, $address: String!) {
+    addressBalance(chainId: $chainId, address: $address) {
       balance
     }
   }
@@ -280,7 +280,11 @@ export const GET_TRANSACTION_LOGS = gql`
 `;
 
 export const GET_ORBIT_TRANSACTIONS = gql`
-  query GetOrbitTransactions($chainId: String!, $lastId: String, $limit: String) {
+  query GetOrbitTransactions(
+    $chainId: String!
+    $lastId: String
+    $limit: String
+  ) {
     transactions(chainId: $chainId, lastId: $lastId, limit: $limit) {
       id
       chain_type

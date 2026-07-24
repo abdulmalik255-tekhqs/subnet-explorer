@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { ethers } from "ethers";
+import { isValidBlock } from "../../../utils";
 
 const TYPE_COLORS = {
   transaction: "#1D4ED8",
@@ -8,22 +10,40 @@ const TYPE_COLORS = {
   contract: "#7C3AED",
   address: "#B45309",
   l1: "#0F3460",
+  network: "#0F3460",
+  orbit: "#0F3460",
+};
+
+// Block search results carry the block *hash* in `value`, but the block-detail
+// route is keyed by block *number* — pull it back out of the title instead
+// ("Block #67" -> "67"). A tx hash and a block hash are both 66-char hex
+// strings, so shape alone can't tell them apart — `item.type` still has to
+// make that call; ethers only needs to distinguish address vs. hash.
+const parseBlockNumber = (title = "") => {
+  const match = title.match(/#(\d+)/);
+  return match ? match[1] : "";
 };
 
 const getSearchHref = (item) => {
-  switch (item.type) {
-    case "transaction":
-      return `/tx/${item.value}`;
-    case "block":
-      return `/block/${item.value}`;
-    case "contract":
-    case "address":
-      return `/address/${item.value}`;
-    case "l1":
-      return `/subnets/network/${encodeURIComponent(item.chain_name)}`;
-    default:
-      return `/address/${item.value}`;
+  const chainId = item.chain_id;
+  const cleaned = (item.value || "").trim().toLowerCase();
+
+  if (item.type === "block") {
+    const blockNumber = parseBlockNumber(item.title);
+    if (isValidBlock(blockNumber)) {
+      return `/subnets/${chainId}/blocks/${blockNumber}`;
+    }
   }
+
+  if (ethers.isAddress(cleaned)) {
+    return `/subnets/${chainId}/address/${cleaned}`;
+  }
+
+  if (ethers.isHexString(cleaned) && cleaned.length === 66) {
+    return `/subnets/${chainId}/tx/${cleaned}`;
+  }
+
+  return `/subnets/network/${encodeURIComponent(item.chain_name)}`;
 };
 
 const KbdHint = ({ keys, label }) => (
@@ -54,19 +74,75 @@ const SearchBarModal = ({ isOpen, onClose }) => {
   const [query, setQuery] = useState("");
   const [selectedChain, setSelectedChain] = useState("All chains");
   const [focused, setFocused] = useState(0);
+  const [liveResults, setLiveResults] = useState([]);
+  const [searching, setSearching] = useState(false);
 
   const inputRef = useRef(null);
+  const requestIdRef = useRef(0);
 
   /* auto-focus input + refresh recent searches when modal opens */
   useEffect(() => {
     if (isOpen) {
       setQuery("");
+      setLiveResults([]);
       setFocused(0);
       setSelectedChain("All chains");
       setTimeout(() => inputRef.current?.focus(), 30);
       dispatch.orbit.getLatestSearchHistory();
     }
   }, [isOpen, dispatch]);
+
+  /* resolve the selected chip to { chainType, chainId } for the search query */
+  const resolveChainFilter = useCallback(
+    (chipName) => {
+      if (chipName === "All chains") return { chainType: undefined, chainId: undefined };
+      const orbit = (orbits ?? []).find((c) => c.name === chipName);
+      if (orbit) return { chainType: "orbit", chainId: orbit.chain_id };
+      const prim = (primary ?? []).find((c) => c.name === chipName);
+      if (prim) return { chainType: "primary", chainId: prim.chain_id };
+      return { chainType: undefined, chainId: undefined };
+    },
+    [orbits, primary],
+  );
+
+  /* debounced live search as the user types */
+  useEffect(() => {
+    const trimmed = query.trim();
+    if (!trimmed) {
+      setLiveResults([]);
+      setSearching(false);
+      return;
+    }
+
+    const requestId = ++requestIdRef.current;
+    setSearching(true);
+    const { chainType, chainId } = resolveChainFilter(selectedChain);
+
+    const timer = setTimeout(async () => {
+      const results = await dispatch.orbit.getSearchData({
+        query: trimmed,
+        chainType,
+        chainId,
+      });
+      if (requestIdRef.current === requestId) {
+        setLiveResults(results ?? []);
+        setSearching(false);
+        setFocused(0);
+      }
+    }, 300);
+
+    return () => clearTimeout(timer);
+  }, [query, selectedChain, dispatch, resolveChainFilter]);
+
+  const isSearchingQuery = query.trim().length > 0;
+
+  /* filter recent searches by selected chain */
+  const recent = (searchHistory ?? []).filter((r) => {
+    if (selectedChain === "All chains") return true;
+    return r.chain_name === selectedChain;
+  });
+
+  const results = isSearchingQuery ? liveResults : recent;
 
   /* ESC + arrow key navigation */
   const handleKeyDown = useCallback(
@@ -78,18 +154,18 @@ const SearchBarModal = ({ isOpen, onClose }) => {
       }
       if (e.key === "ArrowDown") {
         e.preventDefault();
-        setFocused((f) => Math.min(f + 1, (searchHistory?.length ?? 1) - 1));
+        setFocused((f) => Math.min(f + 1, (results?.length ?? 1) - 1));
       }
       if (e.key === "ArrowUp") {
         e.preventDefault();
         setFocused((f) => Math.max(f - 1, 0));
       }
-      if (e.key === "Enter" && searchHistory?.[focused]) {
-        navigate(getSearchHref(searchHistory[focused]));
+      if (e.key === "Enter" && results?.[focused]) {
+        navigate(getSearchHref(results[focused]));
         onClose();
       }
     },
-    [isOpen, focused, navigate, onClose, searchHistory],
+    [isOpen, focused, navigate, onClose, results],
   );
 
   useEffect(() => {
@@ -105,12 +181,6 @@ const SearchBarModal = ({ isOpen, onClose }) => {
     ...(primary ?? []).map((c) => c.name),
     ...(orbits ?? []).slice(0, 3).map((c) => c.name),
   ];
-
-  /* filter recent searches by selected chain */
-  const results = (searchHistory ?? []).filter((r) => {
-    if (selectedChain === "All chains") return true;
-    return r.chain_name === selectedChain;
-  });
 
   return (
     <div
@@ -172,17 +242,23 @@ const SearchBarModal = ({ isOpen, onClose }) => {
           ))}
         </div>
 
-        {/* ── Recent searches ── */}
+        {/* ── Results ── */}
         <div className="px-4 pt-3 pb-1">
           <span className="text-[10px] font-bold tracking-widest text-gray-600 uppercase">
-            Recent Searches
+            {isSearchingQuery ? "Search Results" : "Recent Searches"}
           </span>
         </div>
 
-        <div className="pb-2">
-          {results?.length === 0 ? (
+        <div className="pb-2 max-h-[360px] overflow-y-auto">
+          {isSearchingQuery && searching ? (
             <div className="px-4 py-6 text-center text-xs text-gray-700">
-              No recent searches for this chain
+              Searching…
+            </div>
+          ) : results?.length === 0 ? (
+            <div className="px-4 py-6 text-center text-xs text-gray-700">
+              {isSearchingQuery
+                ? "No results found"
+                : "No recent searches for this chain"}
             </div>
           ) : (
             results?.map((item, i) => (

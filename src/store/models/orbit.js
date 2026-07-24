@@ -532,6 +532,7 @@ export const orbit = createModel()({
           chainId,
           address,
         });
+        console.log(response);
         dispatch.orbit.setAddressBalance(
           response?.addressBalance?.balance ?? null,
         );
