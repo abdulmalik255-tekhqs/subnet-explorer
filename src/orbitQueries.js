@@ -530,6 +530,64 @@ export const GET_NFTS_BY_ADDRESS = gql`
   }
 `;
 
+export const GET_ORBIT_NFT_DETAIL = gql`
+  query GetOrbitNftDetail(
+    $chainId: String!
+    $contract: String!
+    $tokenId: String!
+  ) {
+    nft(chainId: $chainId, contract: $contract, tokenId: $tokenId) {
+      id
+      chain_id
+      number
+      type
+      token_address
+      owner
+      token_id
+      amount
+      token_uri
+      token_uri_resolved
+    }
+  }
+`;
+
+export const GET_ORBIT_NFT_TOKEN_TRANSFERS = gql`
+  query GetOrbitTransfersByNft(
+    $chainId: String!
+    $contract: String!
+    $tokenId: String!
+    $lastId: String
+    $limit: String
+  ) {
+    transfersByNft(
+      chainId: $chainId
+      contract: $contract
+      tokenId: $tokenId
+      lastId: $lastId
+      limit: $limit
+    ) {
+      transfers {
+        id
+        chain_id
+        number
+        transaction_hash
+        log_index
+        block_number
+        timestamp
+        token_address
+        from
+        to
+        value
+        token_type
+        token_id
+        name
+        logo
+      }
+      totalTransfers
+    }
+  }
+`;
+
 export const GET_LATEST_SEARCH_HISTORY = gql`
   query GetLatestSearchHistory {
     searchHistory {

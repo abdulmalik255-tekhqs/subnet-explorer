@@ -19,6 +19,8 @@ import {
   GET_ERC20_TOKEN_TXS,
   GET_NFT_TRANSFERS,
   GET_NFTS_BY_ADDRESS,
+  GET_ORBIT_NFT_DETAIL,
+  GET_ORBIT_NFT_TOKEN_TRANSFERS,
   GET_ORBIT_TRANSACTIONS,
   GET_LATEST_SEARCH_HISTORY,
   GET_SEARCH_HISTORY_BY_CHAIN,
@@ -80,6 +82,11 @@ export const orbit = createModel()({
     nftsByAddress: [],
     nftsByAddressTotal: "0",
     nftsByAddressLoading: false,
+    orbitNftDetail: null,
+    orbitNftDetailLoading: false,
+    nftTokenTransfers: [],
+    nftTokenTransfersTotal: "0",
+    nftTokenTransfersLoading: false,
   },
   reducers: {
     setLoading(state, payload) {
@@ -231,6 +238,21 @@ export const orbit = createModel()({
     },
     setNftsByAddressLoading(state, payload) {
       state.nftsByAddressLoading = payload;
+    },
+    setOrbitNftDetail(state, payload) {
+      state.orbitNftDetail = payload;
+    },
+    setOrbitNftDetailLoading(state, payload) {
+      state.orbitNftDetailLoading = payload;
+    },
+    setNftTokenTransfers(state, payload) {
+      state.nftTokenTransfers = payload;
+    },
+    setNftTokenTransfersTotal(state, payload) {
+      state.nftTokenTransfersTotal = payload;
+    },
+    setNftTokenTransfersLoading(state, payload) {
+      state.nftTokenTransfersLoading = payload;
     },
   },
   effects: (dispatch) => ({
@@ -649,6 +671,52 @@ export const orbit = createModel()({
         dispatch.orbit.setNftsByAddressLoading(false);
       }
     },
+
+    async handleGetOrbitNftDetail(payload) {
+      try {
+        dispatch.orbit.setOrbitNftDetailLoading(true);
+        const { chainId, contract, tokenId } = payload || {};
+        const response = await graphqlClient.request(GET_ORBIT_NFT_DETAIL, {
+          chainId,
+          contract,
+          tokenId,
+        });
+        dispatch.orbit.setOrbitNftDetail(response?.nft ?? null);
+        return response?.nft ?? null;
+      } catch (err) {
+        console.log(err.message);
+        return null;
+      } finally {
+        dispatch.orbit.setOrbitNftDetailLoading(false);
+      }
+    },
+
+    async handleGetNftTokenTransfers(payload) {
+      try {
+        dispatch.orbit.setNftTokenTransfersLoading(true);
+        const {
+          chainId,
+          contract,
+          tokenId,
+          lastId = "0",
+          limit = "10",
+        } = payload || {};
+        const response = await graphqlClient.request(
+          GET_ORBIT_NFT_TOKEN_TRANSFERS,
+          { chainId, contract, tokenId, lastId, limit },
+        );
+        const data = response?.transfersByNft;
+        dispatch.orbit.setNftTokenTransfers(data?.transfers ?? []);
+        dispatch.orbit.setNftTokenTransfersTotal(data?.totalTransfers ?? "0");
+        return data;
+      } catch (err) {
+        console.log(err.message);
+        return null;
+      } finally {
+        dispatch.orbit.setNftTokenTransfersLoading(false);
+      }
+    },
+
     async handleSearchOrbits(payload) {
       try {
         dispatch.orbit.setRegisteredOrbitsLoading(true);

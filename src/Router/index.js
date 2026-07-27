@@ -30,6 +30,7 @@ import TransactionsPage from "../pages/Dashboard/L1s/Transactions/TransactionsPa
 import BlockTransactionsPage from "../pages/Dashboard/L1s/Blocks/BlockTransactionsPage.jsx";
 import TransactionDetailPage from "../pages/Dashboard/L1s/Transactions/TransactionDetailPage.jsx";
 import AddressDetailPage from "../pages/Dashboard/L1s/Address/AddressDetailPage.jsx";
+import OrbitNftDetailPage from "../pages/Dashboard/L1s/Address/NftDetailPage.jsx";
 
 const Index = () => {
   return (
@@ -87,6 +88,10 @@ const Index = () => {
         <Route
           path="/subnets/:chainId/address/:address"
           element={<AddressDetailPage />}
+        />
+        <Route
+          path="/subnets/:chainId/nft/:tokenAddress/:tokenId"
+          element={<OrbitNftDetailPage />}
         />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Route>

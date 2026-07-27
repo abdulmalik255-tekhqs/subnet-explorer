@@ -37,7 +37,14 @@ const NftCard = ({ nft, chainId, navigate }) => {
   const hasImage = nft.token_uri_resolved && !imgFailed;
 
   return (
-    <div className="bg-[#0B111D] border border-gray-800 rounded-xl overflow-hidden">
+    <div
+      onClick={() =>
+        nft.token_address != null &&
+        nft.token_id != null &&
+        navigate(`/subnets/${chainId}/nft/${nft.token_address}/${nft.token_id}`)
+      }
+      className="bg-[#0B111D] border border-gray-800 rounded-xl overflow-hidden cursor-pointer hover:border-gray-700 transition-colors"
+    >
       <div className="aspect-square flex items-center justify-center bg-[#111827]">
         {hasImage ? (
           <img
@@ -54,10 +61,11 @@ const NftCard = ({ nft, chainId, navigate }) => {
         <div className="text-[11px] text-gray-500">
           Token:{" "}
           <span
-            onClick={() =>
+            onClick={(e) => {
+              e.stopPropagation();
               nft.token_address &&
-              navigate(`/subnets/${chainId}/address/${nft.token_address}`)
-            }
+                navigate(`/subnets/${chainId}/address/${nft.token_address}`);
+            }}
             className={
               nft.token_address
                 ? "text-blue-400 hover:text-blue-300 cursor-pointer font-mono"
