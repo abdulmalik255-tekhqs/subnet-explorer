@@ -138,12 +138,12 @@ const Navbar = () => {
                   primary?.map((chain, i) => (
                     <button
                       key={chain.chain_id}
-                      onClick={() =>
-                        handleSelect(
-                          chain,
-                          PRIMARY_COLORS[i % PRIMARY_COLORS.length],
-                        )
-                      }
+                      // onClick={() =>
+                      //   handleSelect(
+                      //     chain,
+                      //     PRIMARY_COLORS[i % PRIMARY_COLORS.length],
+                      //   )
+                      // }
                       className={`w-full flex items-center gap-3 px-4 py-2.5 text-left text-sm transition-colors hover:bg-[#1E293B] ${
                         selected.chain_id === chain.chain_id
                           ? "bg-[#1E293B] text-white"
@@ -168,12 +168,12 @@ const Navbar = () => {
                     {orbits?.map((chain, i) => (
                       <button
                         key={chain.chain_id}
-                        onClick={() =>
-                          handleSelect(
-                            chain,
-                            ORBIT_COLORS[(i + 1) % ORBIT_COLORS.length],
-                          )
-                        }
+                        // onClick={() =>
+                        //   handleSelect(
+                        //     chain,
+                        //     ORBIT_COLORS[(i + 1) % ORBIT_COLORS.length],
+                        //   )
+                        // }
                         className={`w-full flex items-center gap-3 px-4 py-2.5 text-left text-sm transition-colors hover:bg-[#1E293B] ${
                           selected.chain_id === chain.chain_id
                             ? "bg-[#1E293B] text-white"

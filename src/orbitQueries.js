@@ -560,3 +560,16 @@ export const GET_SEARCH_HISTORY_BY_CHAIN = gql`
     }
   }
 `;
+export const GET_SEARCH_ORBIT = gql`
+  query GetSearchOrbits($input: String!) {
+    searchOrbits(input: $input) {
+      name
+      orbit_id
+      tps
+      transaction_count
+      address_count
+      total_deployed_contracts
+      status
+    }
+  }
+`;

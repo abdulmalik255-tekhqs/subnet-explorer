@@ -24,6 +24,7 @@ import {
   GET_SEARCH_HISTORY_BY_CHAIN,
   GET_METRICS_HISTORY,
   GET_GLOBAL_TRANSACTIONS,
+  GET_SEARCH_ORBIT,
 } from "../../orbitQueries";
 
 export const orbit = createModel()({
@@ -646,6 +647,24 @@ export const orbit = createModel()({
         return null;
       } finally {
         dispatch.orbit.setNftsByAddressLoading(false);
+      }
+    },
+    async handleSearchOrbits(payload) {
+      try {
+        dispatch.orbit.setRegisteredOrbitsLoading(true);
+
+        const { input } = payload || {};
+        const response = await graphqlClient.request(GET_SEARCH_ORBIT, {
+          input,
+        });
+        const data = response?.searchOrbits;
+        dispatch.orbit.setRegisteredOrbits(data ?? []);
+        return data;
+      } catch (err) {
+        console.log(err.message);
+        return null;
+      } finally {
+        dispatch.orbit.setRegisteredOrbitsLoading(false);
       }
     },
   }),

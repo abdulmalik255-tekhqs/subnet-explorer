@@ -1,6 +1,6 @@
 import { useState, useMemo, useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { MagnifyingGlass, CaretDown } from "@phosphor-icons/react";
+import { MagnifyingGlass, CaretDown, X } from "@phosphor-icons/react";
 import L1DetailPanel from "./L1DetailPanel";
 
 const PAGE_SIZE = 6;
@@ -132,8 +132,8 @@ export default function RegisteredL1sTable() {
     useSelector((s) => s.orbit);
 
   const [search, setSearch] = useState("");
-  const [sortBy, setSortBy] = useState("TPS");
-  const [statusFilter, setStatusFilter] = useState("All");
+  // const [sortBy, setSortBy] = useState("TPS");
+  // const [statusFilter, setStatusFilter] = useState("All");
   const [page, setPage] = useState(1);
   const [selectedChain, setSelectedChain] = useState(null);
 
@@ -144,56 +144,66 @@ export default function RegisteredL1sTable() {
   const filtered = useMemo(() => {
     let list = [...registeredOrbits];
 
-    if (search.trim()) {
-      const q = search.toLowerCase();
-      list = list.filter(
-        (c) =>
-          c.name?.toLowerCase().includes(q) ||
-          c.orbit_id?.toLowerCase().includes(q),
-      );
-    }
+    // if (statusFilter !== "All") {
+    //   list = list.filter(
+    //     (c) => c.status?.toLowerCase() === statusFilter.toLowerCase(),
+    //   );
+    // }
 
-    if (statusFilter !== "All") {
-      list = list.filter(
-        (c) => c.status?.toLowerCase() === statusFilter.toLowerCase(),
-      );
-    }
-
-    list.sort((a, b) => {
-      if (sortBy === "TPS")
-        return parseFloat(b.tps || 0) - parseFloat(a.tps || 0);
-      if (sortBy === "Name") return (a.name || "").localeCompare(b.name || "");
-      if (sortBy === "Transactions")
-        return (
-          parseInt(b.transaction_count || 0) -
-          parseInt(a.transaction_count || 0)
-        );
-      if (sortBy === "Contracts")
-        return (
-          parseInt(b.total_deployed_contracts || 0) -
-          parseInt(a.total_deployed_contracts || 0)
-        );
-      return 0;
-    });
+    // list.sort((a, b) => {
+    //   if (sortBy === "TPS")
+    //     return parseFloat(b.tps || 0) - parseFloat(a.tps || 0);
+    //   if (sortBy === "Name") return (a.name || "").localeCompare(b.name || "");
+    //   if (sortBy === "Transactions")
+    //     return (
+    //       parseInt(b.transaction_count || 0) -
+    //       parseInt(a.transaction_count || 0)
+    //     );
+    //   if (sortBy === "Contracts")
+    //     return (
+    //       parseInt(b.total_deployed_contracts || 0) -
+    //       parseInt(a.total_deployed_contracts || 0)
+    //     );
+    //   return 0;
+    // });
 
     return list;
-  }, [registeredOrbits, search, sortBy, statusFilter]);
+  }, [registeredOrbits, search]);
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
   const pageData = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
   console.log("RegisteredL1sTable pageData:", pageData);
-  const handleSort = (v) => {
-    setSortBy(v);
-    setPage(1);
-  };
-  const handleStatus = (v) => {
-    setStatusFilter(v);
-    setPage(1);
-  };
+  // const handleSort = (v) => {
+  //   setSortBy(v);
+  //   setPage(1);
+  // };
+  // const handleStatus = (v) => {
+  //   setStatusFilter(v);
+  //   setPage(1);
+  // };
 
   const showingStart = filtered.length === 0 ? 0 : (page - 1) * PAGE_SIZE + 1;
   const showingEnd = Math.min(page * PAGE_SIZE, filtered.length);
+  useEffect(() => {
+    const q = search.trim();
 
+    const timer = setTimeout(() => {
+      if (q) {
+        dispatch.orbit.handleSearchOrbits({
+          input: q.toLowerCase(),
+        });
+      } else {
+        dispatch.orbit.handleGetOrbits();
+      }
+    }, 300);
+
+    return () => clearTimeout(timer);
+  }, [search, dispatch]);
+
+  const handleClearSearch = () => {
+    setSearch("");
+    setPage(1);
+  };
   return (
     <>
       {/* Section label */}
@@ -221,25 +231,35 @@ export default function RegisteredL1sTable() {
                 setPage(1);
               }}
               placeholder="Search by name or chain ID..."
-              className="bg-[#0B111D] border border-gray-800 rounded-lg pl-8 pr-3 py-1.5 text-xs text-gray-300 placeholder-gray-700 focus:outline-none focus:border-blue-500/50 w-52 transition-colors"
+              className="bg-[#0B111D] border border-gray-800 rounded-lg pl-8 pr-7 py-1.5 text-xs text-gray-300 placeholder-gray-700 focus:outline-none focus:border-blue-500/50 w-52 transition-colors"
             />
+            {search && (
+              <button
+                type="button"
+                onClick={handleClearSearch}
+                aria-label="Clear search"
+                className="absolute right-2 text-gray-600 hover:text-gray-300 transition-colors"
+              >
+                <X size={12} />
+              </button>
+            )}
           </div>
 
           {/* Sort dropdown */}
-          <DropMenu
+          {/* <DropMenu
             label="Sort"
             value={sortBy}
             options={SORT_OPTIONS}
             onSelect={handleSort}
-          />
+          /> */}
 
           {/* Status dropdown */}
-          <DropMenu
+          {/* <DropMenu
             label="Status"
             value={statusFilter}
             options={STATUS_OPTIONS}
             onSelect={handleStatus}
-          />
+          /> */}
 
           {/* Total count */}
           <span className="ml-auto text-xs font-semibold text-gray-500">

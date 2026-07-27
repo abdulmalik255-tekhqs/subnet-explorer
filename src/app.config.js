@@ -3,6 +3,8 @@ export const rpcUrl = process.env.REACT_APP_RPC_URL;
 export const baseUrl = process.env.REACT_APP_BASE_URL;
 export const socketUrl = process.env.REACT_APP_SOCKET_URL;
 export const commonURL = process.env.REACT_BASE_URL;
+export const baseSearchUrl = process.env.REACT_APP_BASE_SEARCH_URL;
+export const baseApiKey = process.env.REACT_APP_BASE_API;
 // Base Sepolia
 export const explorerUri = "https://sepolia.basescan.org";
 export const rpcUri = "https://new-bootnode-private.ryt.io/ext/bc/C/rpc";

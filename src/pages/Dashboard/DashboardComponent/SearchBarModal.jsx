@@ -3,6 +3,8 @@ import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { ethers } from "ethers";
 import { isValidBlock } from "../../../utils";
+import axios from "axios";
+import { baseApiKey, baseSearchUrl } from "../../../app.config";
 
 const TYPE_COLORS = {
   transaction: "#1D4ED8",
@@ -95,7 +97,8 @@ const SearchBarModal = ({ isOpen, onClose }) => {
   /* resolve the selected chip to { chainType, chainId } for the search query */
   const resolveChainFilter = useCallback(
     (chipName) => {
-      if (chipName === "All chains") return { chainType: undefined, chainId: undefined };
+      if (chipName === "All chains")
+        return { chainType: undefined, chainId: undefined };
       const orbit = (orbits ?? []).find((c) => c.name === chipName);
       if (orbit) return { chainType: "orbit", chainId: orbit.chain_id };
       const prim = (primary ?? []).find((c) => c.name === chipName);
@@ -181,7 +184,29 @@ const SearchBarModal = ({ isOpen, onClose }) => {
     ...(primary ?? []).map((c) => c.name),
     ...(orbits ?? []).slice(0, 3).map((c) => c.name),
   ];
-
+  const routeSearch = (item) => {
+    const payload = {
+      type: item.type,
+      chainType: item.chain_type,
+      chainId: item.chain_id,
+      chainName: item.chain_name,
+      title: item.title,
+      subtitle: item.subtitle,
+      value: item.value,
+    };
+    axios
+      .post(`${baseSearchUrl}`, payload, {
+        headers: {
+          "Content-Type": "application/json",
+          "x-api-key": baseApiKey,
+        },
+      })
+      .catch((error) => {
+        console.error("Error logging search:", error);
+      });
+    navigate(getSearchHref(item));
+    onClose();
+  };
   return (
     <div
       className="fixed inset-0 z-[70] flex items-start justify-center bg-black/60 backdrop-blur-sm pt-24 px-4"
@@ -264,16 +289,16 @@ const SearchBarModal = ({ isOpen, onClose }) => {
             results?.map((item, i) => (
               <button
                 key={`${item.type}-${item.value}-${i}`}
-                onClick={() => {
-                  navigate(getSearchHref(item));
-                  onClose();
-                }}
+                onClick={() => routeSearch(item)}
                 onMouseEnter={() => setFocused(i)}
                 className={`w-full flex items-center gap-3 px-4 py-3 text-left transition-colors ${
                   focused === i ? "bg-white/[0.04]" : "hover:bg-white/[0.02]"
                 }`}
               >
-                <ChainIcon color={TYPE_COLORS[item.type] ?? "#334155"} size={38} />
+                <ChainIcon
+                  color={TYPE_COLORS[item.type] ?? "#334155"}
+                  size={38}
+                />
                 <div className="flex flex-col gap-0.5 min-w-0">
                   <span className="text-sm font-medium text-gray-200 truncate">
                     {item.title}
