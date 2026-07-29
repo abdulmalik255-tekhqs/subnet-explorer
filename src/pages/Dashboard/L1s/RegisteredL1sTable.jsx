@@ -1,6 +1,6 @@
-import { useState, useMemo, useEffect, useRef } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { MagnifyingGlass, CaretDown, X } from "@phosphor-icons/react";
+import { MagnifyingGlass, X } from "@phosphor-icons/react";
 import L1DetailPanel from "./L1DetailPanel";
 
 const PAGE_SIZE = 6;
@@ -64,57 +64,57 @@ const fmtContracts = (val) => {
 
 const truncateId = (id = "") => (id.length > 10 ? `${id.slice(0, 10)}…` : id);
 
-const SORT_OPTIONS = ["TPS", "Name", "Transactions", "Contracts"];
-const STATUS_OPTIONS = ["All", "Active", "Running", "Offline"];
+// const SORT_OPTIONS = ["TPS", "Name", "Transactions", "Contracts"];
+// const STATUS_OPTIONS = ["All", "Active", "Running", "Offline"];
 
-const DropMenu = ({ label, value, options, onSelect }) => {
-  const [open, setOpen] = useState(false);
-  const ref = useRef(null);
+// const DropMenu = ({ label, value, options, onSelect }) => {
+//   const [open, setOpen] = useState(false);
+//   const ref = useRef(null);
 
-  useEffect(() => {
-    const handler = (e) => {
-      if (ref.current && !ref.current.contains(e.target)) setOpen(false);
-    };
-    if (open) document.addEventListener("mousedown", handler);
-    return () => document.removeEventListener("mousedown", handler);
-  }, [open]);
+//   useEffect(() => {
+//     const handler = (e) => {
+//       if (ref.current && !ref.current.contains(e.target)) setOpen(false);
+//     };
+//     if (open) document.addEventListener("mousedown", handler);
+//     return () => document.removeEventListener("mousedown", handler);
+//   }, [open]);
 
-  return (
-    <div className="relative" ref={ref}>
-      <button
-        onClick={(e) => {
-          e.stopPropagation();
-          setOpen((v) => !v);
-        }}
-        className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-blue-500/60 bg-[#0B111D] text-blue-400 text-xs font-semibold hover:border-blue-400 transition-colors"
-      >
-        {label}: <span className="text-white">{value}</span>
-        <CaretDown
-          size={11}
-          className={`transition-transform ${open ? "rotate-180" : ""}`}
-        />
-      </button>
-      {open && (
-        <div className="absolute top-full left-0 mt-1.5 w-36 bg-[#0F172A] border border-gray-800 rounded-xl overflow-hidden shadow-2xl z-50">
-          {options.map((opt) => (
-            <button
-              key={opt}
-              onClick={() => {
-                onSelect(opt);
-                setOpen(false);
-              }}
-              className={`w-full text-left px-4 py-2.5 text-xs transition-colors hover:bg-[#1E293B] ${
-                value === opt ? "text-white bg-[#1E293B]" : "text-gray-400"
-              }`}
-            >
-              {opt}
-            </button>
-          ))}
-        </div>
-      )}
-    </div>
-  );
-};
+//   return (
+//     <div className="relative" ref={ref}>
+//       <button
+//         onClick={(e) => {
+//           e.stopPropagation();
+//           setOpen((v) => !v);
+//         }}
+//         className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-blue-500/60 bg-[#0B111D] text-blue-400 text-xs font-semibold hover:border-blue-400 transition-colors"
+//       >
+//         {label}: <span className="text-white">{value}</span>
+//         <CaretDown
+//           size={11}
+//           className={`transition-transform ${open ? "rotate-180" : ""}`}
+//         />
+//       </button>
+//       {open && (
+//         <div className="absolute top-full left-0 mt-1.5 w-36 bg-[#0F172A] border border-gray-800 rounded-xl overflow-hidden shadow-2xl z-50">
+//           {options.map((opt) => (
+//             <button
+//               key={opt}
+//               onClick={() => {
+//                 onSelect(opt);
+//                 setOpen(false);
+//               }}
+//               className={`w-full text-left px-4 py-2.5 text-xs transition-colors hover:bg-[#1E293B] ${
+//                 value === opt ? "text-white bg-[#1E293B]" : "text-gray-400"
+//               }`}
+//             >
+//               {opt}
+//             </button>
+//           ))}
+//         </div>
+//       )}
+//     </div>
+//   );
+// };
 
 const SkeletonRow = () => (
   <tr className="border-b border-gray-800/40">
@@ -168,11 +168,10 @@ export default function RegisteredL1sTable() {
     // });
 
     return list;
-  }, [registeredOrbits, search]);
+  }, [registeredOrbits]);
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
   const pageData = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
-  console.log("RegisteredL1sTable pageData:", pageData);
   // const handleSort = (v) => {
   //   setSortBy(v);
   //   setPage(1);

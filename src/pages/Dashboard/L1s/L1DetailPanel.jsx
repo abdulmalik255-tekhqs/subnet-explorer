@@ -61,7 +61,7 @@ export default function L1DetailPanel({ chain, onClose }) {
       value: dashboard?.current_tps ?? chain?.tps ?? "0",
     },
     {
-      label: "Daily Active Addresses",
+      label: "Total Addresses",
       value: fmtNum(dashboard?.total_accounts ?? chain?.address_count),
     },
     {

@@ -457,7 +457,6 @@ export const orbit = createModel()({
           chainId,
           limit,
         });
-        console.log("response?.blocks", response?.blocks);
         dispatch.orbit.setOrbitBlocksTotal(
           response?.blocks?.[0]?.block_number ?? 0,
         );
@@ -555,7 +554,6 @@ export const orbit = createModel()({
           chainId,
           address,
         });
-        console.log(response);
         dispatch.orbit.setAddressBalance(
           response?.addressBalance?.balance ?? null,
         );

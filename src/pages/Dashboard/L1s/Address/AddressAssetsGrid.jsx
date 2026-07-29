@@ -2,7 +2,7 @@ import { useCallback, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import Pagination from "../Pagination";
-import { truncateHash, fmtNum } from "./addressUtils";
+import { fmtNum } from "./addressUtils";
 import useKeysetPagination, { PAGE_SIZE } from "./useKeysetPagination";
 
 const NftIcon = () => (
@@ -14,10 +14,7 @@ const NftIcon = () => (
     stroke="#4b5563"
     strokeWidth="1.4"
   >
-    <path
-      d="M12 2 L21 7 V17 L12 22 L3 17 V7 Z"
-      strokeLinejoin="round"
-    />
+    <path d="M12 2 L21 7 V17 L12 22 L3 17 V7 Z" strokeLinejoin="round" />
     <text
       x="12"
       y="13.5"
@@ -35,7 +32,6 @@ const NftIcon = () => (
 const NftCard = ({ nft, chainId, navigate }) => {
   const [imgFailed, setImgFailed] = useState(false);
   const hasImage = nft.token_uri_resolved && !imgFailed;
-
   return (
     <div
       onClick={() =>
@@ -48,7 +44,7 @@ const NftCard = ({ nft, chainId, navigate }) => {
       <div className="aspect-square flex items-center justify-center bg-[#111827]">
         {hasImage ? (
           <img
-            src={nft.token_uri_resolved}
+            src={nft.token_uri?.image}
             alt={`Token #${nft.token_id}`}
             className="w-full h-full object-cover"
             onError={() => setImgFailed(true)}
@@ -72,11 +68,14 @@ const NftCard = ({ nft, chainId, navigate }) => {
                 : "text-gray-600"
             }
           >
-            {nft.token_address ? truncateHash(nft.token_address) : "--"}
+            {hasImage ? nft.token_uri?.name : "--"}
           </span>
         </div>
         <div className="text-[11px] text-gray-500">
           TokenId: <span className="text-gray-300">{nft.token_id ?? "--"}</span>
+        </div>
+        <div className="text-[11px] text-gray-500">
+          ChainID: <span className="text-gray-300">{nft.chain_id ?? "--"}</span>
         </div>
       </div>
     </div>

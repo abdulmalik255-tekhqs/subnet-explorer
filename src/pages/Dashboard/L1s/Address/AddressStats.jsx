@@ -6,7 +6,11 @@ export default function AddressStats({ acct, addressBalance }) {
     <div className="grid grid-cols-2 lg:grid-cols-2 gap-4">
       <StatCard
         label="Balance"
-        value={`${addressBalance && roundToSixDecimals(Number(addressBalance))} RYT`}
+        value={
+          addressBalance != null && addressBalance !== undefined
+            ? `${roundToSixDecimals(Number(addressBalance))} RYT`
+            : "0"
+        }
         accent="#3b82f6"
       />
       <StatCard

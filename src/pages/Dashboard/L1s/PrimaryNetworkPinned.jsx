@@ -71,21 +71,53 @@ const PrimaryNetworkPinned = ({ type = "orbit", chainId = "1001" }) => {
                 </div>
               </div>
               <p className="text-[11px] text-gray-500 font-bold uppercase tracking-widest opacity-70">
-                EVM · Subnet-EVM compatible
+                EVM · Orbit-EVM compatible
               </p>
             </div>
           </div>
 
           {/* Stats Grid */}
           <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            <InfoItem label="Latest Block"      value={fmt(d?.latest_block_height)}  loading={dashboardLoading} />
-            <InfoItem label="TPS"               value={fmt(d?.current_tps)}          loading={dashboardLoading} />
-            <InfoItem label="Total Accounts"    value={fmt(d?.total_accounts)}        loading={dashboardLoading} />
-            <InfoItem label="Total Txns"        value={fmt(d?.total_transactions)}    loading={dashboardLoading} />
-            <InfoItem label="Contracts"         value={fmt(d?.total_contracts)}       loading={dashboardLoading} />
-            <InfoItem label="NFT Transfers"     value={fmt(d?.total_nft_transfers)}   loading={dashboardLoading} />
-            <InfoItem label="ERC-20 Transfers"  value={fmt(d?.total_erc20_transfers)} loading={dashboardLoading} />
-            <InfoItem label="Chain ID"          value={d?.chain_id ?? "—"}            loading={dashboardLoading} />
+            <InfoItem
+              label="Latest Block"
+              value={fmt(d?.latest_block_height)}
+              loading={dashboardLoading}
+            />
+            <InfoItem
+              label="TPS"
+              value={fmt(d?.current_tps)}
+              loading={dashboardLoading}
+            />
+            <InfoItem
+              label="Total Accounts"
+              value={fmt(d?.total_accounts)}
+              loading={dashboardLoading}
+            />
+            <InfoItem
+              label="Total Txns"
+              value={fmt(d?.total_transactions)}
+              loading={dashboardLoading}
+            />
+            <InfoItem
+              label="Contracts"
+              value={fmt(d?.total_contracts)}
+              loading={dashboardLoading}
+            />
+            <InfoItem
+              label="NFT Transfers"
+              value={fmt(d?.total_nft_transfers)}
+              loading={dashboardLoading}
+            />
+            <InfoItem
+              label="ERC-20 Transfers"
+              value={fmt(d?.total_erc20_transfers)}
+              loading={dashboardLoading}
+            />
+            <InfoItem
+              label="Chain ID"
+              value={d?.chain_id ?? "—"}
+              loading={dashboardLoading}
+            />
           </div>
         </div>
       </div>
