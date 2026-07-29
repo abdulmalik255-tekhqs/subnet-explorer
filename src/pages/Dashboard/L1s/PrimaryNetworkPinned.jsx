@@ -36,9 +36,9 @@ const PrimaryNetworkPinned = ({ type = "orbit", chainId = "1001" }) => {
   const d = dashboard;
 
   return (
-    <div className="w-full mt-2">
+    <div className="w-full mt-1">
       {/* Section Header */}
-      <div className="flex items-center gap-4 mb-1 opacity-60">
+      <div className="flex items-center gap-4 mb-2 opacity-60">
         <h2 className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] whitespace-nowrap">
           Primary Network (Pinned)
         </h2>

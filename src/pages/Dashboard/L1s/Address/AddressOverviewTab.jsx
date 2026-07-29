@@ -25,14 +25,12 @@ export default function AddressOverviewTab({ acct, chainId, isContract }) {
       {isContract && (
         <>
           <div className="flex items-center justify-between gap-4 px-5 py-3 border-b border-gray-800/60">
-            <span className="text-xs text-gray-500 flex-shrink-0">
-              Creator
-            </span>
+            <span className="text-xs text-gray-500 flex-shrink-0">Creator</span>
             <CopyableValue
               value={acct.creator}
               onClick={() =>
                 acct.creator &&
-                navigate(`/subnets/${chainId}/address/${acct.creator}`)
+                navigate(`/orbit/${chainId}/address/${acct.creator}`)
               }
             />
           </div>
@@ -44,7 +42,7 @@ export default function AddressOverviewTab({ acct, chainId, isContract }) {
               value={acct.creation_tx_hash}
               onClick={() =>
                 acct.creation_tx_hash &&
-                navigate(`/subnets/${chainId}/tx/${acct.creation_tx_hash}`)
+                navigate(`/orbit/${chainId}/tx/${acct.creation_tx_hash}`)
               }
             />
           </div>

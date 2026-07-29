@@ -12,20 +12,16 @@ const TABS = ["Explorer", "Stats", "Details"];
 const ChainLogo = ({ colors }) => (
   <div className="grid grid-cols-2 gap-0.5 w-9 h-9 flex-shrink-0">
     {colors.slice(0, 4).map((color, i) => (
-      <div
-        key={i}
-        className="rounded-sm"
-        style={{ backgroundColor: color }}
-      />
+      <div key={i} className="rounded-sm" style={{ backgroundColor: color }} />
     ))}
   </div>
 );
 
 const L1SLandingPage = () => {
-  const { subnetName } = useParams();
+  const { orbitName } = useParams();
   const [activeTab, setActiveTab] = useState("Explorer");
 
-  const chain = getChainConfig(decodeURIComponent(subnetName || ""));
+  const chain = getChainConfig(decodeURIComponent(orbitName || ""));
 
   return (
     <div className="min-h-screen bg-[#060B15] text-white -m-5">
@@ -37,13 +33,20 @@ const L1SLandingPage = () => {
           <div className="flex items-center gap-3">
             <ChainLogo colors={chain.colors} />
             <div>
-              <h1 className="text-lg font-bold text-white leading-tight">{chain.name}</h1>
-              <span className="text-xs text-gray-500">Chain ID: {chain.chainId}</span>
+              <h1 className="text-lg font-bold text-white leading-tight">
+                {chain.name}
+              </h1>
+              <span className="text-xs text-gray-500">
+                Chain ID: {chain.chainId}
+              </span>
             </div>
           </div>
 
           <div className="relative flex items-center flex-1 max-w-lg">
-            <MagnifyingGlass className="absolute left-3 text-gray-500" size={16} />
+            <MagnifyingGlass
+              className="absolute left-3 text-gray-500"
+              size={16}
+            />
             <input
               type="text"
               placeholder={`Search all Avalanche L1s for tx hash, block ID, address, token, ...`}

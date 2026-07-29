@@ -33,19 +33,19 @@ const getSearchHref = (item) => {
   if (item.type === "block") {
     const blockNumber = parseBlockNumber(item.title);
     if (isValidBlock(blockNumber)) {
-      return `/subnets/${chainId}/blocks/${blockNumber}`;
+      return `/orbit/${chainId}/blocks/${blockNumber}`;
     }
   }
 
   if (ethers.isAddress(cleaned)) {
-    return `/subnets/${chainId}/address/${cleaned}`;
+    return `/orbit/${chainId}/address/${cleaned}`;
   }
 
   if (ethers.isHexString(cleaned) && cleaned.length === 66) {
-    return `/subnets/${chainId}/tx/${cleaned}`;
+    return `/orbit/${chainId}/tx/${cleaned}`;
   }
 
-  return `/subnets/network/${encodeURIComponent(item.chain_name)}`;
+  return `/orbit/network/${encodeURIComponent(item.chain_name)}`;
 };
 
 const KbdHint = ({ keys, label }) => (
@@ -239,7 +239,7 @@ const SearchBarModal = ({ isOpen, onClose }) => {
             type="text"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Search tx hash, block, address, token..."
+            placeholder="Search tx hash, block, address..."
             className="flex-1 bg-transparent text-sm text-gray-200 placeholder-gray-600 focus:outline-none"
           />
           <button

@@ -63,34 +63,31 @@ const Index = () => {
         <Route path="/blockchain/accounts" element={<TopAccounts />} />
         <Route path="/nft/:id/:tokenID" element={<NftDetailPage />} />
         <Route path="mempoolspace" element={<MempoolPage />} />
-        <Route path="/subnets" element={<L1Component />} />
+        <Route path="/orbit" element={<L1Component />} />
+        <Route path="/orbit/network/:orbitName" element={<L1SLandingPage />} />
+        <Route path="/orbit/:chainId/blocks" element={<BlocksPage />} />
         <Route
-          path="/subnets/network/:subnetName"
-          element={<L1SLandingPage />}
-        />
-        <Route path="/subnets/:chainId/blocks" element={<BlocksPage />} />
-        <Route
-          path="/subnets/:chainId/blocks/:blockNumber"
+          path="/orbit/:chainId/blocks/:blockNumber"
           element={<BlockDetailPage />}
         />
         <Route
-          path="/subnets/:chainId/blocks/:blockNumber/transactions"
+          path="/orbit/:chainId/blocks/:blockNumber/transactions"
           element={<BlockTransactionsPage />}
         />
         <Route
-          path="/subnets/:chainId/transactions"
+          path="/orbit/:chainId/transactions"
           element={<TransactionsPage />}
         />
         <Route
-          path="/subnets/:chainId/tx/:txHash"
+          path="/orbit/:chainId/tx/:txHash"
           element={<TransactionDetailPage />}
         />
         <Route
-          path="/subnets/:chainId/address/:address"
+          path="/orbit/:chainId/address/:address"
           element={<AddressDetailPage />}
         />
         <Route
-          path="/subnets/:chainId/nft/:tokenAddress/:tokenId"
+          path="/orbit/:chainId/nft/:tokenAddress/:tokenId"
           element={<OrbitNftDetailPage />}
         />
         <Route path="*" element={<Navigate to="/" replace />} />

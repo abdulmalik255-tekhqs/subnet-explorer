@@ -142,7 +142,7 @@ export default function TransactionsPage() {
                       <td className="px-5 py-2.5">
                         <span
                           onClick={() =>
-                            navigate(`/subnets/${chainId}/tx/${row.hash}`)
+                            navigate(`/orbit/${chainId}/tx/${row.hash}`)
                           }
                           className="text-blue-400 font-mono hover:text-blue-300 cursor-pointer"
                         >
@@ -152,9 +152,7 @@ export default function TransactionsPage() {
                       <td className="px-3 py-2.5 font-mono text-gray-300">
                         <span
                           onClick={() =>
-                            navigate(
-                              `/subnets/${chainId}/address/${row.from}`,
-                            )
+                            navigate(`/orbit/${chainId}/address/${row.from}`)
                           }
                           className="hover:text-blue-300 cursor-pointer"
                         >
@@ -164,7 +162,7 @@ export default function TransactionsPage() {
                       <td className="px-3 py-2.5 font-mono text-gray-300">
                         <span
                           onClick={() =>
-                            navigate(`/subnets/${chainId}/address/${row.to}`)
+                            navigate(`/orbit/${chainId}/address/${row.to}`)
                           }
                           className="hover:text-blue-300 cursor-pointer"
                         >

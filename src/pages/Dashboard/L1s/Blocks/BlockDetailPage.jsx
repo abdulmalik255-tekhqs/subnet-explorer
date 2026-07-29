@@ -80,7 +80,7 @@ export default function BlockDetailPage() {
     <div className="min-h-screen bg-[#060B15] text-white -m-5">
       <Navbar />
 
-      <div className="px-6 py-5 space-y-4 max-w-4xl mx-auto">
+      <div className="px-6 py-5 space-y-4 max-w-6xl mx-auto">
         <div className="flex items-center gap-2 text-xs text-gray-500">
           <button
             onClick={() => navigate(-1)}
@@ -92,7 +92,7 @@ export default function BlockDetailPage() {
           <span>Chain {chainId}</span>
           <span>/</span>
           <span
-            onClick={() => navigate(`/subnets/${chainId}/blocks`)}
+            onClick={() => navigate(`/orbit/${chainId}/blocks`)}
             className="text-blue-400 hover:text-blue-300 cursor-pointer"
           >
             Blocks
@@ -151,7 +151,7 @@ export default function BlockDetailPage() {
                     <span
                       onClick={() =>
                         navigate(
-                          `/subnets/${chainId}/blocks/${blockNumber}/transactions`,
+                          `/orbit/${chainId}/blocks/${blockNumber}/transactions`,
                         )
                       }
                       className="text-blue-400 hover:text-blue-300 cursor-pointer"
@@ -177,7 +177,7 @@ export default function BlockDetailPage() {
                 label="Previous Hash"
                 value={block?.previous_hash}
                 onClick={() =>
-                  num > 0 && navigate(`/subnets/${chainId}/blocks/${num - 1}`)
+                  num > 0 && navigate(`/orbit/${chainId}/blocks/${num - 1}`)
                 }
               />
               <HashRow label="State Root" value={block?.state_root} />
@@ -197,7 +197,7 @@ export default function BlockDetailPage() {
                   <span
                     onClick={() =>
                       navigate(
-                        `/subnets/${chainId}/blocks/${blockNumber}/transactions`,
+                        `/orbit/${chainId}/blocks/${blockNumber}/transactions`,
                       )
                     }
                     className="text-[11px] font-bold uppercase tracking-widest text-blue-400 cursor-pointer hover:text-blue-300"

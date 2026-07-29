@@ -20,7 +20,10 @@ export default function AddressTransactionsTable({ chainId, address, active }) {
         lastId,
         limit: String(PAGE_SIZE),
       });
-      return { items: data?.transactions ?? [], total: data?.totalTransactions };
+      return {
+        items: data?.transactions ?? [],
+        total: data?.totalTransactions,
+      };
     },
     [dispatch, chainId, address],
   );
@@ -72,19 +75,26 @@ export default function AddressTransactionsTable({ chainId, address, active }) {
           <tbody>
             {loading ? (
               <tr>
-                <td colSpan={9} className="text-center py-10 text-gray-600 text-xs">
+                <td
+                  colSpan={9}
+                  className="text-center py-10 text-gray-600 text-xs"
+                >
                   Loading…
                 </td>
               </tr>
             ) : items.length === 0 ? (
               <tr>
-                <td colSpan={9} className="text-center py-10 text-gray-600 text-xs">
+                <td
+                  colSpan={9}
+                  className="text-center py-10 text-gray-600 text-xs"
+                >
                   No transactions found
                 </td>
               </tr>
             ) : (
               items.map((row, i) => {
-                const isOut = row.from?.toLowerCase() === address?.toLowerCase();
+                const isOut =
+                  row.from?.toLowerCase() === address?.toLowerCase();
                 return (
                   <tr
                     key={row.id ?? i}
@@ -95,7 +105,7 @@ export default function AddressTransactionsTable({ chainId, address, active }) {
                     <td className="px-5 py-2.5">
                       <span
                         onClick={() =>
-                          navigate(`/subnets/${chainId}/tx/${row.hash}`)
+                          navigate(`/orbit/${chainId}/tx/${row.hash}`)
                         }
                         className="text-blue-400 font-mono hover:text-blue-300 cursor-pointer"
                       >
@@ -114,7 +124,7 @@ export default function AddressTransactionsTable({ chainId, address, active }) {
                     <td className="px-3 py-2.5">
                       <span
                         onClick={() =>
-                          navigate(`/subnets/${chainId}/blocks/${row.number}`)
+                          navigate(`/orbit/${chainId}/blocks/${row.number}`)
                         }
                         className="text-blue-400 hover:text-blue-300 cursor-pointer"
                       >
@@ -124,7 +134,7 @@ export default function AddressTransactionsTable({ chainId, address, active }) {
                     <td className="px-3 py-2.5 font-mono text-gray-300">
                       <span
                         onClick={() =>
-                          navigate(`/subnets/${chainId}/address/${row.from}`)
+                          navigate(`/orbit/${chainId}/address/${row.from}`)
                         }
                         className="hover:text-blue-300 cursor-pointer"
                       >
@@ -137,7 +147,7 @@ export default function AddressTransactionsTable({ chainId, address, active }) {
                     <td className="px-3 py-2.5 font-mono text-gray-300">
                       <span
                         onClick={() =>
-                          navigate(`/subnets/${chainId}/address/${row?.to}`)
+                          navigate(`/orbit/${chainId}/address/${row?.to}`)
                         }
                         className="hover:text-blue-300 cursor-pointer"
                       >

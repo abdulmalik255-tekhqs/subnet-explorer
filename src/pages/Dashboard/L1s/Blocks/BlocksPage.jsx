@@ -136,7 +136,7 @@ export default function BlocksPage() {
                         <span
                           onClick={() =>
                             navigate(
-                              `/subnets/${chainId}/blocks/${row.block_number}`,
+                              `/orbit/${chainId}/blocks/${row.block_number}`,
                             )
                           }
                           className="text-blue-400 font-medium hover:text-blue-300 cursor-pointer"
@@ -165,7 +165,11 @@ export default function BlocksPage() {
             </table>
           </div>
 
-          <Pagination page={page} totalPages={totalPages} onPageChange={setPage} />
+          <Pagination
+            page={page}
+            totalPages={totalPages}
+            onPageChange={setPage}
+          />
         </div>
       </div>
     </div>

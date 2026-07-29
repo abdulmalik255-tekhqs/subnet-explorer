@@ -99,7 +99,7 @@ const LogEntry = ({ log }) => {
             </button>
           )}
         </div>
-        {(!log.data || log.data === "0x") ? (
+        {!log.data || log.data === "0x" ? (
           <span className="text-xs text-gray-700">—</span>
         ) : showData ? (
           <p className="text-xs font-mono text-gray-400 break-all">
@@ -136,14 +136,13 @@ export default function TransactionDetailPage() {
   const tx = orbitTransactionDetail;
   const logs = transactionLogs ?? [];
   const blockNumber = tx?.block ? getBlockNumberFromRef(tx.block) : null;
-  const isContractCreation =
-    !tx?.to || tx?.to?.toLowerCase() === ZERO_ADDRESS;
+  const isContractCreation = !tx?.to || tx?.to?.toLowerCase() === ZERO_ADDRESS;
 
   return (
     <div className="min-h-screen bg-[#060B15] text-white -m-5">
       <Navbar />
 
-      <div className="px-6 py-5 space-y-4 max-w-4xl mx-auto">
+      <div className="px-6 py-5 space-y-4 max-w-6xl mx-auto">
         <div className="flex items-center gap-2 text-xs text-gray-500">
           <button
             onClick={() => navigate(-1)}
@@ -155,15 +154,13 @@ export default function TransactionDetailPage() {
           <span>Chain {chainId}</span>
           <span>/</span>
           <span
-            onClick={() => navigate(`/subnets/${chainId}/transactions`)}
+            onClick={() => navigate(`/orbit/${chainId}/transactions`)}
             className="text-blue-400 hover:text-blue-300 cursor-pointer"
           >
             Transactions
           </span>
           <span>/</span>
-          <span className="text-gray-300 truncate max-w-[220px]">
-            {txHash}
-          </span>
+          <span className="text-gray-300 truncate max-w-[220px]">{txHash}</span>
         </div>
 
         <div>
@@ -242,7 +239,7 @@ export default function TransactionDetailPage() {
                   blockNumber ? (
                     <span
                       onClick={() =>
-                        navigate(`/subnets/${chainId}/blocks/${blockNumber}`)
+                        navigate(`/orbit/${chainId}/blocks/${blockNumber}`)
                       }
                       className="text-blue-400 hover:text-blue-300 cursor-pointer font-mono"
                     >
@@ -294,8 +291,7 @@ export default function TransactionDetailPage() {
                 <CopyableValue
                   value={tx.from}
                   onClick={() =>
-                    tx.from &&
-                    navigate(`/subnets/${chainId}/address/${tx.from}`)
+                    tx.from && navigate(`/orbit/${chainId}/address/${tx.from}`)
                   }
                 />
               </div>
@@ -309,8 +305,7 @@ export default function TransactionDetailPage() {
                   <CopyableValue
                     value={tx.to}
                     onClick={() =>
-                      tx.to &&
-                      navigate(`/subnets/${chainId}/address/${tx.to}`)
+                      tx.to && navigate(`/orbit/${chainId}/address/${tx.to}`)
                     }
                   />
                 )}
@@ -325,7 +320,7 @@ export default function TransactionDetailPage() {
                       value={tx.contract_address}
                       onClick={() =>
                         navigate(
-                          `/subnets/${chainId}/address/${tx.contract_address}`,
+                          `/orbit/${chainId}/address/${tx.contract_address}`,
                         )
                       }
                     />

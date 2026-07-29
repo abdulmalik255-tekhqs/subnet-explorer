@@ -54,7 +54,7 @@ export default function TopL1sByTPS() {
         <button
           className="text-sm text-[#4D8DFF] hover:text-[#6AA4FF] cursor-pointer transition-colors duration-200"
           onClick={() => {
-            navigate("/subnets");
+            navigate("/orbit");
           }}
         >
           View all →

@@ -47,7 +47,7 @@ export default function LatestTransactions({ chainId, symbol = "RYT" }) {
           Latest Transactions
         </span>
         <button
-          onClick={() => navigate(`/subnets/${chainId}/transactions`)}
+          onClick={() => navigate(`/orbit/${chainId}/transactions`)}
           className="text-xs text-blue-400 hover:text-blue-300 transition-colors"
         >
           View all →
@@ -96,7 +96,7 @@ export default function LatestTransactions({ chainId, symbol = "RYT" }) {
                     <span className="text-blue-400 font-mono flex items-center gap-1">
                       <span
                         onClick={() =>
-                          navigate(`/subnets/${chainId}/tx/${row.hash}`)
+                          navigate(`/orbit/${chainId}/tx/${row.hash}`)
                         }
                         className="hover:text-blue-300 cursor-pointer"
                       >

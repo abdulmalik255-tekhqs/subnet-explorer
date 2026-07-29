@@ -30,7 +30,7 @@ export default function LatestBlocks({ chainId }) {
       <div className="flex items-center justify-between px-5 py-4 border-b border-gray-800">
         <span className="text-sm font-semibold text-white">Latest Blocks</span>
         <button
-          onClick={() => navigate(`/subnets/${chainId}/blocks`)}
+          onClick={() => navigate(`/orbit/${chainId}/blocks`)}
           className="text-xs text-blue-400 hover:text-blue-300 transition-colors"
         >
           View all →
@@ -78,9 +78,7 @@ export default function LatestBlocks({ chainId }) {
                   <td className="px-5 py-2.5">
                     <span
                       onClick={() =>
-                        navigate(
-                          `/subnets/${chainId}/blocks/${row.block_number}`,
-                        )
+                        navigate(`/orbit/${chainId}/blocks/${row.block_number}`)
                       }
                       className="text-blue-400 font-medium hover:text-blue-300 cursor-pointer"
                     >

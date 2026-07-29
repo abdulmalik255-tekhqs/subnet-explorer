@@ -62,7 +62,7 @@ export default function BlockTransactionsPage() {
     <div className="min-h-screen bg-[#060B15] text-white -m-5">
       <Navbar />
 
-      <div className="px-6 py-5 space-y-4 max-w-4xl mx-auto">
+      <div className="px-6 py-5 space-y-4 max-w-6xl mx-auto">
         <div className="flex items-center gap-2 text-xs text-gray-500">
           <button
             onClick={() => navigate(-1)}
@@ -72,16 +72,14 @@ export default function BlockTransactionsPage() {
           </button>
           <span>/</span>
           <span
-            onClick={() => navigate(`/subnets/${chainId}/blocks`)}
+            onClick={() => navigate(`/orbit/${chainId}/blocks`)}
             className="text-blue-400 hover:text-blue-300 cursor-pointer"
           >
             Blocks
           </span>
           <span>/</span>
           <span
-            onClick={() =>
-              navigate(`/subnets/${chainId}/blocks/${blockNumber}`)
-            }
+            onClick={() => navigate(`/orbit/${chainId}/blocks/${blockNumber}`)}
             className="text-blue-400 hover:text-blue-300 cursor-pointer"
           >
             #{blockNumber}
@@ -147,7 +145,7 @@ export default function BlockTransactionsPage() {
                   <div className="flex items-center gap-1.5 min-w-0">
                     <span
                       onClick={() =>
-                        navigate(`/subnets/${chainId}/tx/${tx.hash}`)
+                        navigate(`/orbit/${chainId}/tx/${tx.hash}`)
                       }
                       className="text-sm font-mono text-blue-400 truncate hover:text-blue-300 cursor-pointer"
                     >
@@ -172,7 +170,7 @@ export default function BlockTransactionsPage() {
                   <span className="text-gray-500">From</span>
                   <span
                     onClick={() =>
-                      navigate(`/subnets/${chainId}/address/${tx.from}`)
+                      navigate(`/orbit/${chainId}/address/${tx.from}`)
                     }
                     className="font-mono text-gray-300 hover:text-blue-300 cursor-pointer"
                   >
@@ -182,7 +180,7 @@ export default function BlockTransactionsPage() {
                   <span className="text-gray-500">To</span>
                   <span
                     onClick={() =>
-                      navigate(`/subnets/${chainId}/address/${tx.to}`)
+                      navigate(`/orbit/${chainId}/address/${tx.to}`)
                     }
                     className="font-mono text-gray-300 hover:text-blue-300 cursor-pointer"
                   >

@@ -37,7 +37,7 @@ const NftCard = ({ nft, chainId, navigate }) => {
       onClick={() =>
         nft.token_address != null &&
         nft.token_id != null &&
-        navigate(`/subnets/${chainId}/nft/${nft.token_address}/${nft.token_id}`)
+        navigate(`/orbit/${chainId}/nft/${nft.token_address}/${nft.token_id}`)
       }
       className="bg-[#0B111D] border border-gray-800 rounded-xl overflow-hidden cursor-pointer hover:border-gray-700 transition-colors"
     >
@@ -60,7 +60,7 @@ const NftCard = ({ nft, chainId, navigate }) => {
             onClick={(e) => {
               e.stopPropagation();
               nft.token_address &&
-                navigate(`/subnets/${chainId}/address/${nft.token_address}`);
+                navigate(`/orbit/${chainId}/address/${nft.token_address}`);
             }}
             className={
               nft.token_address

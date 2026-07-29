@@ -88,7 +88,7 @@ const NetworkOverview = () => {
   ];
 
   return (
-    <div className="flex flex-col gap-6 mt-6">
+    <div className="flex flex-col gap-4 mt-3">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
           <h2 className="text-xl font-bold text-white">Network Overview</h2>
@@ -109,7 +109,7 @@ const NetworkOverview = () => {
           <StatCard key={i} {...stat} loading={loading} />
         ))}
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-1">
         {stats.slice(4).map((stat, i) => (
           <StatCard key={i} {...stat} loading={loading} />
         ))}

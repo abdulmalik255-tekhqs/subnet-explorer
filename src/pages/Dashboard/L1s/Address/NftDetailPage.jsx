@@ -158,7 +158,7 @@ export default function NftDetailPage() {
     <div className="min-h-screen bg-[#060B15] text-white -m-5">
       <Navbar />
 
-      <div className="px-6 py-5 space-y-4 max-w-4xl mx-auto">
+      <div className="px-6 py-5 space-y-4 max-w-6xl mx-auto">
         <div className="flex items-center gap-2 text-xs text-gray-500 flex-wrap">
           <button
             onClick={() => navigate(-1)}
@@ -171,7 +171,7 @@ export default function NftDetailPage() {
           <span>/</span>
           <span
             onClick={() =>
-              navigate(`/subnets/${chainId}/address/${tokenAddress}`)
+              navigate(`/orbit/${chainId}/address/${tokenAddress}`)
             }
             className="text-blue-400 hover:text-blue-300 cursor-pointer font-mono"
           >
@@ -211,7 +211,7 @@ export default function NftDetailPage() {
                       onClick={() =>
                         nft?.token_address &&
                         navigate(
-                          `/subnets/${chainId}/address/${nft.token_address}`,
+                          `/orbit/${chainId}/address/${nft.token_address}`,
                         )
                       }
                     />
@@ -221,7 +221,7 @@ export default function NftDetailPage() {
                       value={nft?.owner}
                       onClick={() =>
                         nft?.owner &&
-                        navigate(`/subnets/${chainId}/address/${nft.owner}`)
+                        navigate(`/orbit/${chainId}/address/${nft.owner}`)
                       }
                     />
                   </DetailField>
@@ -345,7 +345,7 @@ export default function NftDetailPage() {
                               <td className="px-5 py-2.5">
                                 <span
                                   onClick={() =>
-                                    navigate(`/subnets/${chainId}/tx/${txHash}`)
+                                    navigate(`/orbit/${chainId}/tx/${txHash}`)
                                   }
                                   className="text-blue-400 font-mono hover:text-blue-300 cursor-pointer"
                                 >
@@ -356,7 +356,7 @@ export default function NftDetailPage() {
                                 <span
                                   onClick={() =>
                                     navigate(
-                                      `/subnets/${chainId}/address/${row.from}`,
+                                      `/orbit/${chainId}/address/${row.from}`,
                                     )
                                   }
                                   className="hover:text-blue-300 cursor-pointer"
@@ -368,7 +368,7 @@ export default function NftDetailPage() {
                                 <span
                                   onClick={() =>
                                     navigate(
-                                      `/subnets/${chainId}/address/${row.to}`,
+                                      `/orbit/${chainId}/address/${row.to}`,
                                     )
                                   }
                                   className="hover:text-blue-300 cursor-pointer"

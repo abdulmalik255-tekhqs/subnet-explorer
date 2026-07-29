@@ -45,9 +45,7 @@ export default function AddressFirstTransactions({ chainId, address }) {
           >
             <div className="flex items-center justify-between gap-3 flex-wrap">
               <span
-                onClick={() =>
-                  navigate(`/subnets/${chainId}/tx/${txRow.hash}`)
-                }
+                onClick={() => navigate(`/orbit/${chainId}/tx/${txRow.hash}`)}
                 className="text-xs font-mono text-blue-400 hover:text-blue-300 cursor-pointer truncate"
               >
                 {truncateHash(txRow.hash)}
@@ -63,7 +61,7 @@ export default function AddressFirstTransactions({ chainId, address }) {
               <span className="text-gray-500">From</span>
               <span
                 onClick={() =>
-                  navigate(`/subnets/${chainId}/address/${txRow.from}`)
+                  navigate(`/orbit/${chainId}/address/${txRow.from}`)
                 }
                 className="font-mono text-gray-300 hover:text-blue-300 cursor-pointer"
               >
@@ -73,7 +71,7 @@ export default function AddressFirstTransactions({ chainId, address }) {
               <span className="text-gray-500">To</span>
               <span
                 onClick={() =>
-                  navigate(`/subnets/${chainId}/address/${txRow.to}`)
+                  navigate(`/orbit/${chainId}/address/${txRow.to}`)
                 }
                 className="font-mono text-gray-300 hover:text-blue-300 cursor-pointer"
               >

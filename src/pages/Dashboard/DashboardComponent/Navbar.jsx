@@ -66,7 +66,7 @@ const Navbar = () => {
     if (item.chain_id === "all") {
       navigate("/");
     } else {
-      navigate(`/subnets/network/${encodeURIComponent(item.name)}`);
+      navigate(`/orbit/network/${encodeURIComponent(item.name)}`);
     }
   };
 
@@ -81,7 +81,10 @@ const Navbar = () => {
         {/* Left: Logo + Chain selector + Nav links */}
         <div className="flex items-center gap-8">
           {/* Logo */}
-          <div className="flex items-center gap-2">
+          <div
+            className="flex items-center gap-2 cursor-pointer"
+            onClick={() => navigate("/")}
+          >
             <div className="w-8 h-8 bg-[#2563EB] rounded-md flex items-center justify-center font-bold text-lg">
               RY
             </div>
@@ -198,8 +201,8 @@ const Navbar = () => {
               Overview
             </p>
             <p
-              onClick={() => navigate("/subnets")}
-              className={getLinkClass("/subnets")}
+              onClick={() => navigate("/orbit")}
+              className={getLinkClass("/orbit")}
             >
               Orbits
             </p>

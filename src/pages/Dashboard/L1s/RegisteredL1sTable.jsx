@@ -205,14 +205,12 @@ export default function RegisteredL1sTable() {
   };
   return (
     <>
-      {/* Section label */}
-      <div className="flex items-center gap-4 mb-1 opacity-60">
+      <div className="flex items-center gap-4  opacity-60 w-full">
         <h2 className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] whitespace-nowrap">
           All Registered Orbits
         </h2>
-        <div className="h-px w-full bg-gradient-to-r from-gray-800 to-transparent" />
+        <div className="h-[2px] w-full bg-gradient-to-r from-gray-800 to-transparent" />
       </div>
-
       <div className="bg-[#111827] border border-gray-800/60 rounded-2xl shadow-2xl shadow-black/50 w-full mb-2 overflow-hidden">
         {/* Toolbar */}
         <div className="flex items-center gap-3 px-4 py-3 border-b border-gray-800/60">
@@ -230,7 +228,7 @@ export default function RegisteredL1sTable() {
                 setPage(1);
               }}
               placeholder="Search by name or chain ID..."
-              className="bg-[#0B111D] border border-gray-800 rounded-lg pl-8 pr-7 py-1.5 text-xs text-gray-300 placeholder-gray-700 focus:outline-none focus:border-blue-500/50 w-52 transition-colors"
+              className="bg-[#0B111D] border border-gray-800 rounded-lg pl-8 pr-7 py-1.5 text-xs text-gray-300 placeholder-gray-700 focus:outline-none focus:border-blue-500/50 w-64 transition-colors"
             />
             {search && (
               <button
@@ -276,7 +274,7 @@ export default function RegisteredL1sTable() {
                   { label: "Orbit ID", align: "left", pl: "pl-4" },
                   { label: "TPS", align: "right", pl: "" },
                   { label: "Daily Txns", align: "right", pl: "" },
-                  { label: "Active Addresses", align: "right", pl: "" },
+                  { label: "Total Addresses", align: "right", pl: "" },
                   { label: "Contracts", align: "right", pl: "" },
                   { label: "Status", align: "right", pl: "" },
                 ].map(({ label, align, pl }) => (
