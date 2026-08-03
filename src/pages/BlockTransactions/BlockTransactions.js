@@ -23,7 +23,7 @@ const BlockTransactions = ({ block }) => {
   const handleTxs = async () => {
     try {
       const result = await Promise.all(
-        txHashes.map((hash) => bryt.getTransactionByHash(hash))
+        txHashes.map((hash) => bryt.getTransactionByHash(hash)),
       );
       const data = result.map((r) => r.result.transaction);
       setTransactions(data);
@@ -44,7 +44,7 @@ const BlockTransactions = ({ block }) => {
           <button
             className={classNames(
               "py-[5px] px-[9px] bg-bryt-grey-200 rounded-lg text-bryt-primary-main",
-              tab === "transactions" && "text-white bg-bryt-primary-main"
+              tab === "transactions" && "text-white bg-bryt-primary-main",
             )}
             onClick={() => handleTab("transactions")}
           >

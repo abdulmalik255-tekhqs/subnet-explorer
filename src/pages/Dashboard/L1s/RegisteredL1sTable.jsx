@@ -2,6 +2,8 @@ import { useState, useMemo, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { MagnifyingGlass, X } from "@phosphor-icons/react";
 import L1DetailPanel from "./L1DetailPanel";
+import { shortenString } from "../../../utils";
+import ClipBoardComponet from "../../../components/Pagination/ClipBoard";
 
 const PAGE_SIZE = 6;
 
@@ -340,8 +342,13 @@ export default function RegisteredL1sTable() {
 
                       {/* Subnet ID */}
                       <td className="px-4 py-3 text-left">
-                        <span className="text-blue-400 font-mono hover:text-blue-300 transition-colors">
-                          {truncateId(chain?.orbit_id)}
+                        <span className="text-blue-400 font-mono hover:text-blue-300 transition-colors flex items-center gap-1">
+                          {shortenString(chain?.orbit_id)}
+                          <ClipBoardComponet
+                            val={chain?.orbit_id}
+                            message="Orbit ID copied!"
+                            className="text-blue-400 hover:text-gray-200"
+                          />
                         </span>
                       </td>
 

@@ -1,5 +1,11 @@
 import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
+import { shortenString } from "../../../utils";
+import ClipBoardComponet from "../../../components/Pagination/ClipBoard";
+
+dayjs.extend(relativeTime);
 
 const POLL_INTERVAL_MS = 2000;
 const MAX_ITEMS = 10;
@@ -13,15 +19,16 @@ const TYPE_DOT_COLORS = {
 };
 
 const fmtTimeAgo = (timestamp) => {
-  const seconds = Math.max(0, Math.floor((Date.now() - Number(timestamp)) / 1000));
+  const seconds = Math.max(
+    0,
+    Math.floor((Date.now() - Number(timestamp)) / 1000),
+  );
   if (seconds < 60) return `${seconds}s`;
   const minutes = Math.floor(seconds / 60);
   if (minutes < 60) return `${minutes}m`;
   const hours = Math.floor(minutes / 60);
   return `${hours}h`;
 };
-
-const truncateHash = (hash) => (hash ? `${hash.slice(0, 12)}…` : "");
 
 export default function LiveActivity() {
   const dispatch = useDispatch();
@@ -65,12 +72,18 @@ export default function LiveActivity() {
               <span
                 className="w-2 h-2 rounded-full flex-shrink-0"
                 style={{
-                  backgroundColor: TYPE_DOT_COLORS[tx.transaction_type] ?? "#6B7280",
+                  backgroundColor:
+                    TYPE_DOT_COLORS[tx.transaction_type] ?? "#6B7280",
                 }}
               />
               <div className="flex flex-col gap-0.5 min-w-0 flex-1">
-                <span className="text-sm font-mono text-blue-400 truncate">
-                  {truncateHash(tx.hash)}
+                <span className="text-sm font-mono text-blue-400 truncate flex items-center gap-1">
+                  {shortenString(tx.hash)}
+                  <ClipBoardComponet
+                    val={tx?.hash}
+                    message="Transaction hash copied!"
+                    className="text-blue-400 hover:text-gray-200"
+                  />
                 </span>
                 <span className="text-xs text-gray-600">
                   {tx.transaction_type}
@@ -81,8 +94,8 @@ export default function LiveActivity() {
                 <span className="px-1.5 py-0.5 bg-[#1E293B] rounded text-[10px] text-gray-500 font-mono">
                   {tx.chain_name}
                 </span>
-                <span className="text-[11px] text-gray-600 w-6 text-right">
-                  {fmtTimeAgo(tx.timestamp)}
+                <span className="text-[11px] text-gray-600 text-right">
+                  {dayjs(Number(tx.timestamp)).fromNow()}
                 </span>
               </div>
             </div>

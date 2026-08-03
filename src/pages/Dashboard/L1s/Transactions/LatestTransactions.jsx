@@ -12,15 +12,6 @@ dayjs.extend(relativeTime);
 const truncateHash = (hash = "") =>
   hash.length > 14 ? `${hash.slice(0, 8)}…${hash.slice(-6)}` : hash;
 
-const fmtAge = (timestamp) => {
-  const ts = Number(timestamp);
-  if (!ts) return "—";
-  const diffSec = Math.max(0, Math.floor((Date.now() - ts) / 1000));
-  if (diffSec < 60) return `${diffSec}s`;
-  if (diffSec < 3600) return `${Math.floor(diffSec / 60)}m`;
-  return `${Math.floor(diffSec / 3600)}h`;
-};
-
 export default function LatestTransactions({ chainId, symbol = "RYT" }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();

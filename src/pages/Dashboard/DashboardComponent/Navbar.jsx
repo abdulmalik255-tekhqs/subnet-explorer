@@ -78,9 +78,7 @@ const Navbar = () => {
   return (
     <>
       <nav className="flex items-center justify-between px-6 py-3 bg-[#0B111D] border-b border-gray-800 text-white">
-        {/* Left: Logo + Chain selector + Nav links */}
         <div className="flex items-center gap-8">
-          {/* Logo */}
           <div
             className="flex items-center gap-2 cursor-pointer"
             onClick={() => navigate("/")}
@@ -111,7 +109,7 @@ const Navbar = () => {
             </button>
 
             {open && (
-              <div className="absolute top-full left-0 mt-2 w-56 rounded-xl border border-[#1E293B] bg-[#0F172A] shadow-2xl overflow-hidden z-50">
+              <div className="max-h-[400px] overflow-y-auto absolute top-full left-0 mt-2 w-56 rounded-xl border border-[#1E293B] bg-[#0F172A] shadow-2xl z-50">
                 {/* PRIMARY NETWORK section */}
                 <div className="px-4 pt-4 pb-1">
                   <span className="text-[10px] font-semibold tracking-widest text-gray-500 uppercase">
@@ -191,11 +189,10 @@ const Navbar = () => {
                     ))}
                   </>
                 )}
-                <div className="h-2" />
+                {/* <div className="h-2" /> */}
               </div>
             )}
           </div>
-          {/* Nav links */}
           <div className="flex items-center gap-6 ml-4">
             <p onClick={() => navigate("/")} className={getLinkClass("/")}>
               Overview
@@ -214,8 +211,6 @@ const Navbar = () => {
             </p> */}
           </div>
         </div>
-
-        {/* Right: Search + Block number */}
         <div className="flex items-center gap-4">
           <div
             className="relative flex items-center group"
