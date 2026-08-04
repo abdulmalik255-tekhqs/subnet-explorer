@@ -1,6 +1,6 @@
 import React from "react";
 import Navbar from "./DashboardComponent/Navbar";
-import ChainPulse from "./DashboardComponent/ChainPulse";
+// import ChainPulse from "./DashboardComponent/ChainPulse";
 import NetworkOverview from "./DashboardComponent/NetworkOverview";
 import PrimaryNetworkPinned from "./L1s/PrimaryNetworkPinned";
 import TransactionChart from "./DashboardComponent/TransactionChart";
@@ -12,7 +12,7 @@ const Dashboard = () => {
   return (
     <div className="min-h-screen bg-[#060B15] text-white -m-5">
       <Navbar />
-      <ChainPulse />
+      {/* <ChainPulse /> */}
       <div className="flex items-center gap-2 text-xs text-gray-500 border-b border-gray-800 w-full max-w-full px-6 py-[8px]">
         <span className="text-blue-500">/</span>
         <span>Overview</span>

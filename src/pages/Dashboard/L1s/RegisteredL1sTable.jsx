@@ -274,7 +274,7 @@ export default function RegisteredL1sTable() {
                 {[
                   { label: "Name", align: "left", pl: "pl-5" },
                   { label: "Orbit ID", align: "left", pl: "pl-4" },
-                  { label: "TPS", align: "right", pl: "" },
+                  { label: "Chain ID", align: "right", pl: "" },
                   { label: "Daily Txns", align: "right", pl: "" },
                   { label: "Total Addresses", align: "right", pl: "" },
                   { label: "Contracts", align: "right", pl: "" },
@@ -353,14 +353,8 @@ export default function RegisteredL1sTable() {
                       </td>
 
                       {/* TPS */}
-                      <td style={TNUM} className="px-4 py-3 text-right">
-                        <span
-                          className={
-                            tps === 0 ? "text-gray-700" : "text-gray-200"
-                          }
-                        >
-                          {tps === 0 ? "0" : tps?.toLocaleString()}
-                        </span>
+                      <td className="px-4 py-3 text-right text-gray-200">
+                        <span>{chain?.chain_id}</span>
                       </td>
 
                       {/* Daily Txns */}

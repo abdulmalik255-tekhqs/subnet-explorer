@@ -2,6 +2,9 @@ import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
+const TABLE_GRID_CLASS =
+  "grid grid-cols-[minmax(0,1.6fr)_minmax(96px,0.9fr)_minmax(88px,0.8fr)_88px] gap-x-4";
+
 const ROW_STYLES = [
   {
     dotColor: "bg-blue-500",
@@ -44,11 +47,11 @@ export default function TopL1sByTPS() {
   }, [dispatch]);
 
   return (
-    <div className="bg-[#111827] border border-gray-800/60 rounded-2xl p-3 shadow-2xl shadow-black/50 w-[50%]">
+    <div className="w-full lg:w-1/2 bg-[#111827] border border-gray-800/60 rounded-2xl p-3 shadow-2xl shadow-black/50">
       {/* Header */}
       <div className="mb-4 flex items-center justify-between">
         <h3 className="text-xs font-semibold uppercase tracking-wider text-[#7D8FB3]">
-          TOP Orbits BY TPS
+          Top Orbits by TPS
         </h3>
 
         <button
@@ -64,11 +67,13 @@ export default function TopL1sByTPS() {
       {/* Table */}
       <div className="overflow-hidden rounded-xl border border-[#16284A]">
         {/* Header Row */}
-        <div className="grid grid-cols-4 bg-[#0E1B31] px-4 py-3 text-xs uppercase tracking-wider text-[#6F82A7]">
-          <div>Orbit Name</div>
-          <div>TPS</div>
-          <div>Daily Txns</div>
-          <div>7D Trend</div>
+        <div
+          className={`${TABLE_GRID_CLASS} bg-[#0E1B31] px-4 py-3 text-xs uppercase tracking-wider text-[#6F82A7]`}
+        >
+          <div className="min-w-0">Orbit Name</div>
+          <div className="text-left">Chain ID</div>
+          <div className="text-left">Daily Txns</div>
+          <div className="text-left">7D Trend</div>
         </div>
 
         {/* Data Rows */}
@@ -76,7 +81,7 @@ export default function TopL1sByTPS() {
           Array.from({ length: 3 }).map((_, i) => (
             <div
               key={i}
-              className={`grid grid-cols-4 items-center px-4 py-4 ${
+              className={`${TABLE_GRID_CLASS} items-center px-4 py-4 ${
                 i !== 2 ? "border-b border-[#16284A]" : ""
               }`}
             >
@@ -98,27 +103,34 @@ export default function TopL1sByTPS() {
             return (
               <div
                 key={item.orbit_id ?? index}
-                className={`grid grid-cols-4 items-center px-4 py-4 ${
+                className={`${TABLE_GRID_CLASS} items-center px-4 py-4 ${
                   index !== registeredOrbits.length - 1
                     ? "border-b border-[#16284A]"
                     : ""
                 }`}
               >
                 {/* Name */}
-                <div className="flex items-center gap-3">
+                <div className="flex min-w-0 items-center gap-3">
                   <div
-                    className={`h-3 w-3 rounded-sm ${style.dotColor} shadow-[0_0_8px_currentColor]`}
+                    className={`h-3 w-3 shrink-0 rounded-sm ${style.dotColor} shadow-[0_0_8px_currentColor]`}
                   />
-                  <span className="font-medium text-white">{item.name}</span>
+                  <span
+                    className="truncate font-medium text-white"
+                    title={item.name}
+                  >
+                    {item.name}
+                  </span>
                 </div>
 
-                {/* TPS */}
-                <div className={`font-mono ${style.tpsColor}`}>
-                  {fmtNum(item.tps)}
+                {/* Chain ID */}
+                <div
+                  className={`font-mono text-lg leading-none ${style.tpsColor}`}
+                >
+                  {item.chain_id}
                 </div>
 
                 {/* Transactions */}
-                <div className="text-white">
+                <div className="text-lg leading-none text-white">
                   {fmtNum(item.transaction_count)}
                 </div>
 

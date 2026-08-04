@@ -87,6 +87,7 @@ export const orbit = createModel()({
     nftTokenTransfers: [],
     nftTokenTransfersTotal: "0",
     nftTokenTransfersLoading: false,
+    orbitDashboard: null,
   },
   reducers: {
     setLoading(state, payload) {
@@ -100,6 +101,9 @@ export const orbit = createModel()({
     },
     setDashboard(state, payload) {
       state.dashboard = payload;
+    },
+    setOrbitDashboard(state, payload) {
+      state.orbitDashboard = payload;
     },
     setDashboardLoading(state, payload) {
       state.dashboardLoading = payload;
@@ -324,6 +328,7 @@ export const orbit = createModel()({
         dispatch.orbit.setDashboardLoading(false);
       }
     },
+
     async handleGetOrbitDetail(payload) {
       try {
         dispatch.orbit.setOrbitDetailLoading(true);
@@ -731,6 +736,21 @@ export const orbit = createModel()({
         return null;
       } finally {
         dispatch.orbit.setRegisteredOrbitsLoading(false);
+      }
+    },
+    async handleOrbitDashboard(payload) {
+      try {
+        dispatch.orbit.setDashboardLoading(true);
+        const { type = "orbit", chainId = "1001" } = payload || {};
+        const response = await graphqlClient.request(GET_ORBIT_DASHBOARD, {
+          type,
+          chainId,
+        });
+        dispatch.orbit.setOrbitDashboard(response?.dashboard ?? null);
+      } catch (err) {
+        console.log(err.message);
+      } finally {
+        dispatch.orbit.setDashboardLoading(false);
       }
     },
   }),

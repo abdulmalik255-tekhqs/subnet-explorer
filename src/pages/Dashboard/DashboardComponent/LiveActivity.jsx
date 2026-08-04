@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { shortenString } from "../../../utils";
@@ -8,7 +9,7 @@ import ClipBoardComponet from "../../../components/Pagination/ClipBoard";
 dayjs.extend(relativeTime);
 
 const POLL_INTERVAL_MS = 2000;
-const MAX_ITEMS = 10;
+const MAX_ITEMS = 5;
 
 const TYPE_DOT_COLORS = {
   Transfer: "#3B82F6",
@@ -18,20 +19,9 @@ const TYPE_DOT_COLORS = {
   "Token Mint": "#F59E0B",
 };
 
-const fmtTimeAgo = (timestamp) => {
-  const seconds = Math.max(
-    0,
-    Math.floor((Date.now() - Number(timestamp)) / 1000),
-  );
-  if (seconds < 60) return `${seconds}s`;
-  const minutes = Math.floor(seconds / 60);
-  if (minutes < 60) return `${minutes}m`;
-  const hours = Math.floor(minutes / 60);
-  return `${hours}h`;
-};
-
 export default function LiveActivity() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { globalTransactions } = useSelector((s) => s.orbit);
 
   useEffect(() => {
@@ -42,8 +32,7 @@ export default function LiveActivity() {
     return () => clearInterval(intervalId);
   }, [dispatch]);
 
-  const items = (globalTransactions ?? []).slice(0, MAX_ITEMS);
-
+  const items = (globalTransactions ?? [])?.slice(0, MAX_ITEMS);
   return (
     <div className="bg-[#0B1220] border border-gray-800/60 rounded-2xl p-4 shadow-2xl shadow-black/50 w-full">
       <div className="flex items-center justify-between mb-4">
@@ -64,9 +53,9 @@ export default function LiveActivity() {
         </div>
       ) : (
         <div className="flex flex-col">
-          {items.map((tx) => (
+          {items?.map((tx) => (
             <div
-              key={tx.id}
+              key={tx?.id}
               className="flex items-center gap-3 py-2.5 border-b border-gray-800/40 last:border-b-0"
             >
               <span
@@ -78,7 +67,15 @@ export default function LiveActivity() {
               />
               <div className="flex flex-col gap-0.5 min-w-0 flex-1">
                 <span className="text-sm font-mono text-blue-400 truncate flex items-center gap-1">
-                  {shortenString(tx.hash)}
+                  <span
+                    onClick={() =>
+                      navigate(`/orbit/${tx?.chain_id}/tx/${tx?.hash}`)
+                    }
+                    className="hover:text-blue-300 cursor-pointer"
+                  >
+                    {shortenString(tx?.hash)}
+                  </span>
+
                   <ClipBoardComponet
                     val={tx?.hash}
                     message="Transaction hash copied!"
@@ -86,16 +83,16 @@ export default function LiveActivity() {
                   />
                 </span>
                 <span className="text-xs text-gray-600">
-                  {tx.transaction_type}
-                  {tx.value && tx.value !== "0" && ` · ${tx.value} RYT`}
+                  {tx?.transaction_type}
+                  {tx?.value && tx?.value !== "0" && ` · ${tx?.value} RYT`}
                 </span>
               </div>
               <div className="flex items-center gap-2 flex-shrink-0">
                 <span className="px-1.5 py-0.5 bg-[#1E293B] rounded text-[10px] text-gray-500 font-mono">
-                  {tx.chain_name}
+                  {tx?.chain_name}
                 </span>
                 <span className="text-[11px] text-gray-600 text-right">
-                  {dayjs(Number(tx.timestamp)).fromNow()}
+                  {dayjs(Number(tx?.timestamp)).fromNow()}
                 </span>
               </div>
             </div>

@@ -10,6 +10,7 @@ import {
 } from "recharts";
 
 const TWENTY_FOUR_HOURS_MS = 24 * 60 * 60 * 1000;
+const REFRESH_INTERVAL_MS = 10000;
 
 const fmtTime = (timestamp) =>
   new Date(Number(timestamp)).toLocaleTimeString([], {
@@ -32,22 +33,35 @@ const CustomTooltip = ({ active, payload, label }) => {
 export default function NetworkTPSChart({ type = "primary", chainId }) {
   const dispatch = useDispatch();
   const { metricsHistory, metricsHistoryLoading } = useSelector((s) => s.orbit);
-
+  console.log("NetworkTPSChart metricsHistory", metricsHistory);
   useEffect(() => {
-    const end = Date.now();
-    const start = end - TWENTY_FOUR_HOURS_MS;
-    dispatch.orbit.handleGetMetricsHistory({
-      metrics: ["tps"],
-      start: String(start),
-      end: String(end),
-      type,
-      chainId,
-    });
+    const fetchMetricsHistory = () => {
+      const end = Date.now();
+      const start = end - TWENTY_FOUR_HOURS_MS;
+      dispatch.orbit.handleGetMetricsHistory({
+        metrics: ["tps"],
+        start: String(start),
+        end: String(end),
+        type,
+        chainId,
+      });
+    };
+
+    fetchMetricsHistory();
+    const intervalId = setInterval(fetchMetricsHistory, REFRESH_INTERVAL_MS);
+
+    return () => clearInterval(intervalId);
   }, [dispatch, type, chainId]);
 
   const chartData = useMemo(() => {
+    const earliestAllowedTimestamp = Date.now() - TWENTY_FOUR_HOURS_MS;
+
     return (metricsHistory ?? [])
-      .filter((m) => m?.metric === "tps")
+      .filter(
+        (metric) =>
+          metric?.metric === "tps" &&
+          Number(metric?.timestamp) >= earliestAllowedTimestamp,
+      )
       .map((m) => ({
         timestamp: Number(m?.timestamp),
         time: fmtTime(m?.timestamp),
@@ -88,7 +102,7 @@ export default function NetworkTPSChart({ type = "primary", chainId }) {
           </span>
         </div>
       ) : (
-        <ResponsiveContainer width="100%" height={180}>
+        <ResponsiveContainer width="100%" height={300}>
           <AreaChart
             data={chartData}
             margin={{ top: 4, right: 4, left: 4, bottom: 0 }}

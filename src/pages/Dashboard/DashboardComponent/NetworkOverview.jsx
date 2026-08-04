@@ -61,12 +61,12 @@ const NetworkOverview = () => {
       subtext: "↑ 5 this month",
       borderTopColor: "bg-indigo-500",
     },
-    {
-      title: "Network TPS",
-      value: fmt(ov?.combined_tps),
-      subtext: "Combined across all chains",
-      borderTopColor: "bg-teal-400",
-    },
+    // {
+    //   title: "Network TPS",
+    //   value: fmt(ov?.combined_tps),
+    //   subtext: "Combined across all chains",
+    //   borderTopColor: "bg-teal-400",
+    // },
     {
       title: "Total Addresses",
       value: fmt(dashboard?.total_accounts),
@@ -104,13 +104,13 @@ const NetworkOverview = () => {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 gap-4">
-        {stats.slice(0, 4).map((stat, i) => (
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-3 gap-4">
+        {stats.slice(0, 3).map((stat, i) => (
           <StatCard key={i} {...stat} loading={loading} />
         ))}
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-1">
-        {stats.slice(4).map((stat, i) => (
+        {stats.slice(3).map((stat, i) => (
           <StatCard key={i} {...stat} loading={loading} />
         ))}
       </div>

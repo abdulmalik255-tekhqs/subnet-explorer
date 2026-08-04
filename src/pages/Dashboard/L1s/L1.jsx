@@ -1,6 +1,6 @@
 import React from "react";
 import Navbar from "../DashboardComponent/Navbar";
-import ChainPulse from "../DashboardComponent/ChainPulse";
+// import ChainPulse from "../DashboardComponent/ChainPulse";
 import L1Stats from "./L1Stats";
 import PrimaryNetworkPinned from "./PrimaryNetworkPinned";
 import RegisteredL1sTable from "./RegisteredL1sTable";
@@ -9,7 +9,7 @@ const L1Component = () => {
   return (
     <div className="min-h-screen bg-[#060B15] text-white -m-5">
       <Navbar />
-      <ChainPulse />
+      {/* <ChainPulse /> */}
 
       <div className="">
         <div className="flex items-center gap-2 text-xs text-gray-500 border-b border-gray-800 w-full max-w-full px-6 py-[8px]">

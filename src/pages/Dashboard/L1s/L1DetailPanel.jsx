@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { X } from "@phosphor-icons/react";
-import L1StatsTab from "./L1StatsTab";
+// import L1StatsTab from "./L1StatsTab";
 import L1DetailTab from "./L1DetailTab";
 import LatestBlocks from "./Blocks/LatestBlocks";
 import LatestTransactions from "./Transactions/LatestTransactions";
 
-const TABS = ["Explorer", "Stats", "Detail"];
+const TABS = ["Explorer", "Detail"];
 
 const STAT_ACCENTS = ["#3b82f6", "#2dd4a7", "#f59e0b", "#22c55e"];
 
@@ -40,34 +40,36 @@ const StatCard = ({ label, value, delta, accent }) => (
 
 export default function L1DetailPanel({ chain, onClose }) {
   const dispatch = useDispatch();
-  const { dashboard, dashboardLoading } = useSelector((s) => s.orbit);
+  const { orbitDashboard, dashboardLoading } = useSelector((s) => s.orbit);
   const [activeTab, setActiveTab] = useState("Explorer");
   const symbol = chain?.symbol || "RYT";
   const chainType = "orbit";
   const chainId = chain?.chain_id;
   useEffect(() => {
     if (chainId) {
-      dispatch.orbit.handleGetOrbitDashboard({ type: chainType, chainId });
+      dispatch.orbit.handleOrbitDashboard({ type: chainType, chainId });
     }
   }, [dispatch, chainType, chainId]);
 
   const stats = [
     {
       label: "Total Txn Count",
-      value: fmtNum(dashboard?.total_transactions ?? chain?.transaction_count),
+      value: fmtNum(
+        orbitDashboard?.total_transactions ?? chain?.transaction_count,
+      ),
     },
     {
       label: "Transactions Per Second",
-      value: dashboard?.current_tps ?? chain?.tps ?? "0",
+      value: orbitDashboard?.current_tps ?? chain?.tps ?? "0",
     },
     {
       label: "Total Addresses",
-      value: fmtNum(dashboard?.total_accounts ?? chain?.address_count),
+      value: fmtNum(orbitDashboard?.total_accounts ?? chain?.address_count),
     },
     {
       label: "Total Contracts Deployed",
       value: fmtNum(
-        dashboard?.total_contracts ?? chain?.total_deployed_contracts,
+        orbitDashboard?.total_contracts ?? chain?.total_deployed_contracts,
       ),
     },
   ];
@@ -108,36 +110,39 @@ export default function L1DetailPanel({ chain, onClose }) {
       </div>
 
       {/* Tab content */}
-      {activeTab === "Stats" ? (
-        <L1StatsTab chain={chain} chainType={chainType} chainId={chainId} />
-      ) : activeTab === "Detail" ? (
-        <L1DetailTab chain={chain} chainType={chainType} chainId={chainId} />
-      ) : (
-        <div className="px-5 py-5 space-y-4">
-          {/* Stat cards */}
-          {dashboardLoading && (
-            <div className="text-[10px] text-gray-500 tracking-wider uppercase -mb-2">
-              Refreshing…
+      {
+        // activeTab === "Stats" ? (
+        //   <L1StatsTab chain={chain} chainType={chainType} chainId={chainId} />
+        // ) :
+        activeTab === "Detail" ? (
+          <L1DetailTab chain={chain} chainType={chainType} chainId={chainId} />
+        ) : (
+          <div className="px-5 py-5 space-y-4">
+            {/* Stat cards */}
+            {dashboardLoading && (
+              <div className="text-[10px] text-gray-500 tracking-wider uppercase -mb-2">
+                Refreshing…
+              </div>
+            )}
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+              {stats.map((s, i) => (
+                <StatCard
+                  key={s.label}
+                  label={s.label}
+                  value={s.value}
+                  accent={STAT_ACCENTS[i % STAT_ACCENTS.length]}
+                />
+              ))}
             </div>
-          )}
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-            {stats.map((s, i) => (
-              <StatCard
-                key={s.label}
-                label={s.label}
-                value={s.value}
-                accent={STAT_ACCENTS[i % STAT_ACCENTS.length]}
-              />
-            ))}
-          </div>
 
-          {/* Latest Blocks / Transactions */}
-          <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
-            <LatestBlocks chainId={chainId} />
-            <LatestTransactions chainId={chainId} symbol={symbol} />
+            {/* Latest Blocks / Transactions */}
+            <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
+              <LatestBlocks chainId={chainId} />
+              <LatestTransactions chainId={chainId} symbol={symbol} />
+            </div>
           </div>
-        </div>
-      )}
+        )
+      }
     </div>
   );
 }

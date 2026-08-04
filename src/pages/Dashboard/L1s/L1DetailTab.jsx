@@ -69,7 +69,7 @@ const StatCard = ({ label, value, delta, accent }) => (
 
 export default function L1DetailTab({ chain, chainType, chainId }) {
   const dispatch = useDispatch();
-  const { orbitDetail, dashboard, metricsHistory, metricsHistoryLoading } =
+  const { orbitDetail, orbitDashboard, metricsHistory, metricsHistoryLoading } =
     useSelector((s) => s.orbit);
 
   useEffect(() => {
@@ -112,23 +112,25 @@ export default function L1DetailTab({ chain, chainType, chainId }) {
   const stats = [
     {
       label: "TPS",
-      value: dashboard?.current_tps ?? chain?.tps ?? "0",
+      value: orbitDashboard?.current_tps ?? chain?.tps ?? "0",
       accent: "#3b82f6",
     },
     {
       label: "Total Addresses",
-      value: fmtNum(dashboard?.total_accounts ?? chain?.address_count),
+      value: fmtNum(orbitDashboard?.total_accounts ?? chain?.address_count),
       accent: "#22c55e",
     },
     {
       label: "Total Transactions",
-      value: fmtNum(dashboard?.total_transactions ?? chain?.transaction_count),
+      value: fmtNum(
+        orbitDashboard?.total_transactions ?? chain?.transaction_count,
+      ),
       accent: "#3b82f6",
     },
     {
       label: "Total Contracts",
       value: fmtNum(
-        dashboard?.total_contracts ?? chain?.total_deployed_contracts,
+        orbitDashboard?.total_contracts ?? chain?.total_deployed_contracts,
       ),
       accent: "#f59e0b",
     },
@@ -158,7 +160,8 @@ export default function L1DetailTab({ chain, chainType, chainId }) {
             label="Orbit ID"
             value={truncateId(orbitDetail?.orbit_id ?? chain?.orbit_id)}
           />
-          <InfoRow label="VM type" value={orbitDetail?.vm_type ?? "—"} />
+          <InfoRow label="VM type" value={"orbit-evm"} />
+          {/* <InfoRow label="VM type" value={orbitDetail?.vm_type ?? "—"} /> */}
           <InfoRow
             label="Chain ID"
             value={orbitDetail?.chain_id ?? chainId ?? "—"}
