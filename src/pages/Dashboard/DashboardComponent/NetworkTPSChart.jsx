@@ -33,7 +33,6 @@ const CustomTooltip = ({ active, payload, label }) => {
 export default function NetworkTPSChart({ type = "primary", chainId }) {
   const dispatch = useDispatch();
   const { metricsHistory, metricsHistoryLoading } = useSelector((s) => s.orbit);
-  console.log("NetworkTPSChart metricsHistory", metricsHistory);
   useEffect(() => {
     const fetchMetricsHistory = () => {
       const end = Date.now();

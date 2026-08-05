@@ -38,12 +38,12 @@ const StatCard = ({ label, value, delta, accent }) => (
   </div>
 );
 
-export default function L1DetailPanel({ chain, onClose }) {
+export default function L1DetailPanel({ chain, onClose, type }) {
   const dispatch = useDispatch();
   const { orbitDashboard, dashboardLoading } = useSelector((s) => s.orbit);
   const [activeTab, setActiveTab] = useState("Explorer");
   const symbol = chain?.symbol || "RYT";
-  const chainType = "orbit";
+  const chainType = type;
   const chainId = chain?.chain_id;
   useEffect(() => {
     if (chainId) {
@@ -79,7 +79,9 @@ export default function L1DetailPanel({ chain, onClose }) {
       {/* Header */}
       <div className="flex items-center justify-between px-5 py-3 border-b border-gray-800/60">
         <span className="text-[10px] font-black text-gray-500 uppercase tracking-[0.2em]">
-          Orbit Detail — {chain?.name}
+          {type === "primary"
+            ? "Primary Network"
+            : `Orbit Detail — ${chain?.name}`}
         </span>
         <button
           onClick={onClose}

@@ -1,7 +1,6 @@
 import { useState, useMemo, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { MagnifyingGlass, X } from "@phosphor-icons/react";
-import L1DetailPanel from "./L1DetailPanel";
 import { shortenString } from "../../../utils";
 import ClipBoardComponet from "../../../components/Pagination/ClipBoard";
 
@@ -64,7 +63,7 @@ const fmtContracts = (val) => {
   return isNaN(n) ? val : n.toLocaleString();
 };
 
-const truncateId = (id = "") => (id.length > 10 ? `${id.slice(0, 10)}…` : id);
+// const truncateId = (id = "") => (id.length > 10 ? `${id.slice(0, 10)}…` : id);
 
 // const SORT_OPTIONS = ["TPS", "Name", "Transactions", "Contracts"];
 // const STATUS_OPTIONS = ["All", "Active", "Running", "Offline"];
@@ -128,7 +127,7 @@ const SkeletonRow = () => (
   </tr>
 );
 
-export default function RegisteredL1sTable() {
+export default function RegisteredL1sTable({ selectedChain, onToggleChain }) {
   const dispatch = useDispatch();
   const { registeredOrbits, registeredOrbitsLoading, totalOrbits } =
     useSelector((s) => s.orbit);
@@ -137,7 +136,6 @@ export default function RegisteredL1sTable() {
   // const [sortBy, setSortBy] = useState("TPS");
   // const [statusFilter, setStatusFilter] = useState("All");
   const [page, setPage] = useState(1);
-  const [selectedChain, setSelectedChain] = useState(null);
 
   useEffect(() => {
     dispatch.orbit.handleGetOrbits();
@@ -310,24 +308,19 @@ export default function RegisteredL1sTable() {
                       registeredOrbits?.indexOf(chain) % CHAIN_COLORS?.length
                     ];
                   const st = getStatus(chain?.status);
-                  const tps = parseFloat(chain?.tps || 0);
 
                   const isSelected =
-                    selectedChain?.chain_id === chain?.chain_id;
+                    selectedChain?.type === "orbit" &&
+                    selectedChain?.chain?.chain_id === chain?.chain_id;
 
                   return (
                     <tr
                       key={chain?.chain_id ?? i}
-                      onClick={() =>
-                        setSelectedChain((prev) =>
-                          prev?.chain_id === chain?.chain_id ? null : chain,
-                        )
-                      }
+                      onClick={() => onToggleChain?.(chain, "orbit")}
                       className={`border-b border-gray-800/30 hover:bg-white/[0.02] transition-colors cursor-pointer ${
                         isSelected ? "bg-blue-500/[0.06]" : ""
                       }`}
                     >
-                      {/* Name */}
                       <td className="px-5 py-3 text-left whitespace-nowrap">
                         <div className="flex items-center gap-2.5">
                           <span
@@ -339,8 +332,6 @@ export default function RegisteredL1sTable() {
                           </span>
                         </div>
                       </td>
-
-                      {/* Subnet ID */}
                       <td className="px-4 py-3 text-left">
                         <span className="text-blue-400 font-mono hover:text-blue-300 transition-colors flex items-center gap-1">
                           {shortenString(chain?.orbit_id)}
@@ -351,37 +342,23 @@ export default function RegisteredL1sTable() {
                           />
                         </span>
                       </td>
-
-                      {/* TPS */}
                       <td className="px-4 py-3 text-right text-gray-200">
                         <span>{chain?.chain_id}</span>
                       </td>
-
-                      {/* Daily Txns */}
                       <td
                         style={TNUM}
                         className="px-4 py-3 text-right text-gray-300"
                       >
-                        {fmtNum(chain?.transaction_count)}
+                        {chain?.transaction_count}
+                      </td>
+                      <td className="px-4 py-3 text-right text-gray-300">
+                        {chain?.address_count}
                       </td>
 
-                      {/* Active Addrs */}
-                      <td
-                        style={TNUM}
-                        className="px-4 py-3 text-right text-gray-300"
-                      >
-                        {fmtNum(chain?.address_count)}
+                      <td className="px-4 py-3 text-right text-gray-300">
+                        {chain?.total_deployed_contracts}
                       </td>
 
-                      {/* Contracts */}
-                      <td
-                        style={TNUM}
-                        className="px-4 py-3 text-right text-gray-300"
-                      >
-                        {fmtContracts(chain?.total_deployed_contracts)}
-                      </td>
-
-                      {/* Status */}
                       <td className="px-5 py-3 text-right">
                         <span
                           className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[11px] font-semibold uppercase tracking-wider"
@@ -443,13 +420,6 @@ export default function RegisteredL1sTable() {
           </div>
         </div>
       </div>
-
-      {selectedChain && (
-        <L1DetailPanel
-          chain={selectedChain}
-          onClose={() => setSelectedChain(null)}
-        />
-      )}
     </>
   );
 }

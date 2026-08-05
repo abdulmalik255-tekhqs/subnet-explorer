@@ -54,7 +54,12 @@ const Navbar = () => {
   }, [open]);
 
   const getLinkClass = (path) => {
-    const isActive = location.pathname === path;
+    const isActive =
+      path === "/"
+        ? location.pathname === path
+        : location.pathname === path ||
+          location.pathname.startsWith(`${path}/`);
+
     return `px-4 py-1.5 rounded-md text-sm font-medium cursor-pointer transition-colors ${
       isActive ? "bg-[#1E293B] text-white" : "text-gray-400 hover:text-white"
     }`;

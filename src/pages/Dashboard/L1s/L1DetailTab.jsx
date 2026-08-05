@@ -68,6 +68,7 @@ const StatCard = ({ label, value, delta, accent }) => (
 );
 
 export default function L1DetailTab({ chain, chainType, chainId }) {
+  console.log("L1DetailTab chainType:", chainType, "chainId:", chainId);
   const dispatch = useDispatch();
   const { orbitDetail, orbitDashboard, metricsHistory, metricsHistoryLoading } =
     useSelector((s) => s.orbit);
@@ -156,10 +157,13 @@ export default function L1DetailTab({ chain, chainType, chainId }) {
       {/* Left column */}
       <div className="space-y-4">
         <div className="bg-[#0B111D] border border-gray-800 rounded-xl overflow-hidden">
-          <InfoRow
-            label="Orbit ID"
-            value={truncateId(orbitDetail?.orbit_id ?? chain?.orbit_id)}
-          />
+          {chainType === "primary" ? null : (
+            <InfoRow
+              label="Orbit ID"
+              value={truncateId(orbitDetail?.orbit_id ?? chain?.orbit_id)}
+            />
+          )}
+
           <InfoRow label="VM type" value={"orbit-evm"} />
           {/* <InfoRow label="VM type" value={orbitDetail?.vm_type ?? "—"} /> */}
           <InfoRow
