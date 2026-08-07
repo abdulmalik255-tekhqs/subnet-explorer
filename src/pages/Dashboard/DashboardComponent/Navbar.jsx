@@ -65,13 +65,15 @@ const Navbar = () => {
     }`;
   };
 
-  const handleSelect = (item, color) => {
+  const handleSelect = (item, color, type = "orbit") => {
     setSelected({ ...item, color });
     setOpen(false);
     if (item.chain_id === "all") {
+      dispatch.orbit.setSelectedDirectoryChain(null);
       navigate("/");
     } else {
-      navigate(`/orbit/network/${encodeURIComponent(item.name)}`);
+      dispatch.orbit.setSelectedDirectoryChain({ chain: item, type });
+      navigate("/orbit");
     }
   };
 
@@ -124,7 +126,9 @@ const Navbar = () => {
 
                 {/* All chains */}
                 <button
-                  onClick={() => handleSelect(ALL_CHAINS_ITEM, "#2563EB")}
+                  onClick={() =>
+                    handleSelect(ALL_CHAINS_ITEM, "#2563EB", "all")
+                  }
                   className={`w-full flex items-center gap-3 px-4 py-2.5 text-left text-sm transition-colors hover:bg-[#1E293B] ${
                     selected.chain_id === "all"
                       ? "bg-[#1E293B] text-white"
@@ -144,12 +148,13 @@ const Navbar = () => {
                   primary?.map((chain, i) => (
                     <button
                       key={chain.chain_id}
-                      // onClick={() =>
-                      //   handleSelect(
-                      //     chain,
-                      //     PRIMARY_COLORS[i % PRIMARY_COLORS.length],
-                      //   )
-                      // }
+                      onClick={() =>
+                        handleSelect(
+                          chain,
+                          PRIMARY_COLORS[i % PRIMARY_COLORS.length],
+                          "primary",
+                        )
+                      }
                       className={`w-full flex items-center gap-3 px-4 py-2.5 text-left text-sm transition-colors hover:bg-[#1E293B] ${
                         selected.chain_id === chain.chain_id
                           ? "bg-[#1E293B] text-white"
@@ -174,12 +179,13 @@ const Navbar = () => {
                     {orbits?.map((chain, i) => (
                       <button
                         key={chain.chain_id}
-                        // onClick={() =>
-                        //   handleSelect(
-                        //     chain,
-                        //     ORBIT_COLORS[(i + 1) % ORBIT_COLORS.length],
-                        //   )
-                        // }
+                        onClick={() =>
+                          handleSelect(
+                            chain,
+                            ORBIT_COLORS[(i + 1) % ORBIT_COLORS.length],
+                            "orbit",
+                          )
+                        }
                         className={`w-full flex items-center gap-3 px-4 py-2.5 text-left text-sm transition-colors hover:bg-[#1E293B] ${
                           selected.chain_id === chain.chain_id
                             ? "bg-[#1E293B] text-white"

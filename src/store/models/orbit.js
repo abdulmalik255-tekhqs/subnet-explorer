@@ -88,6 +88,7 @@ export const orbit = createModel()({
     nftTokenTransfersTotal: "0",
     nftTokenTransfersLoading: false,
     orbitDashboard: null,
+    selectedDirectoryChain: null,
   },
   reducers: {
     setLoading(state, payload) {
@@ -257,6 +258,9 @@ export const orbit = createModel()({
     },
     setNftTokenTransfersLoading(state, payload) {
       state.nftTokenTransfersLoading = payload;
+    },
+    setSelectedDirectoryChain(state, payload) {
+      state.selectedDirectoryChain = payload;
     },
   },
   effects: (dispatch) => ({

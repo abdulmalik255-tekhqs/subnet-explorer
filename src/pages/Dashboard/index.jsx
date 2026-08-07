@@ -1,4 +1,6 @@
 import React from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import Navbar from "./DashboardComponent/Navbar";
 // import ChainPulse from "./DashboardComponent/ChainPulse";
 import NetworkOverview from "./DashboardComponent/NetworkOverview";
@@ -9,6 +11,16 @@ import NetworkTPSChart from "./DashboardComponent/NetworkTPSChart";
 import LiveActivity from "./DashboardComponent/LiveActivity";
 
 const Dashboard = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const selectedChain = useSelector((s) => s.orbit.selectedDirectoryChain);
+
+  const handleOpenOrbitDetail = (chain, type) => {
+    if (!chain) return;
+    dispatch.orbit.setSelectedDirectoryChain({ chain, type });
+    navigate("/orbit");
+  };
+
   return (
     <div className="min-h-screen bg-[#060B15] text-white -m-5">
       <Navbar />
@@ -19,7 +31,10 @@ const Dashboard = () => {
       </div>
       <div className="px-6 pb-10">
         <NetworkOverview />
-        <PrimaryNetworkPinned />
+        <PrimaryNetworkPinned
+          selectedChain={selectedChain}
+          onToggleChain={handleOpenOrbitDetail}
+        />
         <div className="flex flex-col lg:flex-row gap-4 mt-2">
           <NetworkTPSChart />
           <LiveActivity />

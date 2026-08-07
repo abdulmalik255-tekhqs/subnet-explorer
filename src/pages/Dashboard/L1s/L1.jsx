@@ -1,4 +1,5 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import Navbar from "../DashboardComponent/Navbar";
 // import ChainPulse from "../DashboardComponent/ChainPulse";
 import L1Stats from "./L1Stats";
@@ -7,17 +8,20 @@ import RegisteredL1sTable from "./RegisteredL1sTable";
 import L1DetailPanel from "./L1DetailPanel";
 
 const L1Component = () => {
-  const [selectedChain, setSelectedChain] = useState(null);
+  const dispatch = useDispatch();
+  const selectedChain = useSelector((s) => s.orbit.selectedDirectoryChain);
   const detailPanelRef = useRef(null);
 
   const handleToggleChain = (chain, type) => {
-    setSelectedChain((prev) => {
-      if (prev?.chain?.chain_id === chain?.chain_id && prev?.type === type) {
-        return null;
-      }
+    if (
+      selectedChain?.chain?.chain_id === chain?.chain_id &&
+      selectedChain?.type === type
+    ) {
+      dispatch.orbit.setSelectedDirectoryChain(null);
+      return;
+    }
 
-      return { chain, type };
-    });
+    dispatch.orbit.setSelectedDirectoryChain({ chain, type });
   };
 
   useEffect(() => {
@@ -54,7 +58,7 @@ const L1Component = () => {
             <div ref={detailPanelRef} className="w-full">
               <L1DetailPanel
                 chain={selectedChain.chain}
-                onClose={() => setSelectedChain(null)}
+                onClose={() => dispatch.orbit.setSelectedDirectoryChain(null)}
                 type={selectedChain.type}
               />
             </div>
