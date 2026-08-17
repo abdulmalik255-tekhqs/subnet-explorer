@@ -50,6 +50,84 @@ const InfoRow = ({ label, value }) => (
   </div>
 );
 
+const InputDataSection = ({ transaction }) => {
+  const [viewType, setViewType] = useState("default");
+  const [open, setOpen] = useState(false);
+
+  if (!transaction?.input) {
+    return null;
+  }
+
+  return (
+    <div className="bg-[#0B111D] border border-gray-800 rounded-xl overflow-hidden">
+      <div className="px-5 py-3 border-b border-gray-800/60 flex items-center justify-between gap-3">
+        <span className="text-[11px] font-bold uppercase tracking-widest text-gray-500">
+          Input Data
+        </span>
+
+        <div className="relative">
+          <button
+            onClick={() => setOpen((prev) => !prev)}
+            className="text-[11px] font-bold uppercase tracking-widest text-blue-400 hover:text-blue-300"
+          >
+            View Input As
+          </button>
+
+          {open && (
+            <div className="absolute right-0 top-full mt-2 w-[150px] rounded-md border border-gray-800 bg-[#111827] shadow-md z-20 overflow-hidden">
+              <button
+                onClick={() => {
+                  setViewType("default");
+                  setOpen(false);
+                }}
+                className={`w-full px-3 py-2 text-left text-xs hover:bg-[#1F2937] ${
+                  viewType === "default"
+                    ? "text-blue-400 font-semibold"
+                    : "text-gray-300"
+                }`}
+              >
+                Default View
+              </button>
+
+              <button
+                onClick={() => {
+                  setViewType("original");
+                  setOpen(false);
+                }}
+                className={`w-full px-3 py-2 text-left text-xs hover:bg-[#1F2937] ${
+                  viewType === "original"
+                    ? "text-blue-400 font-semibold"
+                    : "text-gray-300"
+                }`}
+              >
+                Original
+              </button>
+            </div>
+          )}
+        </div>
+      </div>
+
+      <div className="px-5 py-3">
+        <textarea
+          rows="5"
+          readOnly
+          disabled
+          value={
+            viewType === "default"
+              ? `Function: ${transaction?.function_name || "N/A"}\n\nArguments:\n${JSON.stringify(
+                  transaction?.function_args,
+                  null,
+                  2,
+                )}`
+              : transaction?.input || ""
+          }
+          className="block w-full rounded-lg border border-gray-800 bg-[#060B15] p-2.5 font-mono text-sm text-gray-300"
+        />
+      </div>
+    </div>
+  );
+};
+
 const LogEntry = ({ log }) => {
   const [showData, setShowData] = useState(false);
   const topics = Array.isArray(log.topics) ? log.topics : [];
@@ -124,7 +202,6 @@ export default function TransactionDetailPage() {
     transactionLogsLoading,
   } = useSelector((s) => s.orbit);
   const [tab, setTab] = useState("Details");
-  const [showInput, setShowInput] = useState(false);
 
   useEffect(() => {
     if (chainId && txHash) {
@@ -135,14 +212,14 @@ export default function TransactionDetailPage() {
 
   const tx = orbitTransactionDetail;
   const logs = transactionLogs ?? [];
-  const blockNumber = tx?.block ? getBlockNumberFromRef(tx.block) : null;
+  const blockNumber = tx?.block ? getBlockNumberFromRef(tx?.block) : null;
   const isContractCreation = !tx?.to || tx?.to?.toLowerCase() === ZERO_ADDRESS;
 
   return (
     <div className="min-h-screen bg-[#060B15] text-white -m-5">
       <Navbar />
 
-      <div className="px-6 py-5 space-y-4 max-w-6xl mx-auto">
+      <div className="px-6 py-5 space-y-4 max-w-4xl mx-auto">
         <div className="flex items-center gap-2 text-xs text-gray-500">
           <button
             onClick={() => navigate(-1)}
@@ -200,7 +277,7 @@ export default function TransactionDetailPage() {
             </div>
           ) : (
             <div className="space-y-2.5">
-              {logs.map((log) => (
+              {logs?.map((log) => (
                 <LogEntry key={log.id} log={log} />
               ))}
             </div>
@@ -272,10 +349,10 @@ export default function TransactionDetailPage() {
 
             {/* Value & Fees */}
             <div className="bg-[#0B111D] border border-gray-800 rounded-xl overflow-hidden">
-              <InfoRow label="Value" value={tx.value ?? "0"} />
-              <InfoRow label="Gas Limit" value={tx.gas ?? "—"} />
-              <InfoRow label="Gas Used" value={tx.gas_used ?? "—"} />
-              <InfoRow label="Gas Price" value={tx.gas_price ?? "—"} />
+              <InfoRow label="Value" value={`${tx.value ?? "0"} RYT`} />
+              {/* <InfoRow label="Gas Limit" value={tx.gas ?? "—"} /> */}
+              {/* <InfoRow label="Gas Used" value={tx.gas_used ?? "—"} /> */}
+              {/* <InfoRow label="Gas Price" value={tx.gas_price ?? "—"} /> */}
               <InfoRow
                 label="Transaction Fee"
                 value={fmtFee(tx.gas_used, tx.gas_price)}
@@ -323,34 +400,12 @@ export default function TransactionDetailPage() {
                           `/orbit/${chainId}/address/${tx.contract_address}`,
                         )
                       }
-                    />
+                    />{" "}
                   </div>
                 )}
             </div>
 
-            {/* Input data */}
-            {tx.input && (
-              <div className="bg-[#0B111D] border border-gray-800 rounded-xl overflow-hidden">
-                <div className="px-5 py-3 border-b border-gray-800 flex items-center justify-between">
-                  <span className="text-[11px] font-bold uppercase tracking-widest text-gray-500">
-                    Input Data
-                  </span>
-                  <button
-                    onClick={() => setShowInput((v) => !v)}
-                    className="text-[11px] font-bold uppercase tracking-widest text-blue-400 hover:text-blue-300"
-                  >
-                    {showInput ? "Hide" : "Show"}
-                  </button>
-                </div>
-                {showInput && (
-                  <div className="px-5 py-3">
-                    <p className="text-xs font-mono text-gray-400 break-all">
-                      {tx.input}
-                    </p>
-                  </div>
-                )}
-              </div>
-            )}
+            <InputDataSection transaction={tx} />
           </>
         )}
       </div>

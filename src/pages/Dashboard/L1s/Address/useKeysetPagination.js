@@ -2,6 +2,9 @@ import { useCallback, useEffect, useState } from "react";
 
 export const PAGE_SIZE = 10;
 
+const getLastNumber = (pageItems) =>
+  pageItems?.[pageItems.length - 1]?.number ?? null;
+
 // Generic keyset (cursor) pager: the underlying APIs only support "give me
 // N items before this `number`", so pages can't be computed with a formula
 // (the `number`s for a filtered/per-address list are a sparse subset of all
@@ -11,7 +14,12 @@ export const PAGE_SIZE = 10;
 //
 // `fetchPage(lastId)` must resolve to `{ items, total }` and is expected to
 // be a stable (useCallback'd) reference.
-export default function useKeysetPagination({ chainId, address, active, fetchPage }) {
+export default function useKeysetPagination({
+  chainId,
+  address,
+  active,
+  fetchPage,
+}) {
   const [lastIdStack, setLastIdStack] = useState(["0"]);
   const [page, setPage] = useState(1);
   const [items, setItems] = useState([]);
@@ -48,23 +56,40 @@ export default function useKeysetPagination({ chainId, address, active, fetchPag
     async (target) => {
       if (!chainId || !address || target === page) return;
 
-      if (target <= lastIdStack.length) {
+      const stack = [...lastIdStack];
+
+      if (page === stack.length && items.length > 0 && !stack[page]) {
+        const nextCursor = getLastNumber(items);
+        if (nextCursor) {
+          stack.push(nextCursor);
+        }
+      }
+
+      if (target <= stack.length) {
         setPage(target);
-        await load(lastIdStack[target - 1]);
+        setLastIdStack(stack);
+        await load(stack[target - 1]);
         return;
       }
 
-      const stack = [...lastIdStack];
-      for (let p = stack.length; p < target; p++) {
-        const data = await load(stack[p - 1]);
-        const lastNumber = data?.items?.[data.items.length - 1]?.number;
+      let resolvedPage = stack.length;
+
+      for (let nextPage = stack.length + 1; nextPage <= target; nextPage++) {
+        const data = await load(stack[nextPage - 1]);
+        resolvedPage = nextPage;
+
+        const lastNumber = getLastNumber(data?.items ?? []);
         if (!lastNumber) break;
-        stack.push(lastNumber);
+
+        if (!stack[nextPage]) {
+          stack.push(lastNumber);
+        }
       }
+
       setLastIdStack(stack);
-      setPage(Math.min(target, stack.length));
+      setPage(resolvedPage);
     },
-    [chainId, address, page, lastIdStack, load],
+    [chainId, address, page, lastIdStack, items, load],
   );
 
   const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
