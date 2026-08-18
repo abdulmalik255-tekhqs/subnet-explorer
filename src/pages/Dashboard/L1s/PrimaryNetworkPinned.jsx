@@ -101,11 +101,11 @@ const PrimaryNetworkPinned = ({
                 value={fmt(d?.latest_block_height)}
                 loading={dashboardLoading}
               />
-              <InfoItem
+              {/* <InfoItem
                 label="TPS"
                 value={fmt(d?.current_tps)}
                 loading={dashboardLoading}
-              />
+              /> */}
               <InfoItem
                 label="Total Accounts"
                 value={fmt(d?.total_accounts)}

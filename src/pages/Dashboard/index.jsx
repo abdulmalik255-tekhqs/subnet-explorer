@@ -7,7 +7,7 @@ import NetworkOverview from "./DashboardComponent/NetworkOverview";
 import PrimaryNetworkPinned from "./L1s/PrimaryNetworkPinned";
 import TransactionChart from "./DashboardComponent/TransactionChart";
 import TopL1sByTPS from "./DashboardComponent/TopL1sByTPS";
-import NetworkTPSChart from "./DashboardComponent/NetworkTPSChart";
+// import NetworkTPSChart from "./DashboardComponent/NetworkTPSChart";
 import LiveActivity from "./DashboardComponent/LiveActivity";
 
 const Dashboard = () => {
@@ -36,7 +36,7 @@ const Dashboard = () => {
           onToggleChain={handleOpenOrbitDetail}
         />
         <div className="flex flex-col lg:flex-row gap-4 mt-2">
-          <NetworkTPSChart />
+          {/* <NetworkTPSChart /> */}
           <LiveActivity />
         </div>
         <div className="flex flex-col lg:flex-row gap-4 mt-2">

@@ -1,34 +1,34 @@
 import dayjs from "dayjs";
-import { useEffect, useMemo } from "react";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  AreaChart,
-  Area,
-  XAxis,
-  YAxis,
-  Tooltip,
-  ResponsiveContainer,
-} from "recharts";
+// import {
+//   AreaChart,
+//   Area,
+//   XAxis,
+//   YAxis,
+//   Tooltip,
+//   ResponsiveContainer,
+// } from "recharts";
 
 const TWENTY_FOUR_HOURS_MS = 24 * 60 * 60 * 1000;
 
-const fmtTime = (timestamp) =>
-  new Date(Number(timestamp)).toLocaleTimeString([], {
-    hour: "2-digit",
-    minute: "2-digit",
-  });
+// const fmtTime = (timestamp) =>
+//   new Date(Number(timestamp)).toLocaleTimeString([], {
+//     hour: "2-digit",
+//     minute: "2-digit",
+//   });
 
-const ChartTooltip = ({ active, payload, label }) => {
-  if (!active || !payload?.length) return null;
-  return (
-    <div className="bg-[#0a1220] border border-blue-500/40 rounded-lg px-3 py-2 text-xs shadow-xl">
-      <div className="text-gray-500 mb-0.5">{label}</div>
-      <div className="text-blue-400 font-bold text-sm">
-        {payload[0].value?.toLocaleString()} TPS
-      </div>
-    </div>
-  );
-};
+// const ChartTooltip = ({ active, payload, label }) => {
+//   if (!active || !payload?.length) return null;
+//   return (
+//     <div className="bg-[#0a1220] border border-blue-500/40 rounded-lg px-3 py-2 text-xs shadow-xl">
+//       <div className="text-gray-500 mb-0.5">{label}</div>
+//       <div className="text-blue-400 font-bold text-sm">
+//         {payload[0].value?.toLocaleString()} TPS
+//       </div>
+//     </div>
+//   );
+// };
 
 const fmtNum = (val) => {
   if (!val || val === "0") return "–";
@@ -70,8 +70,11 @@ const StatCard = ({ label, value, delta, accent }) => (
 export default function L1DetailTab({ chain, chainType, chainId }) {
   console.log("L1DetailTab chainType:", chainType, "chainId:", chainId);
   const dispatch = useDispatch();
-  const { orbitDetail, orbitDashboard, metricsHistory, metricsHistoryLoading } =
-    useSelector((s) => s.orbit);
+  const {
+    orbitDetail,
+    orbitDashboard,
+    // metricsHistory, metricsHistoryLoading
+  } = useSelector((s) => s.orbit);
 
   useEffect(() => {
     if (chainId) {
@@ -98,17 +101,17 @@ export default function L1DetailTab({ chain, chainType, chainId }) {
     return () => clearInterval(interval);
   }, [dispatch, chainType, chainId]);
 
-  const chartData = useMemo(() => {
-    return (metricsHistory ?? [])
-      .filter((m) => m?.metric === "tps")
-      .map((m) => ({
-        timestamp: Number(m?.timestamp),
-        time: fmtTime(m?.timestamp),
-        value: parseFloat(m?.value) || 0,
-      }))
-      .sort((a, b) => a?.timestamp - b?.timestamp);
-  }, [metricsHistory]);
-  const hasChartData = chartData?.length > 0;
+  // const chartData = useMemo(() => {
+  //   return (metricsHistory ?? [])
+  //     .filter((m) => m?.metric === "tps")
+  //     .map((m) => ({
+  //       timestamp: Number(m?.timestamp),
+  //       time: fmtTime(m?.timestamp),
+  //       value: parseFloat(m?.value) || 0,
+  //     }))
+  //     .sort((a, b) => a?.timestamp - b?.timestamp);
+  // }, [metricsHistory]);
+  // const hasChartData = chartData?.length > 0;
 
   const stats = [
     {
@@ -153,7 +156,7 @@ export default function L1DetailTab({ chain, chainType, chainId }) {
   // ];
 
   return (
-    <div className="px-5 py-5 grid grid-cols-1 xl:grid-cols-2 gap-4">
+    <div className="px-5 py-5 grid grid-cols-1 xl:grid-cols-1 gap-4">
       {/* Left column */}
       <div className="space-y-4">
         <div className="bg-[#0B111D] border border-gray-800 rounded-xl overflow-hidden">
@@ -191,7 +194,7 @@ export default function L1DetailTab({ chain, chainType, chainId }) {
       </div>
 
       {/* Right column */}
-      <div className="space-y-4">
+      {/* <div className="space-y-4">
         <div className="bg-[#0B111D] border border-gray-800 rounded-xl p-4">
           <div className="flex items-center justify-between mb-3">
             <span className="text-[11px] font-bold uppercase tracking-widest text-gray-500">
@@ -266,63 +269,10 @@ export default function L1DetailTab({ chain, chainType, chainId }) {
           )}
         </div>
 
-        {/* <div className="bg-[#0B111D] border border-gray-800 rounded-xl overflow-hidden">
-          <div className="px-5 py-3 border-b border-gray-800">
-            <span className="text-[11px] font-bold uppercase tracking-widest text-gray-500">
-              Chain Info — L1 Blockchains
-            </span>
-          </div>
-          <table className="w-full text-xs">
-            <thead>
-              <tr className="border-b border-gray-800/60">
-                <th className="text-left px-5 py-2 text-gray-500 font-medium">
-                  Chain Name
-                </th>
-                <th className="text-left px-3 py-2 text-gray-500 font-medium">
-                  Chain ID
-                </th>
-                <th className="text-left px-3 py-2 text-gray-500 font-medium">
-                  VM ID
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {subnetBlockchains.map((b, i) => (
-                <tr
-                  key={b.chainId ?? i}
-                  className={`border-b border-gray-800/40 hover:bg-white/[0.02] transition-colors ${
-                    i === subnetBlockchains.length - 1 ? "border-0" : ""
-                  }`}
-                >
-                  <td className="px-5 py-2.5 text-gray-200 font-medium">
-                    {b.name}
-                  </td>
-                  <td className="px-3 py-2.5 text-gray-300">{b.chainId}</td>
-                  <td className="px-3 py-2.5 text-gray-400 font-mono">
-                    {b.vmId}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div> */}
+        
 
-        {/* <div className="bg-[#0B111D] border border-gray-800 rounded-xl p-4">
-          <div className="text-[11px] font-bold uppercase tracking-widest text-gray-500 mb-3">
-            Blockchains On Subnet
-          </div>
-          <div className="flex items-center gap-2 flex-wrap">
-            {subnetBlockchains.map((b, i) => (
-              <span
-                key={b.chainId ?? i}
-                className="px-3 py-1.5 rounded-lg border border-gray-700 bg-[#111827] text-xs text-gray-200"
-              >
-                {b.name} ({b.chainId})
-              </span>
-            ))}
-          </div>
-        </div> */}
-      </div>
+        
+      </div> */}
     </div>
   );
 }
