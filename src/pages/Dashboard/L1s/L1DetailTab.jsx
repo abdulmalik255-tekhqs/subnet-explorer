@@ -1,5 +1,6 @@
 import dayjs from "dayjs";
 import { useEffect } from "react";
+import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 // import {
 //   AreaChart,
@@ -68,7 +69,7 @@ const StatCard = ({ label, value, delta, accent }) => (
 );
 
 export default function L1DetailTab({ chain, chainType, chainId }) {
-  console.log("L1DetailTab chainType:", chainType, "chainId:", chainId);
+  const params = useParams();
   const dispatch = useDispatch();
   const {
     orbitDetail,
@@ -77,10 +78,12 @@ export default function L1DetailTab({ chain, chainType, chainId }) {
   } = useSelector((s) => s.orbit);
 
   useEffect(() => {
-    if (chainId) {
-      dispatch.orbit.handleGetOrbitDetail({ chainId });
+    if (chainId || params?.chainID) {
+      dispatch.orbit.handleGetOrbitDetail({
+        chainId: chainId || params?.chainID,
+      });
     }
-  }, [dispatch, chainId]);
+  }, [dispatch, chainId, params?.chainID]);
 
   useEffect(() => {
     if (!chainId) return;

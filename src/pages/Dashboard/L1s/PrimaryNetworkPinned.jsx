@@ -88,9 +88,9 @@ const PrimaryNetworkPinned = ({
                     </span>
                   </div>
                 </div>
-                <p className="text-[11px] text-gray-500 font-bold uppercase tracking-widest opacity-70">
-                  EVM · Orbit-EVM compatible
-                </p>
+                {/* <p className="text-[11px] text-gray-500 font-bold uppercase tracking-widest opacity-70">
+                  Orbit-EVM compatible
+                </p> */}
               </div>
             </div>
 

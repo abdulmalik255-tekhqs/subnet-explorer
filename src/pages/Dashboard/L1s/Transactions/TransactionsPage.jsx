@@ -8,6 +8,7 @@ import { ArrowLeft } from "@phosphor-icons/react";
 import Navbar from "../../DashboardComponent/Navbar";
 import Pagination from "../Pagination";
 import StatusBadge from "./StatusBadge";
+import { formatTokenAmount } from "../../../../utils";
 
 dayjs.extend(utc);
 dayjs.extend(relativeTime);
@@ -170,7 +171,7 @@ export default function TransactionsPage() {
                         </span>
                       </td>
                       <td className="px-3 py-2.5 font-mono text-gray-300">
-                        {row.value}
+                        {formatTokenAmount(row.value)} RYT
                       </td>
                       <td className="px-3 py-2.5">
                         <StatusBadge status={row.transaction_status} />

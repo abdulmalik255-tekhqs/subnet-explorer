@@ -48,21 +48,6 @@ const STATUS_MAP = {
 const getStatus = (raw = "") =>
   STATUS_MAP[raw.toLowerCase()] ?? STATUS_MAP.offline;
 
-const fmtNum = (val) => {
-  if (!val || val === "0") return "–";
-  const n = parseInt(val, 10);
-  if (isNaN(n)) return val;
-  if (n >= 1_000_000) return `${(n / 1_000_000).toFixed(1)}M`;
-  if (n >= 1_000) return `${Math.round(n / 1_000)}K`;
-  return n.toLocaleString();
-};
-
-const fmtContracts = (val) => {
-  if (!val || val === "0") return "–";
-  const n = parseInt(val, 10);
-  return isNaN(n) ? val : n.toLocaleString();
-};
-
 // const truncateId = (id = "") => (id.length > 10 ? `${id.slice(0, 10)}…` : id);
 
 // const SORT_OPTIONS = ["TPS", "Name", "Transactions", "Contracts"];
@@ -332,7 +317,10 @@ export default function RegisteredL1sTable({ selectedChain, onToggleChain }) {
                           </span>
                         </div>
                       </td>
-                      <td className="px-4 py-3 text-left">
+                      <td
+                        className="px-4 py-3 text-left"
+                        onClick={(e) => e.stopPropagation()}
+                      >
                         <span className="text-blue-400 font-mono hover:text-blue-300 transition-colors flex items-center gap-1">
                           {shortenString(chain?.orbit_id)}
                           <ClipBoardComponet

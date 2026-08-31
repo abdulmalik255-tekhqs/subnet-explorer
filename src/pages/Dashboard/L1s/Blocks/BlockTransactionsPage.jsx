@@ -8,6 +8,7 @@ import { ArrowLeft, ArrowRight } from "@phosphor-icons/react";
 import Navbar from "../../DashboardComponent/Navbar";
 import ClipBoardComponet from "../../../../components/Pagination/ClipBoard";
 import StatusBadge from "../Transactions/StatusBadge";
+import { formatTokenAmount } from "../../../../utils";
 
 dayjs.extend(utc);
 dayjs.extend(relativeTime);
@@ -192,7 +193,7 @@ export default function BlockTransactionsPage() {
                   <span className="text-gray-500">
                     Value{" "}
                     <span className="text-gray-200 font-mono">
-                      {tx.value ?? "0"}
+                      {formatTokenAmount(tx.value) ?? "0"} RYT
                     </span>
                   </span>
                   <span className="text-gray-500">

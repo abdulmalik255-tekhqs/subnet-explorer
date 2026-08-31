@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
-import { shortenString } from "../../../utils";
+import { formatTokenAmount, shortenString } from "../../../utils";
 import ClipBoardComponet from "../../../components/Pagination/ClipBoard";
 
 dayjs.extend(relativeTime);
@@ -84,7 +84,9 @@ export default function LiveActivity() {
                 </span>
                 <span className="text-xs text-gray-600">
                   {tx?.transaction_type}
-                  {tx?.value && tx?.value !== "0" && ` · ${tx?.value} RYT`}
+                  {tx?.value &&
+                    tx?.value !== "0" &&
+                    ` · ${formatTokenAmount(tx?.value)} RYT`}
                 </span>
               </div>
               <div className="flex items-center gap-2 flex-shrink-0">

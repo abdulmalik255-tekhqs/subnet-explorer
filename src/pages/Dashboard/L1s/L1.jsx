@@ -1,4 +1,5 @@
 import React, { useEffect, useRef } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import Navbar from "../DashboardComponent/Navbar";
 // import ChainPulse from "../DashboardComponent/ChainPulse";
@@ -8,20 +9,29 @@ import RegisteredL1sTable from "./RegisteredL1sTable";
 import L1DetailPanel from "./L1DetailPanel";
 
 const L1Component = () => {
+  const { chainID } = useParams();
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const selectedChain = useSelector((s) => s.orbit.selectedDirectoryChain);
   const detailPanelRef = useRef(null);
+  const hasSeededFromUrl = useRef(false);
+
+  const closeSelectedChain = () => {
+    dispatch.orbit.setSelectedDirectoryChain(null);
+    navigate("/orbit");
+  };
 
   const handleToggleChain = (chain, type) => {
     if (
       selectedChain?.chain?.chain_id === chain?.chain_id &&
       selectedChain?.type === type
     ) {
-      dispatch.orbit.setSelectedDirectoryChain(null);
+      closeSelectedChain();
       return;
     }
 
     dispatch.orbit.setSelectedDirectoryChain({ chain, type });
+    navigate(`/orbit/${chain.chain_id}`);
   };
 
   useEffect(() => {
@@ -32,7 +42,14 @@ const L1Component = () => {
       });
     }
   }, [selectedChain]);
-
+  useEffect(() => {
+    // Seed the selection from a direct deep-link only once on mount; never
+    // reseed after a close, otherwise closing would immediately reopen it.
+    if (chainID && !selectedChain && !hasSeededFromUrl.current) {
+      hasSeededFromUrl.current = true;
+      dispatch.orbit.setSelectedDirectoryChain({ chainID, type: "orbit" });
+    }
+  }, [chainID, dispatch, selectedChain]);
   return (
     <div className="min-h-screen bg-[#060B15] text-white -m-5">
       <Navbar />
@@ -58,7 +75,7 @@ const L1Component = () => {
             <div ref={detailPanelRef} className="w-full">
               <L1DetailPanel
                 chain={selectedChain.chain}
-                onClose={() => dispatch.orbit.setSelectedDirectoryChain(null)}
+                onClose={closeSelectedChain}
                 type={selectedChain.type}
               />
             </div>

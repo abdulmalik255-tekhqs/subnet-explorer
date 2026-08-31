@@ -64,6 +64,7 @@ const Index = () => {
         <Route path="/nft/:id/:tokenID" element={<NftDetailPage />} />
         <Route path="mempoolspace" element={<MempoolPage />} />
         <Route path="/orbit" element={<L1Component />} />
+        <Route path="/orbit/:chainID" element={<L1Component />} />
         <Route path="/orbit/network/:orbitName" element={<L1SLandingPage />} />
         <Route path="/orbit/:chainId/blocks" element={<BlocksPage />} />
         <Route

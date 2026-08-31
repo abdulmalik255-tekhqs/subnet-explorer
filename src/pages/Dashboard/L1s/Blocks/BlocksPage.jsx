@@ -7,6 +7,7 @@ import relativeTime from "dayjs/plugin/relativeTime";
 import { ArrowLeft } from "@phosphor-icons/react";
 import Navbar from "../../DashboardComponent/Navbar";
 import Pagination from "../Pagination";
+import ClipBoardComponet from "../../../../components/Pagination/ClipBoard";
 
 dayjs.extend(utc);
 dayjs.extend(relativeTime);
@@ -145,7 +146,13 @@ export default function BlocksPage() {
                         </span>
                       </td>
                       <td className="px-3 py-2.5 font-mono text-gray-300">
-                        {truncateHash(row.block_hash)}
+                        <span className="flex items-center gap-2">
+                          {truncateHash(row.block_hash)}
+                          <ClipBoardComponet
+                            val={row.block_hash}
+                            message={"Hash copied!"}
+                          />
+                        </span>
                       </td>
                       <td className="px-3 py-2.5 text-gray-300">
                         {row.block_status ?? "—"}

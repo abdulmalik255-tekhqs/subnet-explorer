@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { X } from "@phosphor-icons/react";
 // import L1StatsTab from "./L1StatsTab";
@@ -40,17 +41,29 @@ const StatCard = ({ label, value, delta, accent }) => (
 
 export default function L1DetailPanel({ chain, onClose, type }) {
   const dispatch = useDispatch();
-  const { orbitDashboard, dashboardLoading } = useSelector((s) => s.orbit);
+  const params = useParams();
+  const { orbitDashboard, dashboardLoading, orbitDetail } = useSelector(
+    (s) => s.orbit,
+  );
   const [activeTab, setActiveTab] = useState("Explorer");
   const symbol = chain?.symbol || "RYT";
   const chainType = type;
   const chainId = chain?.chain_id;
   useEffect(() => {
-    if (chainId) {
-      dispatch.orbit.handleOrbitDashboard({ type: chainType, chainId });
+    if (chainId || params?.chainID) {
+      dispatch.orbit.handleOrbitDashboard({
+        type: chainType,
+        chainId: chainId || params?.chainID,
+      });
     }
   }, [dispatch, chainType, chainId]);
-
+  useEffect(() => {
+    if (chainId || params?.chainID) {
+      dispatch.orbit.handleGetOrbitDetail({
+        chainId: chainId || params?.chainID,
+      });
+    }
+  }, [dispatch, chainId, params?.chainID]);
   const stats = [
     {
       label: "Total Txn Count",
@@ -81,7 +94,7 @@ export default function L1DetailPanel({ chain, onClose, type }) {
         <span className="text-[10px] font-black text-gray-500 uppercase tracking-[0.2em]">
           {type === "primary"
             ? "Primary Network"
-            : `Orbit Detail — ${chain?.name}`}
+            : `Orbit Detail — ${orbitDetail?.name}`}
         </span>
         <button
           onClick={onClose}
@@ -139,8 +152,11 @@ export default function L1DetailPanel({ chain, onClose, type }) {
 
             {/* Latest Blocks / Transactions */}
             <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
-              <LatestBlocks chainId={chainId} />
-              <LatestTransactions chainId={chainId} symbol={symbol} />
+              <LatestBlocks chainId={chainId || params?.chainID} />
+              <LatestTransactions
+                chainId={chainId || params?.chainID}
+                symbol={symbol}
+              />
             </div>
           </div>
         )

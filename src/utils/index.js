@@ -39,7 +39,7 @@ export const normalizeValue = (value) => {
  */
 export const formatTokenAmount = (
   value,
-  { maxDecimals = 6, minDisplay = 1e-6 } = {}
+  { maxDecimals = 6, minDisplay = 1e-6 } = {},
 ) => {
   if (value === undefined || value === null || value === "") return "0";
 
@@ -86,7 +86,7 @@ export async function decodeWithoutAbi(input) {
 
   // Try to get function signature from 4byte.directory
   const sigRes = await fetch(
-    `https://www.4byte.directory/api/v1/signatures/?hex_signature=${methodId}`
+    `https://www.4byte.directory/api/v1/signatures/?hex_signature=${methodId}`,
   );
   const sigData = await sigRes.json();
   const functionSignatures = sigData.results.map((r) => r.text_signature);
@@ -180,7 +180,7 @@ export const downloadAsCSV = (data, filename = "table-data.csv") => {
     ...data.map((row) =>
       headers
         .map((field) => `"${String(row[field] ?? "").replace(/"/g, '""')}"`)
-        .join(",")
+        .join(","),
     ),
   ];
 

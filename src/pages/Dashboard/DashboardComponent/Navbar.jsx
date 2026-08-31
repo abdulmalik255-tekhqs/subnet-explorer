@@ -73,7 +73,7 @@ const Navbar = () => {
       navigate("/");
     } else {
       dispatch.orbit.setSelectedDirectoryChain({ chain: item, type });
-      navigate("/orbit");
+      navigate(`/orbit/${item.chain_id}`);
     }
   };
 

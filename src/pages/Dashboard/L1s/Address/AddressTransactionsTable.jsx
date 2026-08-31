@@ -7,6 +7,7 @@ import Pagination from "../Pagination";
 import { DirectionBadge } from "./AddressAtoms";
 import { truncateHash, truncateMethod, fmtNum } from "./addressUtils";
 import useKeysetPagination, { PAGE_SIZE } from "./useKeysetPagination";
+import { formatTokenAmount } from "../../../../utils";
 
 export default function AddressTransactionsTable({ chainId, address, active }) {
   const dispatch = useDispatch();
@@ -155,7 +156,7 @@ export default function AddressTransactionsTable({ chainId, address, active }) {
                       </span>
                     </td>
                     <td className="px-3 py-2.5 font-mono text-gray-300">
-                      {row.value ?? "0"}
+                      {formatTokenAmount(row.value) ?? "0"} RYT
                     </td>
                     <td className="px-3 py-2.5">
                       <StatusBadge status={row?.transaction_status} />

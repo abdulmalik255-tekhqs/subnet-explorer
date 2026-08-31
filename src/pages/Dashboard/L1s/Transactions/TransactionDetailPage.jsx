@@ -8,6 +8,7 @@ import { ArrowLeft } from "@phosphor-icons/react";
 import Navbar from "../../DashboardComponent/Navbar";
 import ClipBoardComponet from "../../../../components/Pagination/ClipBoard";
 import StatusBadge from "./StatusBadge";
+import { formatTokenAmount } from "../../../../utils";
 
 dayjs.extend(utc);
 dayjs.extend(relativeTime);
@@ -219,7 +220,7 @@ export default function TransactionDetailPage() {
     <div className="min-h-screen bg-[#060B15] text-white -m-5">
       <Navbar />
 
-      <div className="px-6 py-5 space-y-4 max-w-4xl mx-auto">
+      <div className="px-6 py-5 space-y-4 max-w-6xl mx-auto">
         <div className="flex items-center gap-2 text-xs text-gray-500">
           <button
             onClick={() => navigate(-1)}
@@ -349,7 +350,10 @@ export default function TransactionDetailPage() {
 
             {/* Value & Fees */}
             <div className="bg-[#0B111D] border border-gray-800 rounded-xl overflow-hidden">
-              <InfoRow label="Value" value={`${tx.value ?? "0"} RYT`} />
+              <InfoRow
+                label="Value"
+                value={`${formatTokenAmount(tx.value) ?? "0"} RYT`}
+              />
               {/* <InfoRow label="Gas Limit" value={tx.gas ?? "—"} /> */}
               {/* <InfoRow label="Gas Used" value={tx.gas_used ?? "—"} /> */}
               {/* <InfoRow label="Gas Price" value={tx.gas_price ?? "—"} /> */}

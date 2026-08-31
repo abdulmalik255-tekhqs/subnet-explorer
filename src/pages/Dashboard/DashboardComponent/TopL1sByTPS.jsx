@@ -45,7 +45,10 @@ export default function TopL1sByTPS() {
   useEffect(() => {
     dispatch.orbit.handleGetOrbits({ limit: "3" });
   }, [dispatch]);
-
+  const handleSelectOrbit = (item) => {
+    dispatch.orbit.setSelectedDirectoryChain({ chain: item, type: "orbit" });
+    navigate(`/orbit/${item?.chain_id}`);
+  };
   return (
     <div className="w-full lg:w-1/2 bg-[#111827] border border-gray-800/60 rounded-2xl p-3 shadow-2xl shadow-black/50">
       {/* Header */}
@@ -102,8 +105,9 @@ export default function TopL1sByTPS() {
             const style = ROW_STYLES[index % ROW_STYLES.length];
             return (
               <div
+                onClick={() => handleSelectOrbit(item)}
                 key={item.orbit_id ?? index}
-                className={`${TABLE_GRID_CLASS} items-center px-4 py-4 ${
+                className={`${TABLE_GRID_CLASS} items-center px-4 py-4 cursor-pointer ${
                   index !== registeredOrbits.length - 1
                     ? "border-b border-[#16284A]"
                     : ""

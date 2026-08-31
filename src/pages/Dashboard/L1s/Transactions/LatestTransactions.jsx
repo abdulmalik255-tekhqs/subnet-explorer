@@ -6,6 +6,7 @@ import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import relativeTime from "dayjs/plugin/relativeTime";
 import ClipBoardComponet from "../../../../components/Pagination/ClipBoard";
+import { formatTokenAmount } from "../../../../utils";
 dayjs.extend(utc);
 dayjs.extend(relativeTime);
 
@@ -100,7 +101,7 @@ export default function LatestTransactions({ chainId, symbol = "RYT" }) {
                     </span>
                   </td>
                   <td className="px-3 py-2.5 font-mono text-gray-300">
-                    {row.value} {symbol}
+                    {formatTokenAmount(row.value)} {symbol}
                   </td>
                   <td className="px-3 py-2.5">
                     <StatusBadge status={row.transaction_status} />
