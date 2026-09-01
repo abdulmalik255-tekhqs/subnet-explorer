@@ -9,6 +9,7 @@ import Navbar from "../../DashboardComponent/Navbar";
 import Pagination from "../Pagination";
 import StatusBadge from "./StatusBadge";
 import { formatTokenAmount } from "../../../../utils";
+import ClipBoardComponet from "../../../../components/Pagination/ClipBoard";
 
 dayjs.extend(utc);
 dayjs.extend(relativeTime);
@@ -72,7 +73,7 @@ export default function TransactionsPage() {
     <div className="min-h-screen bg-[#060B15] text-white -m-5">
       <Navbar />
 
-      <div className="px-6 py-5 space-y-4">
+      <div className="px-6 py-5 space-y-4 max-w-6xl mx-auto">
         <div className="flex items-center gap-2 text-xs text-gray-500">
           <button
             onClick={() => navigate(-1)}
@@ -141,33 +142,48 @@ export default function TransactionsPage() {
                       }`}
                     >
                       <td className="px-5 py-2.5">
-                        <span
-                          onClick={() =>
-                            navigate(`/orbit/${chainId}/tx/${row.hash}`)
-                          }
-                          className="text-blue-400 font-mono hover:text-blue-300 cursor-pointer"
-                        >
-                          {truncateHash(row.hash)}
+                        <span className="text-blue-400 font-mono hover:text-blue-300 cursor-pointer flex items-center gap-2">
+                          <span
+                            onClick={() =>
+                              navigate(`/orbit/${chainId}/tx/${row.hash}`)
+                            }
+                          >
+                            {truncateHash(row.hash)}
+                          </span>
+                          <ClipBoardComponet
+                            val={row.hash}
+                            message="Hash copied!"
+                          />
                         </span>
                       </td>
                       <td className="px-3 py-2.5 font-mono text-gray-300">
-                        <span
-                          onClick={() =>
-                            navigate(`/orbit/${chainId}/address/${row.from}`)
-                          }
-                          className="hover:text-blue-300 cursor-pointer"
-                        >
-                          {truncateHash(row.from)}
+                        <span className="hover:text-blue-300 cursor-pointer flex items-center gap-2">
+                          <span
+                            onClick={() =>
+                              navigate(`/orbit/${chainId}/address/${row.from}`)
+                            }
+                          >
+                            {truncateHash(row.from)}
+                          </span>
+                          <ClipBoardComponet
+                            val={row.from}
+                            message="Address copied!"
+                          />
                         </span>
                       </td>
                       <td className="px-3 py-2.5 font-mono text-gray-300">
-                        <span
-                          onClick={() =>
-                            navigate(`/orbit/${chainId}/address/${row.to}`)
-                          }
-                          className="hover:text-blue-300 cursor-pointer"
-                        >
-                          {truncateHash(row.to)}
+                        <span className="hover:text-blue-300 cursor-pointer flex items-center gap-2">
+                          <span
+                            onClick={() =>
+                              navigate(`/orbit/${chainId}/address/${row.to}`)
+                            }
+                          >
+                            {truncateHash(row.to)}
+                          </span>
+                          <ClipBoardComponet
+                            val={row.to}
+                            message="Address copied!"
+                          />
                         </span>
                       </td>
                       <td className="px-3 py-2.5 font-mono text-gray-300">

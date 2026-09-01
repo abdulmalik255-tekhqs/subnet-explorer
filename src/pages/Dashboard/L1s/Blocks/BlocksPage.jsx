@@ -68,7 +68,7 @@ export default function BlocksPage() {
     <div className="min-h-screen bg-[#060B15] text-white -m-5">
       <Navbar />
 
-      <div className="px-6 py-5 space-y-4">
+      <div className="px-6 py-5 space-y-4 max-w-6xl mx-auto">
         <div className="flex items-center gap-2 text-xs text-gray-500">
           <button
             onClick={() => navigate(-1)}

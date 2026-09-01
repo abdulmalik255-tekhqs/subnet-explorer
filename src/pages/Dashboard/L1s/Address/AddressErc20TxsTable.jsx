@@ -4,8 +4,10 @@ import { useNavigate } from "react-router-dom";
 import dayjs from "dayjs";
 import Pagination from "../Pagination";
 import { DirectionBadge } from "./AddressAtoms";
-import { truncateHash, fmtNum, hexToDecimalString } from "./addressUtils";
+import { truncateHash, fmtNum } from "./addressUtils";
 import useKeysetPagination, { PAGE_SIZE } from "./useKeysetPagination";
+import { formatTokenAmount } from "../../../../utils";
+import ClipBoardComponet from "../../../../components/Pagination/ClipBoard";
 
 export default function AddressErc20TxsTable({ chainId, address, active }) {
   const dispatch = useDispatch();
@@ -94,13 +96,18 @@ export default function AddressErc20TxsTable({ chainId, address, active }) {
                     }`}
                   >
                     <td className="px-5 py-2.5">
-                      <span
-                        onClick={() =>
-                          navigate(`/orbit/${chainId}/tx/${txHash}`)
-                        }
-                        className="text-blue-400 font-mono hover:text-blue-300 cursor-pointer"
-                      >
-                        {truncateHash(txHash)}
+                      <span className="text-blue-400 font-mono hover:text-blue-300 cursor-pointer flex items-center gap-2">
+                        <span
+                          onClick={() =>
+                            navigate(`/orbit/${chainId}/tx/${txHash}`)
+                          }
+                        >
+                          {truncateHash(txHash)}
+                        </span>
+                        <ClipBoardComponet
+                          val={txHash}
+                          message="Hash copied!"
+                        />
                       </span>
                     </td>
                     <td className="px-3 py-2.5">
@@ -116,30 +123,41 @@ export default function AddressErc20TxsTable({ chainId, address, active }) {
                       </span>
                     </td>
                     <td className="px-3 py-2.5 font-mono text-gray-300">
-                      <span
-                        onClick={() =>
-                          navigate(`/orbit/${chainId}/address/${row.from}`)
-                        }
-                        className="hover:text-blue-300 cursor-pointer"
-                      >
-                        {truncateHash(row.from)}
+                      <span className="hover:text-blue-300 cursor-pointer flex items-center gap-2">
+                        <span
+                          onClick={() =>
+                            navigate(`/orbit/${chainId}/address/${row.from}`)
+                          }
+                        >
+                          {truncateHash(row.from)}
+                        </span>
+                        <ClipBoardComponet
+                          val={row.from}
+                          message="Address copied!"
+                        />
                       </span>
                     </td>
                     <td className="px-1 py-2.5">
                       <DirectionBadge isOut={isOut} />
                     </td>
                     <td className="px-3 py-2.5 font-mono text-gray-300">
-                      <span
-                        onClick={() =>
-                          navigate(`/orbit/${chainId}/address/${row.to}`)
-                        }
-                        className="hover:text-blue-300 cursor-pointer"
-                      >
-                        {truncateHash(row.to)}
+                      <span className="hover:text-blue-300 cursor-pointer flex items-center gap-2">
+                        <span
+                          onClick={() =>
+                            navigate(`/orbit/${chainId}/address/${row.to}`)
+                          }
+                        >
+                          {truncateHash(row.to)}
+                        </span>
+                        <ClipBoardComponet
+                          val={row.to}
+                          message="Address copied!"
+                        />
                       </span>
                     </td>
                     <td className="px-3 py-2.5 font-mono text-gray-300">
-                      {hexToDecimalString(row.value)}
+                      {formatTokenAmount(row.value)} RYT
+                      {/* {hexToDecimalString(row.value)} */}
                     </td>
                     <td className="px-5 py-2.5 text-right text-gray-500">
                       {dayjs(Number(row.timestamp)).fromNow()}

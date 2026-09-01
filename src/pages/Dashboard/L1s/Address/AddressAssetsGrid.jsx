@@ -54,23 +54,26 @@ const NftCard = ({ nft, chainId, navigate }) => {
         )}
       </div>
       <div className="px-3 py-2.5 border-t border-gray-800 space-y-1">
-        <div className="text-[11px] text-gray-500">
-          Token:{" "}
-          <span
-            onClick={(e) => {
-              e.stopPropagation();
-              nft.token_address &&
-                navigate(`/orbit/${chainId}/address/${nft.token_address}`);
-            }}
-            className={
-              nft.token_address
-                ? "text-blue-400 hover:text-blue-300 cursor-pointer font-mono"
-                : "text-gray-600"
-            }
-          >
-            {hasImage ? nft.token_uri?.name : "--"}
-          </span>
-        </div>
+        {nft.token_uri?.name && (
+          <div className="text-[11px] text-gray-500">
+            Token:{" "}
+            <span
+              onClick={(e) => {
+                e.stopPropagation();
+                nft.token_address &&
+                  navigate(`/orbit/${chainId}/address/${nft.token_address}`);
+              }}
+              className={
+                nft.token_address
+                  ? "text-blue-400 hover:text-blue-300 cursor-pointer font-mono"
+                  : "text-gray-600"
+              }
+            >
+              {hasImage ? nft.token_uri?.name : "--"}
+            </span>
+          </div>
+        )}
+
         <div className="text-[11px] text-gray-500">
           TokenId: <span className="text-gray-300">{nft.token_id ?? "--"}</span>
         </div>
