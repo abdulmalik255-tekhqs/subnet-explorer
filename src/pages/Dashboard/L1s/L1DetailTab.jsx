@@ -2,6 +2,7 @@ import dayjs from "dayjs";
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
+import MetricCardSkeleton from "../../../components/SkeletonLoading/StatsLoading";
 // import {
 //   AreaChart,
 //   Area,
@@ -74,6 +75,7 @@ export default function L1DetailTab({ chain, chainType, chainId }) {
   const {
     orbitDetail,
     orbitDashboard,
+    orbitDetailLoading,
     // metricsHistory, metricsHistoryLoading
   } = useSelector((s) => s.orbit);
 
@@ -161,40 +163,56 @@ export default function L1DetailTab({ chain, chainType, chainId }) {
   return (
     <div className="px-5 py-5 grid grid-cols-1 xl:grid-cols-1 gap-4">
       {/* Left column */}
-      <div className="space-y-4">
-        <div className="bg-[#0B111D] border border-gray-800 rounded-xl overflow-hidden">
-          {chainType === "primary" ? null : (
-            <InfoRow
-              label="Orbit ID"
-              value={truncateId(orbitDetail?.orbit_id ?? chain?.orbit_id)}
-            />
-          )}
-
-          <InfoRow label="VM type" value={"orbit-evm"} />
-          {/* <InfoRow label="VM type" value={orbitDetail?.vm_type ?? "—"} /> */}
-          <InfoRow
-            label="Chain ID"
-            value={orbitDetail?.chain_id ?? chainId ?? "—"}
-          />
-          <InfoRow
-            label="Created"
-            value={dayjs(orbitDetail?.created_at).fromNow()}
-          />
-          <InfoRow
-            label="Description"
-            value={
-              orbitDetail?.description ??
-              `${chainType ?? "orbit"} L1 registered on the network.`
-            }
-          />
-        </div>
-
-        <div className="grid grid-cols-2 gap-4">
-          {stats.map((s) => (
-            <StatCard key={s.label} {...s} />
+      {orbitDetailLoading ? (
+        <>
+          {" "}
+          {Array.from({ length: 1 }).map((_, index) => (
+            <MetricCardSkeleton key={index} />
           ))}
-        </div>
-      </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            {Array.from({ length: 4 }).map((_, index) => (
+              <MetricCardSkeleton key={index} />
+            ))}
+          </div>
+        </>
+      ) : (
+        <>
+          <div className="space-y-4">
+            <div className="bg-[#0B111D] border border-gray-800 rounded-xl overflow-hidden">
+              {chainType === "primary" ? null : (
+                <InfoRow
+                  label="Orbit ID"
+                  value={truncateId(orbitDetail?.orbit_id ?? chain?.orbit_id)}
+                />
+              )}
+
+              <InfoRow label="VM type" value={"orbit-evm"} />
+              {/* <InfoRow label="VM type" value={orbitDetail?.vm_type ?? "—"} /> */}
+              <InfoRow
+                label="Chain ID"
+                value={orbitDetail?.chain_id ?? chainId ?? "—"}
+              />
+              <InfoRow
+                label="Created"
+                value={dayjs(orbitDetail?.created_at).fromNow()}
+              />
+              <InfoRow
+                label="Description"
+                value={
+                  orbitDetail?.description ??
+                  `${chainType ?? "orbit"} L1 registered on the network.`
+                }
+              />
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              {stats.map((s) => (
+                <StatCard key={s.label} {...s} />
+              ))}
+            </div>
+          </div>
+        </>
+      )}
 
       {/* Right column */}
       {/* <div className="space-y-4">

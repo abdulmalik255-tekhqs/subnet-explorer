@@ -3,9 +3,9 @@ import { useSelector, useDispatch } from "react-redux";
 import {
   AreaChart,
   Area,
-  XAxis,
-  YAxis,
-  CartesianGrid,
+  // XAxis,
+  // YAxis,
+  // CartesianGrid,
   Tooltip,
   ResponsiveContainer,
 } from "recharts";

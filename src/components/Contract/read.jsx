@@ -15,10 +15,14 @@ const ContractAddressRead = ({ addressInfo }) => {
   const [results, setResults] = useState({});
   const [expanded, setExpanded] = useState({}); // Track open/close state per method
 
-  const handleClickConnect = () => {
-    isConnected
-      ? disconnect()
-      : connect({ connector: connectors[0], chainId: brytNetwork.id });
+  const handleClickConnect = async () => {
+    if (isConnected) return disconnect();
+    if (!connectors[0]) return;
+    try {
+      await connect({ connector: connectors[0], chainId: brytNetwork.id });
+    } catch (err) {
+      console.error("Connect error:", err);
+    }
   };
 
   const handleToggle = (fnName) => {

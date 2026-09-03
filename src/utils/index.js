@@ -197,3 +197,18 @@ export const downloadAsCSV = (data, filename = "table-data.csv") => {
 
   URL.revokeObjectURL(url);
 };
+
+export const fmtNum = (val) => {
+  if (!val || val === "0") return "–";
+  const n = parseInt(val, 10);
+  if (isNaN(n)) return val;
+  if (n >= 1_000_000) return `${(n / 1_000_000).toFixed(2)}M`;
+  if (n >= 1_000) return `${Math.round(n / 1_000)}K`;
+  return n.toLocaleString();
+};
+
+const TABS = ["Explorer", "Detail"];
+
+const STAT_ACCENTS = ["#3b82f6", "#2dd4a7", "#f59e0b", "#22c55e"];
+
+export { TABS, STAT_ACCENTS };

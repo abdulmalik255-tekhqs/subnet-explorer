@@ -6,19 +6,8 @@ import { X } from "@phosphor-icons/react";
 import L1DetailTab from "./L1DetailTab";
 import LatestBlocks from "./Blocks/LatestBlocks";
 import LatestTransactions from "./Transactions/LatestTransactions";
-
-const TABS = ["Explorer", "Detail"];
-
-const STAT_ACCENTS = ["#3b82f6", "#2dd4a7", "#f59e0b", "#22c55e"];
-
-const fmtNum = (val) => {
-  if (!val || val === "0") return "–";
-  const n = parseInt(val, 10);
-  if (isNaN(n)) return val;
-  if (n >= 1_000_000) return `${(n / 1_000_000).toFixed(2)}M`;
-  if (n >= 1_000) return `${Math.round(n / 1_000)}K`;
-  return n.toLocaleString();
-};
+import MetricCardSkeleton from "../../../components/SkeletonLoading/StatsLoading";
+import { fmtNum, TABS, STAT_ACCENTS } from "../../../utils";
 
 const StatCard = ({ label, value, delta, accent }) => (
   <div className="relative bg-[#0B111D] border border-gray-800 rounded-xl overflow-hidden">
@@ -134,30 +123,35 @@ export default function L1DetailPanel({ chain, onClose, type }) {
         ) : (
           <div className="px-5 py-5 space-y-4">
             {/* Stat cards */}
-            {dashboardLoading && (
-              <div className="text-[10px] text-gray-500 tracking-wider uppercase -mb-2">
-                Refreshing…
-              </div>
+            {dashboardLoading ? (
+              <>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                  {Array.from({ length: 4 }).map((_, index) => (
+                    <MetricCardSkeleton key={index} />
+                  ))}
+                </div>
+              </>
+            ) : (
+              <>
+                <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                  {stats.map((s, i) => (
+                    <StatCard
+                      key={s.label}
+                      label={s.label}
+                      value={s.value}
+                      accent={STAT_ACCENTS[i % STAT_ACCENTS.length]}
+                    />
+                  ))}
+                </div>
+                <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
+                  <LatestBlocks chainId={chainId || params?.chainID} />
+                  <LatestTransactions
+                    chainId={chainId || params?.chainID}
+                    symbol={symbol}
+                  />
+                </div>
+              </>
             )}
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-              {stats.map((s, i) => (
-                <StatCard
-                  key={s.label}
-                  label={s.label}
-                  value={s.value}
-                  accent={STAT_ACCENTS[i % STAT_ACCENTS.length]}
-                />
-              ))}
-            </div>
-
-            {/* Latest Blocks / Transactions */}
-            <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
-              <LatestBlocks chainId={chainId || params?.chainID} />
-              <LatestTransactions
-                chainId={chainId || params?.chainID}
-                symbol={symbol}
-              />
-            </div>
           </div>
         )
       }
